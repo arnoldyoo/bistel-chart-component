@@ -9,7 +9,6 @@ export class AppComponent implements OnInit{
   title = 'app works!';
 
   consturctor() {}
-  ngOnInit() {
-    console.log(d3);
-  }
+  ngOnInit() { }
+
 }
