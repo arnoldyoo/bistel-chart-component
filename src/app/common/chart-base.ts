@@ -3,7 +3,8 @@ import { IDisplay } from './iDisplay.interface';
 export class ChartBase implements IDisplay {
 
     configuration: any;
-    target: any; //target svg element
+    //target svg element
+    _target: any;
 
     _width: number;
     _height: number;
@@ -12,12 +13,21 @@ export class ChartBase implements IDisplay {
     // 가져올 때 : return _axis['left']
     _axis: any[] = [];
     _series: any[] = [];
+    _axisGroup: any;
+    _seriesGroup: any;
 
-   constructor( config: any ) {
+    constructor( config: any ) {
         this.configuration = config;
     }
 
-   // IDisplay interface getter setter
+    // IDisplay interface getter setter
+    set target( value: any ) {
+        this._target = value;
+    }
+    get target(): any {
+        return this._target;
+    }
+
     set width( value: number ) {
         this._width = value;
     }
@@ -32,22 +42,22 @@ export class ChartBase implements IDisplay {
         return this._height;
     }
 
-   // getter setter methods
+    // getter setter methods
     set dataProvider( data: any[] ) {
 
-   };
+    };
     get dataProvider() {
         return <any>[];
     };
 
-   set axis( value: any[] ) {
+    set axis( value: any[] ) {
         this._axis = value;
     };
     get axis(): any[] {
         return this._axis;
     };
 
-   set series( value: any[] ) {
+    set series( value: any[] ) {
         this._series = value;
     };
     get series(): any[] {
@@ -57,18 +67,27 @@ export class ChartBase implements IDisplay {
     // generate svg element using configuration
     generateConfiguration(): void {
         this.target = this._createSvg(this.configuration.chart);
-
         // generate axis component using this.target
+        this._axisGroup = this.target.append('g')
+                              .attr('class', 'axis')
+                              .attr('transform', 'translate(0 ,0)');
+        this._createAxis();
+        // this._axisGroup = this.target.select('.x.axis')[0];
 
         // generate series component using this.target
-
+        this._seriesGroup = this.target.append('g')
+                            .attr('class', 'series')
+                            .attr('transform', 'translate( 0, 0 )');
+        this._createSeries();
     };
 
     // iDisplay interface method
     updateDisplay(width: number, height: number): void {
         this.target
-            .style('width', width + 'px')
-            .style('height', height + 'px');
+            .attr('width', width )
+            .attr('height', height );
+
+        // _axis[], _series[] loop 돌면서 update
     };
 
     _addEvent(): void { };
@@ -76,5 +95,12 @@ export class ChartBase implements IDisplay {
     _createSvg(chartConfig: any): void {
         return d3.select(chartConfig.selector).append('svg');
     }
-
+    _createAxis(): void {
+        // 1. config axis loop
+        // 2. this._axis.push(axe);
+    }
+    _createSeries(): void {
+        // 1. series loop
+        // 2. this._series.push(seires);
+    }
 };
