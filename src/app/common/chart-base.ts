@@ -3,47 +3,55 @@ import { IDisplay } from './iDisplay.interface';
 export class ChartBase implements IDisplay {
 
     configuration: any;
-    target: any;
+    target: any; //target svg element
 
-    constructor(config: any) {
+    _width: number;
+    _height: number;
+    // axis 는 orient string type으로 key :value로 저장한다.
+    // 예 : 'top': xaxis, 'left': yaxis
+    // 가져올 때 : return _axis['left']
+    _axis: any[] = [];
+    _series: any[] = [];
+
+   constructor( config: any ) {
         this.configuration = config;
     }
 
-    // IDisplay interface getter setter
-    set width(width: number) {
-        this.width = width;
+   // IDisplay interface getter setter
+    set width( value: number ) {
+        this._width = value;
     }
-    get width() {
-        return this.width;
+    get width(): number {
+        return this._width;
     }
 
-    set height(height: number) {
-        this.height = height;
+    set height( value: number ) {
+        this._height = value;
     }
     get height() {
-        return this.height;
+        return this._height;
     }
 
-    // getter setter methods
-    set dataProvider(data: any[]) {
+   // getter setter methods
+    set dataProvider( data: any[] ) {
 
-    };
-    get dataProvider(){
-        return;
-    };
-
-    set axis(axis: any[]) {
-
-    };
-    get axis() {
-        return;
+   };
+    get dataProvider() {
+        return <any>[];
     };
 
-    set series(series: any[]){
-
+   set axis( value: any[] ) {
+        this._axis = value;
     };
-    get series() {
-        return;
+    get axis(): any[] {
+        return this._axis;
+    };
+
+   set series( value: any[] ) {
+        this._series = value;
+    };
+    get series(): any[] {
+        return this._series;
     };
 
     // generate svg element using configuration

@@ -12,22 +12,25 @@ export class Axis implements IDisplay {
     domain: Array<any>;
     axe: Axe;
 
+    _width: number;
+    _height: number;
+
     constructor() {}
 
 
     // IDisplay interface getter setter
-    set width(width: number) {
-        this.width = width;
+    set width(value: number) {
+        this._width = value;
     }
     get width() {
-        return this.width;
+        return this._width;
     }
 
-    set height(height: number) {
-        this.height = height;
+    set height(value: number) {
+        this._height = value;
     }
     get height() {
-        return this.height;
+        return this._height;
     }
 
     updateDisplay(width: number, height: number): void {
