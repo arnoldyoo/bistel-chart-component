@@ -1,6 +1,5 @@
 import { Axe } from './axe';
 import { IDisplay } from './../iDisplay.interface';
-import { Generator } from './../generator';
 
 export class Axis implements IDisplay {
 
@@ -12,35 +11,29 @@ export class Axis implements IDisplay {
     title: string;
     domain: Array<any>;
     axe: Axe;
-    _generator: Generator;
 
-    constructor() {
-        this._generator = new Generator();
-    }
+    constructor() {}
 
 
     // IDisplay interface getter setter
     set width(width: number) {
-
+        this.width = width;
     }
     get width() {
-        return;
+        return this.width;
     }
 
     set height(height: number) {
-
+        this.height = height;
     }
     get height() {
-        return;
+        return this.height;
     }
 
     updateDisplay(width: number, height: number): void {
 
     }
-    createAxis(): void {
-        this.axis = this._generator.createAxis({});
-    }
-    makeAxisLabel(): void {
+    createAxis(): void { }
+    makeAxisLabel(): void { }
 
-    }
 }

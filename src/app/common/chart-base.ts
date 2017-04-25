@@ -1,30 +1,27 @@
 import { IDisplay } from './iDisplay.interface';
-import { Generator } from './generator';
 
 export class ChartBase implements IDisplay {
 
     configuration: any;
     target: any;
-    _generator: Generator;
 
     constructor(config: any) {
         this.configuration = config;
-        this._generator = new Generator();
     }
 
     // IDisplay interface getter setter
     set width(width: number) {
-
+        this.width = width;
     }
     get width() {
-        return;
+        return this.width;
     }
 
     set height(height: number) {
-
+        this.height = height;
     }
     get height() {
-        return;
+        return this.height;
     }
 
     // getter setter methods
@@ -51,7 +48,7 @@ export class ChartBase implements IDisplay {
 
     // generate svg element using configuration
     generateConfiguration(): void {
-        this.target = this._generator.createSvg(this.configuration.chart);
+        this.target = this._createSvg(this.configuration.chart);
 
         // generate axis component using this.target
 
@@ -67,5 +64,9 @@ export class ChartBase implements IDisplay {
     };
 
     _addEvent(): void { };
+
+    _createSvg(chartConfig: any): void {
+        return d3.select(chartConfig.selector).append('svg');
+    }
 
 };

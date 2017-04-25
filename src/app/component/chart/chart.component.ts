@@ -17,7 +17,27 @@ export class ChartComponent implements OnInit {
                     width: 300,
                     height: 300
                 }
-            }
+            },
+            axis: [
+                {
+                    data_type: 'ordinal',
+                    axe: 'x',
+                    field: 'category',
+                    format: undefined,
+                    orient: 'bottom',
+                    visible: true,
+                    title: 'Category'
+                },
+                {
+                    data_type: 'numeric',
+                    axe: 'y',
+                    field: 'profit',
+                    format: undefined,
+                    orient: 'left',
+                    visible: true,
+                    title: 'Profit'
+                }
+            ]
         });
         this.baseChart.generateConfiguration();
     }
