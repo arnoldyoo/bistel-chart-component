@@ -4,7 +4,10 @@ export class Axe {
     width: number;
     height: number;
 
-    constructor() {
+    constructor( axe: string, width: number, height: number ) {
+        this.axeType = axe;
+        this.width = width;
+        this.height = height;
         // d3 scale 설정
         // category, numeric, date
     }

@@ -10,6 +10,6 @@ export class XAxis extends Axis {
                                     .attr('height', 10);
     }
     makeAxisLabel(): void {
-
+        //super.makeAxisLabel();
     }
 }

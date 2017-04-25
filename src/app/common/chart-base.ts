@@ -96,11 +96,15 @@ export class ChartBase implements IDisplay {
         return d3.select(chartConfig.selector).append('svg');
     }
     _createAxis(): void {
-        // 1. config axis loop
-        // 2. this._axis.push(axe);
+        // config axis loop
+        this.configuration.axis.map(axis => {
+            // create Axis Class
+            // this._axis.push(axe);
+            // setupAxis() call
+        });
     }
     _createSeries(): void {
-        // 1. series loop
-        // 2. this._series.push(seires);
+        // series loop
+        // this._series.push(seires);
     }
 };

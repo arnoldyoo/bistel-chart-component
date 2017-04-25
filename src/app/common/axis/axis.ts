@@ -46,12 +46,11 @@ export class Axis implements IDisplay {
         this.makeAxisLabel();
     }
     setupAxe(axisConfig: any): void {
-        
-        if (x) {
-            this.axe = new Axe();
+
+        if (axisConfig.axe === 'x') {
+            this.axe = new Axe(axisConfig.axe, this.width, this.height);
             // 1. scale 정보 세팅
             // 2. Axe 생성 x 인지 y인지에 따라 달라서
-            
         }else {
 
         }
