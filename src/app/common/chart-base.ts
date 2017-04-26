@@ -1,16 +1,20 @@
+import { YAxis } from './axis/yAxis';
+import { XAxis } from './axis/xAxis';
+import { Axis } from './axis/axis';
 import { IDisplay } from './iDisplay.interface';
 
 export class ChartBase implements IDisplay {
 
     configuration: any;
-    //target svg element
-    _target: any;
 
+    // target svg element
+    _target: any;
     _width: number;
     _height: number;
     // axis 는 orient string type으로 key :value로 저장한다.
     // 예 : 'top': xaxis, 'left': yaxis
     // 가져올 때 : return _axis['left']
+
     _axis: any[] = [];
     _series: any[] = [];
     _axisGroup: any;
@@ -18,6 +22,8 @@ export class ChartBase implements IDisplay {
 
     constructor( config: any ) {
         this.configuration = config;
+        this.width = this.configuration.chart.size.width;
+        this.height = this.configuration.chart.size.height;
     }
 
     // IDisplay interface getter setter
@@ -96,11 +102,20 @@ export class ChartBase implements IDisplay {
         return d3.select(chartConfig.selector).append('svg');
     }
     _createAxis(): void {
-        // 1. config axis loop
-        // 2. this._axis.push(axe);
+        // config axis loop
+        this.configuration.axis.map(axis => {
+            let axe: Axis;
+            if (axis.type === 'x') {
+                axe = new XAxis(axis, this._axisGroup, this.width, this.height);
+            } else {
+                axe = new YAxis(axis, this._axisGroup, this.width, this.height);
+            }
+            axe.updateDisplay(this.width, this.height);
+            this._axis.push(axe);
+        });
     }
     _createSeries(): void {
-        // 1. series loop
-        // 2. this._series.push(seires);
+        // series loop
+        // this._series.push(seires);
     }
 };

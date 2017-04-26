@@ -9,14 +9,21 @@ export class Axis implements IDisplay {
     visible: boolean;
     title: string;
     domain: Array<any>;
+    type: string;
     axe: Axe;
+    orient: string;
 
     _target: any;
     _width: number;
     _height: number;
 
-    constructor() {
+    axis: any;
 
+    constructor(config: any, axisTarget: any, width: number, height: number) {
+        this.target = axisTarget.append('g').attr('class', `${this.type} ${this.orient}`);
+        this.width = width;
+        this.height = height;
+        this.configGenerator(config);
     }
 
     // IDisplay interface getter setter
@@ -42,22 +49,37 @@ export class Axis implements IDisplay {
     }
 
     updateDisplay(width: number, height: number): void {
-        this.setupAxe({});
+        this.setupAxe();
         this.makeAxisLabel();
     }
-    setupAxe(axisConfig: any): void {
-        
-        if (x) {
-            this.axe = new Axe();
-            // 1. scale 정보 세팅
-            // 2. Axe 생성 x 인지 y인지에 따라 달라서
-            
-        }else {
-
-        }
+    setupAxe(): void {
+        // scale 정보 생성
+        this.axe = new Axe(this.type, this.width, this.height, this.dataType, this.domain, this.orient);
     }
     makeAxisLabel(): void {
 
+    }
+    configGenerator(config: any): void {
+        this.dataType = config.dataType;
+        this.field = config.field;
+        this.format = config.format;
+        this.visible = config.visible;
+        this.title = config.title;
+        this.type = config.type;
+        this.orient = config.orient;
+
+        if (config.domain) {
+            this.domain = config.domain;
+        } else {
+            this._defaultDomain();
+        }
+    }
+    _defaultDomain(): void {
+        if ( this.type === 'x') {
+            this.domain = ['A', 'B', 'C', 'D'];
+        } else {
+            this.domain = [1, 100];
+        }
     }
 
 }

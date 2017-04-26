@@ -20,8 +20,8 @@ export class ChartComponent implements OnInit {
             },
             axis: [
                 {
-                    data_type: 'ordinal',
-                    axe: 'x',
+                    dataType: 'ordinal',
+                    type: 'x',
                     field: 'category',
                     format: undefined,
                     orient: 'bottom',
@@ -29,8 +29,8 @@ export class ChartComponent implements OnInit {
                     title: 'Category'
                 },
                 {
-                    data_type: 'numeric',
-                    axe: 'y',
+                    dataType: 'numeric',
+                    type: 'y',
                     field: 'profit',
                     format: undefined,
                     orient: 'left',

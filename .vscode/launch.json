@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible Node.js debug attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ng2",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:8080/index.html",
+            "webRoot": "${workspaceRoot}/src"
+        },
+        {
+            "name": "ng2",
+            "type": "chrome",
+            "request": "launch",
+            "sourcemap" : false,
+            "file" : "${workspaceRoot}/src/index.html"
+        }
+    ]
+}
