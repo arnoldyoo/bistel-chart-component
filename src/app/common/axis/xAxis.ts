@@ -1,14 +1,16 @@
 import { Axis } from './axis';
 export class XAxis extends Axis {
-    constructor(axisConfig: any, axisTarget: any, width: number, height: number) {
+    margin: any;
+    constructor(axisConfig: any, axisTarget: any, width: number, height: number, margin: any) {
         super(axisConfig, axisTarget, width, height);
+        this.margin = margin;
         // make Axis
     }
     updateDisplay(width: number, height: number): void {
         if (this.orient === 'bottom') {
-            this.target.attr('transform', `translate(0, ${this.height})`);
+            this.target.attr('transform', `translate(${this.margin.left}, ${this.height})`);
         } else {
-            this.target.attr('transform', 'translate(0, 0)');
+            this.target.attr('transform', `translate(${this.margin.left}, 0)`);
         }
         super.updateDisplay(width, height);
     }
