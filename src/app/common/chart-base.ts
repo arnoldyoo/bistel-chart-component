@@ -9,15 +9,16 @@ export class ChartBase implements IDisplay {
 
     // target svg element
     _target: any;
+    //size
     _width: number;
     _height: number;
-    // axis 는 orient string type으로 key :value로 저장한다.
-    // 예 : 'top': xaxis, 'left': yaxis
-    // 가져올 때 : return _axis['left']
-
+    //axis list
     _axis: any[] = [];
+    //series list
     _series: any[] = [];
+    //axis group element
     _axisGroup: any;
+    //series group element
     _seriesGroup: any;
 
     constructor( config: any ) {
