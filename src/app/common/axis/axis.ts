@@ -20,10 +20,10 @@ export class Axis implements IDisplay {
     axis: any;
 
     constructor(config: any, axisTarget: any, width: number, height: number) {
-        this.target = axisTarget.append('g').attr('class', `${this.type} ${this.orient}`);
         this.width = width;
         this.height = height;
         this.configGenerator(config);
+        this.target = axisTarget.append('g').attr('class', `${this.type} ${this.orient}`);
     }
 
     // IDisplay interface getter setter
@@ -49,6 +49,8 @@ export class Axis implements IDisplay {
     }
 
     updateDisplay(width: number, height: number): void {
+        this.width = width;
+        this.height = height;
         this.setupAxe();
         this.makeAxisLabel();
     }

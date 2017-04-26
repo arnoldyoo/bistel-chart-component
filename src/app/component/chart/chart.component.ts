@@ -8,26 +8,35 @@ import { Component, OnInit, HostListener } from '@angular/core';
 
 export class ChartComponent implements OnInit {
     baseChart: ChartBase;
+    chartConfig: any;
     constructor() { }
     ngOnInit() {
-        this.baseChart = new ChartBase({
+        this._setChartJson();
+        this.baseChart = new ChartBase(this.chartConfig);
+        this.baseChart.generateConfiguration();
+        this.baseChart.updateDisplay(this.chartConfig.chart.size.width, this.chartConfig.chart.size.height);
+    }
+    @HostListener('window:resize', ['$event'])
+    onResize(event) {
+        const elem = window.document.getElementById('div_01');
+        this.baseChart.updateDisplay(elem.offsetWidth, elem.offsetHeight);
+    }
+    _setChartJson(): void {
+        this.chartConfig = {
             chart: {
                 selector: '#div_01',
                 size: {
-                    width: 300,
-                    height: 300
+                    width: 400,
+                    height: 400
+                },
+                margin: {
+                    left: 50,
+                    right: 0,
+                    top: 0,
+                    bottom: 50
                 }
             },
             axis: [
-                {
-                    dataType: 'ordinal',
-                    type: 'x',
-                    field: 'category',
-                    format: undefined,
-                    orient: 'bottom',
-                    visible: true,
-                    title: 'Category'
-                },
                 {
                     dataType: 'numeric',
                     type: 'y',
@@ -36,13 +45,17 @@ export class ChartComponent implements OnInit {
                     orient: 'left',
                     visible: true,
                     title: 'Profit'
+                },
+                {
+                    dataType: 'ordinal',
+                    type: 'x',
+                    field: 'category',
+                    format: undefined,
+                    orient: 'bottom',
+                    visible: true,
+                    title: 'Category'
                 }
             ]
-        });
-        this.baseChart.generateConfiguration();
-    }
-    @HostListener('window:resize', ['$event'])
-    onResize(event) {
-        this.baseChart.updateDisplay(event.target.innerWidth, event.target.innerHeight);
+        }
     }
 }

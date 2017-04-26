@@ -6,6 +6,7 @@ import { IDisplay } from './iDisplay.interface';
 export class ChartBase implements IDisplay {
 
     configuration: any;
+    margin: any;
 
     // target svg element
     _target: any;
@@ -23,8 +24,8 @@ export class ChartBase implements IDisplay {
 
     constructor( config: any ) {
         this.configuration = config;
-        this.width = this.configuration.chart.size.width;
-        this.height = this.configuration.chart.size.height;
+        this.margin = this.configuration.chart.margin;
+        this._setSize(this.configuration.chart.size.width, this.configuration.chart.size.height);
     }
 
     // IDisplay interface getter setter
@@ -90,11 +91,20 @@ export class ChartBase implements IDisplay {
 
     // iDisplay interface method
     updateDisplay(width: number, height: number): void {
+        
+        this._setSize(width, height);
+        
+        
         this.target
-            .attr('width', width )
-            .attr('height', height );
-
+            .attr('width', width)
+            .attr('height', height);
         // _axis[], _series[] loop 돌면서 update
+        // this._axis.map(function(axe) {
+        //     axe.updateDisplay(this.width, this.height);
+        // });
+        for (let i = 0 ; i < this._axis.length; i++) {
+            this._axis[i].updateDisplay(this.width, this.height);
+        }
     };
 
     _addEvent(): void { };
@@ -107,9 +117,9 @@ export class ChartBase implements IDisplay {
         this.configuration.axis.map(axis => {
             let axe: Axis;
             if (axis.type === 'x') {
-                axe = new XAxis(axis, this._axisGroup, this.width, this.height);
+                axe = new XAxis(axis, this._axisGroup, this.width, this.height, this.margin);
             } else {
-                axe = new YAxis(axis, this._axisGroup, this.width, this.height);
+                axe = new YAxis(axis, this._axisGroup, this.width, this.height, this.margin);
             }
             axe.updateDisplay(this.width, this.height);
             this._axis.push(axe);
@@ -118,5 +128,9 @@ export class ChartBase implements IDisplay {
     _createSeries(): void {
         // series loop
         // this._series.push(seires);
+    }
+    _setSize(width: number, height: number): void {
+        this.width = width - (this.margin.left + this.margin.right);
+        this.height = height - (this.margin.top + this.margin.bottom);
     }
 };
