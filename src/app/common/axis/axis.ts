@@ -3,30 +3,30 @@ import { IDisplay } from './../iDisplay.interface';
 
 export class Axis implements IDisplay {
 
-    dataType: string;
-    field: string;
-    format: any;
-    visible: boolean;
-    title: string;
-    domain: Array<any>;
-    type: string;
     axe: Axe;
-    orient: string;
 
+    _dataType: string;
+    _field: string;
+    _format: any;
+    _visible: boolean;
+    _title: string;
+    _domain: Array<any>;
+    _type: string;
+    _orient: string;
+    _margin: any;
     _target: any;
     _width: number;
     _height: number;
 
-    axis: any;
-
-    constructor(config: any, axisTarget: any, width: number, height: number) {
+    constructor(config: any, axisTarget: any, width: number, height: number, margin: any) {
         this.width = width;
         this.height = height;
+        this.margin = margin;
         this.configGenerator(config);
         this.target = axisTarget.append('g').attr('class', `${this.type} ${this.orient}`);
     }
 
-    // IDisplay interface getter setter
+    // setter getter method
     set target( value: any ) {
         this._target = value;
     }
@@ -48,6 +48,69 @@ export class Axis implements IDisplay {
         return this._height;
     }
 
+    set dataType( value: string ) {
+        this._dataType = value;
+    }
+    get dataType() {
+        return this._dataType;
+    }
+
+    set field( value: string ) {
+        this._field = value;
+    }
+    get field() {
+        return this._field;
+    }
+
+    set format( value: any ) {
+        this._format = value;
+    }
+    get format() {
+        return this._format;
+    }
+
+    set visible( value: boolean ) {
+        this._visible = value;
+    }
+    get visible() {
+        return this._visible;
+    }
+
+    set title( value: string ) {
+        this._title = value;
+    }
+    get title() {
+        return this._title;
+    }
+
+    set domain( value: any ) {
+        this._domain = value;
+    }
+    get domain() {
+        return this._domain;
+    }
+
+    set type( value: string ) {
+        this._type = value;
+    }
+    get type() {
+        return this._type;
+    }
+
+    set orient( value: string ) {
+        this._orient = value;
+    }
+    get orient() {
+        return this._orient;
+    }
+
+    set margin( value: any ) {
+        this._margin = value;
+    }
+    get margin() {
+        return this._margin;
+    }
+
     updateDisplay(width: number, height: number): void {
         this.width = width;
         this.height = height;
@@ -58,9 +121,8 @@ export class Axis implements IDisplay {
         // scale 정보 생성
         this.axe = new Axe(this.type, this.width, this.height, this.dataType, this.domain, this.orient);
     }
-    makeAxisLabel(): void {
 
-    }
+    makeAxisLabel(): void { }
     configGenerator(config: any): void {
         this.dataType = config.dataType;
         this.field = config.field;
@@ -78,9 +140,25 @@ export class Axis implements IDisplay {
     }
     _defaultDomain(): void {
         if ( this.type === 'x') {
-            this.domain = ['A', 'B', 'C', 'D'];
+            if ( this.dataType === 'ordinal') {
+                this.domain = ['A', 'B', 'C', 'D'];
+            } else if ( this.dataType === 'date' ) {
+                const mindate = new Date(2017, 0, 1);
+                const maxdate = new Date(2017, 0, 31);
+                this.domain = [mindate, maxdate];
+            } else {
+
+            }
         } else {
-            this.domain = [1, 100];
+            if ( this.dataType === 'ordinal') {
+                this.domain = ['a', 'b', 'c', 'd'];
+            } else if ( this.dataType === 'date' ) {
+                const mindate = new Date(2017, 0, 1);
+                const maxdate = new Date(2017, 0, 31);
+                this.domain = [mindate, maxdate];
+            } else {
+                this.domain = [1, 100];
+            }
         }
     }
 

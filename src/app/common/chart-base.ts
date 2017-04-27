@@ -4,23 +4,23 @@ import { Axis } from './axis/axis';
 import { IDisplay } from './iDisplay.interface';
 
 export class ChartBase implements IDisplay {
-
-    configuration: any;
-    margin: any;
-
+    // chart configuration object
+    _configuration: any;
     // target svg element
     _target: any;
-    //size
+    // size
     _width: number;
     _height: number;
-    //axis list
+    // axis list
     _axis: any[] = [];
-    //series list
+    // series list
     _series: any[] = [];
-    //axis group element
+    // axis group element
     _axisGroup: any;
-    //series group element
+    // series group element
     _seriesGroup: any;
+    // margin object
+    _margin: any;
 
     constructor( config: any ) {
         this.configuration = config;
@@ -28,7 +28,14 @@ export class ChartBase implements IDisplay {
         this._setSize(this.configuration.chart.size.width, this.configuration.chart.size.height);
     }
 
-    // IDisplay interface getter setter
+    // getter setter methods
+    set configuration( value: any ) {
+        this._configuration = value;
+    }
+    get configuration() {
+        return this._configuration;
+    }
+
     set target( value: any ) {
         this._target = value;
     }
@@ -50,7 +57,6 @@ export class ChartBase implements IDisplay {
         return this._height;
     }
 
-    // getter setter methods
     set dataProvider( data: any[] ) {
 
     };
@@ -72,6 +78,13 @@ export class ChartBase implements IDisplay {
         return this._series;
     };
 
+    set margin( value: any ) {
+        this._margin = value;
+    }
+    get margin() {
+        return this._margin;
+    }
+
     // generate svg element using configuration
     generateConfiguration(): void {
         this.target = this._createSvg(this.configuration.chart);
@@ -91,10 +104,7 @@ export class ChartBase implements IDisplay {
 
     // iDisplay interface method
     updateDisplay(width: number, height: number): void {
-        
         this._setSize(width, height);
-        
-        
         this.target
             .attr('width', width)
             .attr('height', height);
@@ -106,8 +116,6 @@ export class ChartBase implements IDisplay {
             this._axis[i].updateDisplay(this.width, this.height);
         }
     };
-
-    _addEvent(): void { };
 
     _createSvg(chartConfig: any): void {
         return d3.select(chartConfig.selector).append('svg');
@@ -133,4 +141,5 @@ export class ChartBase implements IDisplay {
         this.width = width - (this.margin.left + this.margin.right);
         this.height = height - (this.margin.top + this.margin.bottom);
     }
+    _addEvent(): void { };
 };

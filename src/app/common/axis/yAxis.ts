@@ -1,9 +1,7 @@
 import { Axis } from './axis';
 export class YAxis extends Axis {
-    margin: any;
     constructor(axisConfig: any, axisTarget: any, width: number, height: number, margin: any) {
-        super(axisConfig, axisTarget, width, height);
-        this.margin = margin;
+        super(axisConfig, axisTarget, width, height, margin);
         // make Axis
     }
     updateDisplay(width: number, height: number): void {

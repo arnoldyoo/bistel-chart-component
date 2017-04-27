@@ -26,7 +26,7 @@ export class ChartComponent implements OnInit {
             chart: {
                 selector: '#div_01',
                 size: {
-                    width: 400,
+                    width: 800,
                     height: 400
                 },
                 margin: {
@@ -54,6 +54,15 @@ export class ChartComponent implements OnInit {
                     orient: 'bottom',
                     visible: true,
                     title: 'Category'
+                },
+                {
+                    dataType: 'date',
+                    type: 'x',
+                    field: 'date',
+                    format: undefined,
+                    orient: 'top',
+                    visible: true,
+                    title: 'date'
                 }
             ]
         }
