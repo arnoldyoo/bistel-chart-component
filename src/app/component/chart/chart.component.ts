@@ -1,9 +1,20 @@
 import { ChartBase } from './../../common/chart-base';
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
     selector: 'app-chart',
-    templateUrl: 'chart.component.html'
+    templateUrl: 'chart.component.html',
+    styles: [`
+        #div_01 {
+            border: 1px solid black;
+        }
+        path, line {
+            fill: none;
+            stroke: #ccc;
+            shape-rendering: crispEdges;
+        }
+    `],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class ChartComponent implements OnInit {
@@ -31,8 +42,8 @@ export class ChartComponent implements OnInit {
                 },
                 margin: {
                     left: 50,
-                    right: 0,
-                    top: 0,
+                    right: 50,
+                    top: 50,
                     bottom: 50
                 }
             },

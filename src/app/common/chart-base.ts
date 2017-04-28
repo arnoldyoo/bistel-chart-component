@@ -1,26 +1,22 @@
-import { YAxis } from './axis/yAxis';
-import { XAxis } from './axis/xAxis';
+import { NumericAxis } from './axis/NumericAxis';
+import { DateTimeyAxis } from './axis/DateTimeAxis';
+import { CategoryAxis } from './axis/CategoryAxis';
 import { Axis } from './axis/axis';
 import { IDisplay } from './iDisplay.interface';
 
 export class ChartBase implements IDisplay {
-    // chart configuration object
+
     _configuration: any;
-    // target svg element
-    _target: any;
-    // size
+
+    _target: any; // target svg element
     _width: number;
     _height: number;
-    // axis list
     _axis: any[] = [];
-    // series list
     _series: any[] = [];
-    // axis group element
-    _axisGroup: any;
-    // series group element
-    _seriesGroup: any;
-    // margin object
+    _axisGroup: any; // axis group element
+    _seriesGroup: any; // series group element
     _margin: any;
+    _domain: any;
 
     constructor( config: any ) {
         this.configuration = config;
@@ -28,7 +24,6 @@ export class ChartBase implements IDisplay {
         this._setSize(this.configuration.chart.size.width, this.configuration.chart.size.height);
     }
 
-    // getter setter methods
     set configuration( value: any ) {
         this._configuration = value;
     }
@@ -85,6 +80,13 @@ export class ChartBase implements IDisplay {
         return this._margin;
     }
 
+    set domain( value: any ) {
+        this._domain = value;
+    }
+    get domain() {
+        return this._domain;
+    }
+
     // generate svg element using configuration
     generateConfiguration(): void {
         this.target = this._createSvg(this.configuration.chart);
@@ -93,8 +95,6 @@ export class ChartBase implements IDisplay {
                               .attr('class', 'axis')
                               .attr('transform', 'translate(0 ,0)');
         this._createAxis();
-        // this._axisGroup = this.target.select('.x.axis')[0];
-
         // generate series component using this.target
         this._seriesGroup = this.target.append('g')
                             .attr('class', 'series')
@@ -102,44 +102,74 @@ export class ChartBase implements IDisplay {
         this._createSeries();
     };
 
-    // iDisplay interface method
     updateDisplay(width: number, height: number): void {
         this._setSize(width, height);
         this.target
             .attr('width', width)
             .attr('height', height);
-        // _axis[], _series[] loop 돌면서 update
-        // this._axis.map(function(axe) {
-        //     axe.updateDisplay(this.width, this.height);
-        // });
+
         for (let i = 0 ; i < this._axis.length; i++) {
             this._axis[i].updateDisplay(this.width, this.height);
         }
     };
 
-    _createSvg(chartConfig: any): void {
+    _createSvg(chartConfig: any): any {
         return d3.select(chartConfig.selector).append('svg');
     }
+
     _createAxis(): void {
-        // config axis loop
-        this.configuration.axis.map(axis => {
+        this.configuration.axis.map( axis => {
             let axe: Axis;
-            if (axis.type === 'x') {
-                axe = new XAxis(axis, this._axisGroup, this.width, this.height, this.margin);
+            if ( axis.domain ) {
+                this.domain = axis.domain;
             } else {
-                axe = new YAxis(axis, this._axisGroup, this.width, this.height, this.margin);
+                this._defaultDomain( axis );
             }
-            axe.updateDisplay(this.width, this.height);
-            this._axis.push(axe);
+            if ( axis.dataType === 'ordinal' ) {
+                axe = new CategoryAxis( axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
+            } else if ( axis.dataType === 'date' ) {
+                axe = new DateTimeyAxis( axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
+            } else {
+                axe = new NumericAxis( axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
+            }
+            axe.updateDisplay( this.width, this.height );
+            this._axis.push( axe );
         });
     }
+
     _createSeries(): void {
         // series loop
         // this._series.push(seires);
     }
+
     _setSize(width: number, height: number): void {
         this.width = width - (this.margin.left + this.margin.right);
         this.height = height - (this.margin.top + this.margin.bottom);
     }
+
+    _defaultDomain(axisConfig: any): void {
+        if ( axisConfig.type === 'x') {
+            if ( axisConfig.dataType === 'ordinal') {
+                this.domain = ['A', 'B', 'C', 'D'];
+            } else if ( axisConfig.dataType === 'date' ) {
+                const mindate = new Date(2017, 0, 1);
+                const maxdate = new Date(2017, 0, 31);
+                this.domain = [mindate, maxdate];
+            } else {
+                this.domain = [1, 100];
+            }
+        } else {
+            if ( axisConfig.dataType === 'ordinal') {
+                this.domain = ['a', 'b', 'c', 'd'];
+            } else if ( axisConfig.dataType === 'date' ) {
+                const mindate = new Date(2017, 0, 1);
+                const maxdate = new Date(2017, 0, 31);
+                this.domain = [mindate, maxdate];
+            } else {
+                this.domain = [1, 100];
+            }
+        }
+    }
+
     _addEvent(): void { };
 };

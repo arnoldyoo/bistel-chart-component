@@ -2,7 +2,6 @@ import { Axe } from './axe';
 import { IDisplay } from './../iDisplay.interface';
 
 export class Axis implements IDisplay {
-
     axe: Axe;
 
     _dataType: string;
@@ -14,19 +13,19 @@ export class Axis implements IDisplay {
     _type: string;
     _orient: string;
     _margin: any;
-    _target: any;
+    _target: any;  // svg group element value
     _width: number;
     _height: number;
 
-    constructor(config: any, axisTarget: any, width: number, height: number, margin: any) {
+    constructor(config: any, axisTarget: any, width: number, height: number, margin: any, domain: any) {
         this.width = width;
         this.height = height;
         this.margin = margin;
-        this.configGenerator(config);
-        this.target = axisTarget.append('g').attr('class', `${this.type} ${this.orient}`);
+        this.domain = domain;
+        this._configGenerator(config);
+        this._createContainer(axisTarget);
     }
 
-    // setter getter method
     set target( value: any ) {
         this._target = value;
     }
@@ -114,16 +113,22 @@ export class Axis implements IDisplay {
     updateDisplay(width: number, height: number): void {
         this.width = width;
         this.height = height;
-        this.setupAxe();
+        this._updateContainerPosition();
+        this._setupAxe();
         this.makeAxisLabel();
     }
-    setupAxe(): void {
-        // scale 정보 생성
-        this.axe = new Axe(this.type, this.width, this.height, this.dataType, this.domain, this.orient);
+    _setupAxe(): void {
+        this.scaleSetting();
+        this.scaleToAxeSetting();
     }
 
+    scaleToAxeSetting(): void { }
+
+    scaleSetting(): void { }
+
     makeAxisLabel(): void { }
-    configGenerator(config: any): void {
+
+    _configGenerator(config: any): void {
         this.dataType = config.dataType;
         this.field = config.field;
         this.format = config.format;
@@ -131,35 +136,22 @@ export class Axis implements IDisplay {
         this.title = config.title;
         this.type = config.type;
         this.orient = config.orient;
-
-        if (config.domain) {
-            this.domain = config.domain;
-        } else {
-            this._defaultDomain();
-        }
-    }
-    _defaultDomain(): void {
-        if ( this.type === 'x') {
-            if ( this.dataType === 'ordinal') {
-                this.domain = ['A', 'B', 'C', 'D'];
-            } else if ( this.dataType === 'date' ) {
-                const mindate = new Date(2017, 0, 1);
-                const maxdate = new Date(2017, 0, 31);
-                this.domain = [mindate, maxdate];
-            } else {
-
-            }
-        } else {
-            if ( this.dataType === 'ordinal') {
-                this.domain = ['a', 'b', 'c', 'd'];
-            } else if ( this.dataType === 'date' ) {
-                const mindate = new Date(2017, 0, 1);
-                const maxdate = new Date(2017, 0, 31);
-                this.domain = [mindate, maxdate];
-            } else {
-                this.domain = [1, 100];
-            }
-        }
     }
 
+    _createContainer(axisTarget: any): void {
+        this.target = axisTarget.append('g').attr('class', `${this.type} ${this.orient}`);
+        this.updateDisplay(this.width, this.height);
+    }
+
+    _updateContainerPosition(): void {
+        if (this.orient === 'bottom') {
+            this.target.attr('transform', `translate(${this.margin.left}, ${this.height+this.margin.top})`);
+        } else if (this.orient === 'top' ) {
+            this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+        } else if (this.orient === 'right') {
+            this.target.attr('transform', `translate(${this.width}, 0)`);
+        } else {
+            this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+        }
+    }
 }
