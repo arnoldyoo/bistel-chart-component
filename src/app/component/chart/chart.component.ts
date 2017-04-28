@@ -1,10 +1,24 @@
 import { ChartBase } from './../../common/chart-base';
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
     selector: 'app-chart',
     templateUrl: 'chart.component.html',
+<<<<<<< HEAD
     styleUrls: [ 'chart.component.css' ]
+=======
+    styles: [`
+        #div_01 {
+            border: 1px solid black;
+        }
+        path, line {
+            fill: none;
+            stroke: #ccc;
+            shape-rendering: crispEdges;
+        }
+    `],
+    encapsulation: ViewEncapsulation.None
+>>>>>>> master
 })
 
 export class ChartComponent implements OnInit {
@@ -27,13 +41,18 @@ export class ChartComponent implements OnInit {
             chart: {
                 selector: '#div_01',
                 size: {
-                    width: 400,
+                    width: 800,
                     height: 400
                 },
                 margin: {
                     left: 50,
+<<<<<<< HEAD
                     right: 0,
                     top: 10,
+=======
+                    right: 50,
+                    top: 50,
+>>>>>>> master
                     bottom: 50
                 }
             },
@@ -55,6 +74,15 @@ export class ChartComponent implements OnInit {
                     orient: 'bottom',
                     visible: true,
                     title: 'Category'
+                },
+                {
+                    dataType: 'date',
+                    type: 'x',
+                    field: 'date',
+                    format: undefined,
+                    orient: 'top',
+                    visible: true,
+                    title: 'date'
                 }
             ]
         }

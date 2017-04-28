@@ -2,31 +2,30 @@ import { Axe } from './axe';
 import { IDisplay } from './../iDisplay.interface';
 
 export class Axis implements IDisplay {
-
-    dataType: string;
-    field: string;
-    format: any;
-    visible: boolean;
-    title: string;
-    domain: Array<any>;
-    type: string;
     axe: Axe;
-    orient: string;
 
-    _target: any;
+    _dataType: string;
+    _field: string;
+    _format: any;
+    _visible: boolean;
+    _title: string;
+    _domain: Array<any>;
+    _type: string;
+    _orient: string;
+    _margin: any;
+    _target: any;  // svg group element value
     _width: number;
     _height: number;
 
-    axis: any;
-
-    constructor(config: any, axisTarget: any, width: number, height: number) {
+    constructor(config: any, axisTarget: any, width: number, height: number, margin: any, domain: any) {
         this.width = width;
         this.height = height;
-        this.configGenerator(config);
-        this.target = axisTarget.append('g').attr('class', `${this.type} ${this.orient}`);
+        this.margin = margin;
+        this.domain = domain;
+        this._configGenerator(config);
+        this._createContainer(axisTarget);
     }
 
-    // IDisplay interface getter setter
     set target( value: any ) {
         this._target = value;
     }
@@ -48,20 +47,88 @@ export class Axis implements IDisplay {
         return this._height;
     }
 
+    set dataType( value: string ) {
+        this._dataType = value;
+    }
+    get dataType() {
+        return this._dataType;
+    }
+
+    set field( value: string ) {
+        this._field = value;
+    }
+    get field() {
+        return this._field;
+    }
+
+    set format( value: any ) {
+        this._format = value;
+    }
+    get format() {
+        return this._format;
+    }
+
+    set visible( value: boolean ) {
+        this._visible = value;
+    }
+    get visible() {
+        return this._visible;
+    }
+
+    set title( value: string ) {
+        this._title = value;
+    }
+    get title() {
+        return this._title;
+    }
+
+    set domain( value: any ) {
+        this._domain = value;
+    }
+    get domain() {
+        return this._domain;
+    }
+
+    set type( value: string ) {
+        this._type = value;
+    }
+    get type() {
+        return this._type;
+    }
+
+    set orient( value: string ) {
+        this._orient = value;
+    }
+    get orient() {
+        return this._orient;
+    }
+
+    set margin( value: any ) {
+        this._margin = value;
+    }
+    get margin() {
+        return this._margin;
+    }
+
     updateDisplay(width: number, height: number): void {
         this.width = width;
         this.height = height;
-        this.setupAxe();
+        this._updateContainerPosition();
+        this._setupAxe();
         this.makeAxisLabel();
     }
-    setupAxe(): void {
-        // scale 정보 생성
-        this.axe = new Axe(this.type, this.width, this.height, this.dataType, this.domain, this.orient);
+    _setupAxe(): void {
+        this.scaleSetting();
+        this.scaleToAxeSetting();
     }
-    makeAxisLabel(): void {
 
-    }
-    configGenerator(config: any): void {
+    scaleToAxeSetting(): void { }
+
+    scaleSetting(): void { }
+
+    makeAxisLabel(): void { }
+
+    _configGenerator(config: any): void {
         this.dataType = config.dataType;
         this.field = config.field;
         this.format = config.format;
@@ -69,19 +136,22 @@ export class Axis implements IDisplay {
         this.title = config.title;
         this.type = config.type;
         this.orient = config.orient;
-
-        if (config.domain) {
-            this.domain = config.domain;
-        } else {
-            this._defaultDomain();
-        }
-    }
-    _defaultDomain(): void {
-        if ( this.type === 'x') {
-            this.domain = ['A', 'B', 'C', 'D'];
-        } else {
-            this.domain = [1, 100];
-        }
     }
 
+    _createContainer(axisTarget: any): void {
+        this.target = axisTarget.append('g').attr('class', `${this.type} ${this.orient}`);
+        this.updateDisplay(this.width, this.height);
+    }
+
+    _updateContainerPosition(): void {
+        if (this.orient === 'bottom') {
+            this.target.attr('transform', `translate(${this.margin.left}, ${this.height+this.margin.top})`);
+        } else if (this.orient === 'top' ) {
+            this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+        } else if (this.orient === 'right') {
+            this.target.attr('transform', `translate(${this.width}, 0)`);
+        } else {
+            this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+        }
+    }
 }
