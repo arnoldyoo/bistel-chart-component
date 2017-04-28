@@ -4,9 +4,6 @@ import { Component, HostListener, OnInit, ViewEncapsulation } from '@angular/cor
 @Component({
     selector: 'app-chart',
     templateUrl: 'chart.component.html',
-<<<<<<< HEAD
-    styleUrls: [ 'chart.component.css' ]
-=======
     styles: [`
         #div_01 {
             border: 1px solid black;
@@ -18,7 +15,6 @@ import { Component, HostListener, OnInit, ViewEncapsulation } from '@angular/cor
         }
     `],
     encapsulation: ViewEncapsulation.None
->>>>>>> master
 })
 
 export class ChartComponent implements OnInit {
@@ -46,13 +42,8 @@ export class ChartComponent implements OnInit {
                 },
                 margin: {
                     left: 50,
-<<<<<<< HEAD
-                    right: 0,
-                    top: 10,
-=======
                     right: 50,
                     top: 50,
->>>>>>> master
                     bottom: 50
                 }
             },
