@@ -26,6 +26,7 @@ export class ChartComponent implements OnInit {
         this.baseChart = new ChartBase(this.chartConfig);
         this.baseChart.generateConfiguration();
         this.baseChart.updateDisplay(this.chartConfig.chart.size.width, this.chartConfig.chart.size.height);
+        window.dispatchEvent(new Event('resize'));
     }
     @HostListener('window:resize', ['$event'])
     onResize(event) {
