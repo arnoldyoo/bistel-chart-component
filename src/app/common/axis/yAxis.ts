@@ -8,9 +8,9 @@ export class YAxis extends Axis {
     }
     updateDisplay(width: number, height: number): void {
         if (this.orient === 'right') {
-            this.target.attr('transform', `translate(${this.width}, 0)`);
+            this.target.attr('transform', `translate(${this.width}, ${this.margin.top})`);
         } else {
-            this.target.attr('transform', `translate(${this.margin.left}, 0)`);
+            this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
         }
         super.updateDisplay(width, height);
     }

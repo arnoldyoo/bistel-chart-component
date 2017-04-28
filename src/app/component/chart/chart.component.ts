@@ -3,7 +3,8 @@ import { Component, OnInit, HostListener } from '@angular/core';
 
 @Component({
     selector: 'app-chart',
-    templateUrl: 'chart.component.html'
+    templateUrl: 'chart.component.html',
+    styleUrls: [ 'chart.component.css' ]
 })
 
 export class ChartComponent implements OnInit {
@@ -32,7 +33,7 @@ export class ChartComponent implements OnInit {
                 margin: {
                     left: 50,
                     right: 0,
-                    top: 0,
+                    top: 10,
                     bottom: 50
                 }
             },

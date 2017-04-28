@@ -8,7 +8,7 @@ export class XAxis extends Axis {
     }
     updateDisplay(width: number, height: number): void {
         if (this.orient === 'bottom') {
-            this.target.attr('transform', `translate(${this.margin.left}, ${this.height})`);
+            this.target.attr('transform', `translate(${this.margin.left}, ${this.height + this.margin.top})`);
         } else {
             this.target.attr('transform', `translate(${this.margin.left}, 0)`);
         }
