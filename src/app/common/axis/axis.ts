@@ -4,7 +4,6 @@ import { IDisplay } from './../iDisplay.interface';
 export class Axis implements IDisplay {
     axe: Axe;
 
-    _dataType: string;
     _field: string;
     _format: any;
     _visible: boolean;
@@ -17,13 +16,19 @@ export class Axis implements IDisplay {
     _width: number;
     _height: number;
 
-    constructor(config: any, axisTarget: any, width: number, height: number, margin: any, domain: any) {
-        this.width = width;
-        this.height = height;
-        this.margin = margin;
-        this.domain = domain;
-        this._configGenerator(config);
-        this._createContainer(axisTarget);
+    //  axis,  this._axisGroup, this.width, this.height, this.margin, this.domain
+    constructor(...args) {
+        
+        if ( args[0].length > 0 ) {
+            const params: any = args[0];
+            const param: any = params[0];
+            this.width = param[2];
+            this.height = param[3];
+            this.margin = param[4];
+            this.domain = param[5];
+            this._configGenerator(param[0]);
+            this._createContainer(param[1]);
+        }
     }
 
     set target( value: any ) {
@@ -45,13 +50,6 @@ export class Axis implements IDisplay {
     }
     get height() {
         return this._height;
-    }
-
-    set dataType( value: string ) {
-        this._dataType = value;
-    }
-    get dataType() {
-        return this._dataType;
     }
 
     set field( value: string ) {
@@ -129,7 +127,6 @@ export class Axis implements IDisplay {
     makeAxisLabel(): void { }
 
     _configGenerator(config: any): void {
-        this.dataType = config.dataType;
         this.field = config.field;
         this.format = config.format;
         this.visible = config.visible;
