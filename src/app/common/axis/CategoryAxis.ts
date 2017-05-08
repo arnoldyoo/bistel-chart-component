@@ -2,8 +2,8 @@ import { Axe } from './axe';
 import { Axis } from './axis';
 export class CategoryAxis extends Axis {
     _scale: any;
-    constructor(axisConfig: any, axisTarget: any, width: number, height: number, margin: any, domain: any) {
-        super(axisConfig, axisTarget, width, height, margin, domain);
+    constructor(...args) {
+        super(args);
         // make Axis
     }
     updateDisplay(width: number, height: number): void {

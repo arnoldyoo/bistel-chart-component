@@ -50,16 +50,16 @@ export class ChartComponent implements OnInit {
             },
             axis: [
                 {
-                    dataType: 'numeric',
+                    axisClass: 'NumericAxis',
                     type: 'y',
                     field: 'profit',
-                    format: undefined,
+                    format: 't',
                     orient: 'left',
                     visible: true,
                     title: 'Profit'
                 },
                 {
-                    dataType: 'ordinal',
+                    axisClass: 'CategoryAxis',
                     type: 'x',
                     field: 'category',
                     format: undefined,
@@ -68,7 +68,7 @@ export class ChartComponent implements OnInit {
                     title: 'Category'
                 },
                 {
-                    dataType: 'date',
+                    axisClass: 'DateTimeAxis',
                     type: 'x',
                     field: 'date',
                     format: undefined,

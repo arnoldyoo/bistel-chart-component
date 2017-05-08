@@ -1,10 +1,15 @@
 import { NumericAxis } from './axis/NumericAxis';
-import { DateTimeyAxis } from './axis/DateTimeAxis';
+import { DateTimeAxis } from './axis/DateTimeAxis';
 import { CategoryAxis } from './axis/CategoryAxis';
 import { Axis } from './axis/axis';
 import { IDisplay } from './iDisplay.interface';
+import { InstanceLoader } from './InstanceLoader';
 
 export class ChartBase implements IDisplay {
+
+    numeric: NumericAxis = new NumericAxis();
+    datetime: DateTimeAxis = new DateTimeAxis();
+    category: CategoryAxis = new CategoryAxis();
 
     _configuration: any;
 
@@ -18,7 +23,10 @@ export class ChartBase implements IDisplay {
     _margin: any;
     _domain: any;
 
+    instance_loader: InstanceLoader;
+
     constructor( config: any ) {
+        this.instance_loader = new InstanceLoader();
         this.configuration = config;
         this.margin = this.configuration.chart.margin;
         this._setSize(this.configuration.chart.size.width, this.configuration.chart.size.height);
@@ -119,23 +127,28 @@ export class ChartBase implements IDisplay {
 
     _createAxis(): void {
         this.configuration.axis.map( axis => {
-            let axe: Axis;
+            let axe: any;
             if ( axis.domain ) {
                 this.domain = axis.domain;
             } else {
                 this._defaultDomain( axis );
             }
-            if ( axis.dataType === 'ordinal' ) {
-                axe = new CategoryAxis( axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
-            } else if ( axis.dataType === 'date' ) {
-                axe = new DateTimeyAxis( axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
-            } else {
-                axe = new NumericAxis( axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
-            }
+            // if ( axis.axisClass === 'CategoryAxis' ) {
+            //     axe = new CategoryAxis( axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
+            // } else if ( axis.axisClass === 'DateTimeAxis' ) {
+            //     axe = new DateTimeyAxis( axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
+            // } else {
+            //     axe = new NumericAxis( axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
+            // }
+            // axe = loader.getInstance(axis.axisClass, axis, this._axisGroup,
+            //                                     this.width, this.height, this.margin, this.domain);
+
+            axe = this.instance_loader.factory(axis.axisClass, axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
             axe.updateDisplay( this.width, this.height );
             this._axis.push( axe );
         });
     }
+
 
     _createSeries(): void {
         // series loop
@@ -149,9 +162,9 @@ export class ChartBase implements IDisplay {
 
     _defaultDomain(axisConfig: any): void {
         if ( axisConfig.type === 'x') {
-            if ( axisConfig.dataType === 'ordinal') {
+            if ( axisConfig.axisClass === 'CategoryAxis') {
                 this.domain = ['A', 'B', 'C', 'D'];
-            } else if ( axisConfig.dataType === 'date' ) {
+            } else if ( axisConfig.axisClass === 'DateTimeAxis' ) {
                 const mindate = new Date(2017, 0, 1);
                 const maxdate = new Date(2017, 0, 31);
                 this.domain = [mindate, maxdate];
@@ -159,9 +172,9 @@ export class ChartBase implements IDisplay {
                 this.domain = [1, 100];
             }
         } else {
-            if ( axisConfig.dataType === 'ordinal') {
+            if ( axisConfig.axisClass === 'CategoryAxis') {
                 this.domain = ['a', 'b', 'c', 'd'];
-            } else if ( axisConfig.dataType === 'date' ) {
+            } else if ( axisConfig.axisClass === 'DateTimeAxis' ) {
                 const mindate = new Date(2017, 0, 1);
                 const maxdate = new Date(2017, 0, 31);
                 this.domain = [mindate, maxdate];
