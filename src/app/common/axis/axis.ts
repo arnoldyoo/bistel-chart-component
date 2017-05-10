@@ -1,3 +1,4 @@
+import { AxisParam } from './../../model/ChartParam.interface';
 import { Axe } from './axe';
 import { IDisplay } from './../iDisplay.interface';
 
@@ -15,20 +16,16 @@ export class Axis implements IDisplay {
     _target: any;  // svg group element value
     _width: number;
     _height: number;
+    _tickInfo: any;
 
-    //  axis,  this._axisGroup, this.width, this.height, this.margin, this.domain
-    constructor(...args) {
-        
-        if ( args[0].length > 0 ) {
-            const params: any = args[0];
-            const param: any = params[0];
-            this.width = param[2];
-            this.height = param[3];
-            this.margin = param[4];
-            this.domain = param[5];
-            this._configGenerator(param[0]);
-            this._createContainer(param[1]);
-        }
+    // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
+    constructor(axixparams: AxisParam) {
+        this.width = axixparams.width;
+        this.height = axixparams.height;
+        this.margin = axixparams.margin;
+        this.domain = axixparams.domain;
+        this._configGenerator(axixparams.config);
+        this._createContainer(axixparams.target);
     }
 
     set target( value: any ) {
@@ -108,6 +105,13 @@ export class Axis implements IDisplay {
         return this._margin;
     }
 
+    set tickInfo( value: any ) {
+        this._tickInfo = value;
+    }
+    get tickInfo() {
+        return this._tickInfo;
+    }
+
     updateDisplay(width: number, height: number): void {
         this.width = width;
         this.height = height;
@@ -133,6 +137,9 @@ export class Axis implements IDisplay {
         this.title = config.title;
         this.type = config.type;
         this.orient = config.orient;
+        if (config.tickInfo) {
+            this.tickInfo = config.tickInfo;
+        }
     }
 
     _createContainer(axisTarget: any): void {

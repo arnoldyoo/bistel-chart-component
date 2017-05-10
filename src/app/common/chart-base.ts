@@ -1,3 +1,4 @@
+import { AxisParam } from './../model/ChartParam.interface';
 import { NumericAxis } from './axis/NumericAxis';
 import { DateTimeAxis } from './axis/DateTimeAxis';
 import { CategoryAxis } from './axis/CategoryAxis';
@@ -6,10 +7,6 @@ import { IDisplay } from './iDisplay.interface';
 import { InstanceLoader } from './InstanceLoader';
 
 export class ChartBase implements IDisplay {
-
-    numeric: NumericAxis = new NumericAxis();
-    datetime: DateTimeAxis = new DateTimeAxis();
-    category: CategoryAxis = new CategoryAxis();
 
     _configuration: any;
 
@@ -24,6 +21,7 @@ export class ChartBase implements IDisplay {
     _domain: any;
 
     instance_loader: InstanceLoader;
+    data: Array<any>;
 
     constructor( config: any ) {
         this.instance_loader = new InstanceLoader();
@@ -110,7 +108,7 @@ export class ChartBase implements IDisplay {
         this._createSeries();
     };
 
-    updateDisplay(width: number, height: number): void {
+    updateDisplay( width: number, height: number ): void {
         this._setSize(width, height);
         this.target
             .attr('width', width)
@@ -126,29 +124,27 @@ export class ChartBase implements IDisplay {
     }
 
     _createAxis(): void {
-        this.configuration.axis.map( axis => {
+        this.configuration.axis.map( axisConfig => {
             let axe: any;
-            if ( axis.domain ) {
-                this.domain = axis.domain;
+            if ( axisConfig.domain ) {
+                this.domain = axisConfig.domain;
             } else {
-                this._defaultDomain( axis );
+                this._defaultDomain( axisConfig );
             }
-            // if ( axis.axisClass === 'CategoryAxis' ) {
-            //     axe = new CategoryAxis( axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
-            // } else if ( axis.axisClass === 'DateTimeAxis' ) {
-            //     axe = new DateTimeyAxis( axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
-            // } else {
-            //     axe = new NumericAxis( axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
-            // }
-            // axe = loader.getInstance(axis.axisClass, axis, this._axisGroup,
-            //                                     this.width, this.height, this.margin, this.domain);
-
-            axe = this.instance_loader.factory(axis.axisClass, axis, this._axisGroup, this.width, this.height, this.margin, this.domain );
+            const axis_params: AxisParam = {
+                config: axisConfig,
+                target: this._axisGroup,
+                width: this.width,
+                height: this.height,
+                margin: this.margin,
+                domain: this.domain
+            }
+            // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
+            axe = this.instance_loader.axisFactory(axisConfig.axisClass, axis_params);
             axe.updateDisplay( this.width, this.height );
             this._axis.push( axe );
         });
     }
-
 
     _createSeries(): void {
         // series loop

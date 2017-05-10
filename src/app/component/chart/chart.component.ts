@@ -53,10 +53,14 @@ export class ChartComponent implements OnInit {
                     axisClass: 'NumericAxis',
                     type: 'y',
                     field: 'profit',
-                    format: 't',
+                    format: undefined,
                     orient: 'left',
                     visible: true,
-                    title: 'Profit'
+                    title: 'Profit',
+                    tickInfo : {
+                        ticks: 20,
+                        tickFormat: function(d) { return '$' + d3.format(',.0f')(d); }
+                    }
                 },
                 {
                     axisClass: 'CategoryAxis',
@@ -65,7 +69,10 @@ export class ChartComponent implements OnInit {
                     format: undefined,
                     orient: 'bottom',
                     visible: true,
-                    title: 'Category'
+                    title: 'Category',
+                    tickInfo: {
+                        ticks: 2
+                    }
                 },
                 {
                     axisClass: 'DateTimeAxis',
@@ -74,7 +81,10 @@ export class ChartComponent implements OnInit {
                     format: undefined,
                     orient: 'top',
                     visible: true,
-                    title: 'date'
+                    title: 'date',
+                    tickInfo: {
+                        ticks: 12
+                    }
                 }
             ]
         }
