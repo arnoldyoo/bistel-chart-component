@@ -20,7 +20,7 @@ export class CategoryAxis extends Axis {
         super.scaleSetting();
         this._scale = d3.scale.ordinal()
                                 .domain(this.domain)
-                                .rangeRoundBands( [0, this.width], .1 );
+                                .rangeBands( [0, this.width], .1 );
     }
 
     scaleToAxeSetting(): void {

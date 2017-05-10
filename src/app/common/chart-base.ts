@@ -21,13 +21,14 @@ export class ChartBase implements IDisplay {
     _domain: any;
 
     instance_loader: InstanceLoader;
-    data: Array<any>;
+    data: Array<any> = [];
 
     constructor( config: any ) {
         this.instance_loader = new InstanceLoader();
         this.configuration = config;
         this.margin = this.configuration.chart.margin;
         this._setSize(this.configuration.chart.size.width, this.configuration.chart.size.height);
+        this._setDefaultData();
     }
 
     set configuration( value: any ) {
@@ -157,28 +158,29 @@ export class ChartBase implements IDisplay {
     }
 
     _defaultDomain(axisConfig: any): void {
-        if ( axisConfig.type === 'x') {
-            if ( axisConfig.axisClass === 'CategoryAxis') {
-                this.domain = ['A', 'B', 'C', 'D'];
-            } else if ( axisConfig.axisClass === 'DateTimeAxis' ) {
-                const mindate = new Date(2017, 0, 1);
-                const maxdate = new Date(2017, 0, 31);
-                this.domain = [mindate, maxdate];
-            } else {
-                this.domain = [1, 100];
-            }
-        } else {
-            if ( axisConfig.axisClass === 'CategoryAxis') {
-                this.domain = ['a', 'b', 'c', 'd'];
-            } else if ( axisConfig.axisClass === 'DateTimeAxis' ) {
-                const mindate = new Date(2017, 0, 1);
-                const maxdate = new Date(2017, 0, 31);
-                this.domain = [mindate, maxdate];
-            } else {
-                this.domain = [1, 100];
-            }
+        this.domain = this.data.map( d => { return d[axisConfig.field] } );
+        if ( this.domain.length && _.isNumber(this.domain[0]) ) {
+            const tempDomain = [...this.domain];
+            this.domain = [];
+            this.domain.push(_.min(tempDomain));
+            this.domain.push(_.max(tempDomain));
         }
     }
 
-    _addEvent(): void { };
+    _addEvent(): void {};
+
+    _setDefaultData(): void {
+        this.data.push( {  category: 'A', 
+                           date: new Date(2017, 0, 1).getTime(),
+                           profit: Math.round( Math.random()*100 ) } );
+        this.data.push( {  category: 'B', 
+                           date: new Date(2017, 0, 2).getTime(),
+                           profit: Math.round( Math.random()*100 ) } );
+        this.data.push( {  category: 'C', 
+                           date: new Date(2017, 0, 3).getTime(),
+                           profit: Math.round( Math.random()*100 ) } );
+        this.data.push( {  category: 'D', 
+                           date: new Date(2017, 0, 4).getTime(),
+                           profit: Math.round( Math.random()*100 ) } );
+    }
 };

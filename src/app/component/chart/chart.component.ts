@@ -86,6 +86,15 @@ export class ChartComponent implements OnInit {
                         ticks: 12
                     }
                 }
+            ],
+            series: [
+                {
+                    seriesClass: 'ColumnSeries',
+                    xField: 'category',
+                    yField: 'profit',
+                    visible: true,
+                    displayName: 'Profit'
+                }
             ]
         }
     }
