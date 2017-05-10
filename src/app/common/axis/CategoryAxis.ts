@@ -1,9 +1,10 @@
+import { AxisParam } from './../../model/ChartParam.interface';
 import { Axe } from './axe';
 import { Axis } from './axis';
 export class CategoryAxis extends Axis {
     _scale: any;
-    constructor(...args) {
-        super(args);
+    constructor(axisparams: AxisParam) {
+        super(axisparams);
         // make Axis
     }
     updateDisplay(width: number, height: number): void {
@@ -21,6 +22,7 @@ export class CategoryAxis extends Axis {
                                 .domain(this.domain)
                                 .rangeRoundBands( [0, this.width], .1 );
     }
+
     scaleToAxeSetting(): void {
         super.scaleToAxeSetting();
         this.axe = new Axe();
