@@ -151,14 +151,7 @@ export class Series implements IDisplay {
     updateDisplay(width, height): void {}
 
     generatePosition(): void {
-        // tslint:disable-next-line:comment-format
-        // setup x, y, width, height
-        const tempx = this.xAxe.scale(this._data[this._xField]);
-        const tempwidth = this.xAxe.scale.rangeBand();
-
-        let tempy: number = this.yAxe.scale(this._data[this._yField]);
-        let tempheight: number = this.yAxe.scale.range()[0] - tempy;
-        console.log(`Series.generatePosition() => ${tempx}, ${tempwidth} | ${tempy}, ${tempheight}`);
+        
     }
 
     /*
