@@ -2,6 +2,7 @@ export class Axe {
 
     _scaleToAxe: any; // chart base reference, Axis with scale value
     _scale: any;
+    name: string;
 
     // getter setter method
     set scaleToAxe( value: any ) {
