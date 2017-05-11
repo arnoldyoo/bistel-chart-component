@@ -35,7 +35,9 @@ export class DateTimeAxis extends Axis {
     }
     scaleToAxeSetting(): void {
         super.scaleToAxeSetting();
-        this.axe = new Axe();
+        if (!this.axe) {
+            this.axe = new Axe();
+        }
         this.axe.scale = this._scale;
         this.axe.scaleToAxe = d3.svg.axis()
                                 .scale(this._scale)
