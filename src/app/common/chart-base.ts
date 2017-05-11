@@ -221,9 +221,9 @@ export class ChartBase implements IDisplay {
     _addEvent(): void {};
 
     _setDefaultData(): void {
-        for (let i =1; i < 100; i++) {
+        for (let i = 0; i < 31; i++) {
             this.data.push( {  category: 'A' + i,
-                           date: new Date(2017, 0, 1).getTime(),
+                           date: new Date(2017, 0, i).getTime(),
                            profit: Math.round( Math.random() * 100 ) } );
         }
     }

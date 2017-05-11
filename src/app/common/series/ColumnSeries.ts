@@ -21,7 +21,7 @@ export class ColumnSeries extends Series {
         // tslint:disable-next-line:comment-format
         // setup x, y, width, height
         this.x = this.xAxe.scale(this._data[this._xField]);
-        this.width = this.xAxe.scale.rangeBand();
+        this.width = this.xAxe.itemDimensions;
 
         this.y = this.yAxe.scale(this._data[this._yField]);
         this.height = this.yAxe.scale.range()[0] - this.y;
