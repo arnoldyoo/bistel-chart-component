@@ -1,5 +1,5 @@
-import { Series } from "app/common/series/Series";
-import { SeriesParam } from "app/model/ChartParam.interface";
+import { Series } from 'app/common/series/Series';
+import { SeriesParam } from 'app/model/ChartParam.interface';
 
 export class ColumnSeries extends Series {
 
@@ -32,6 +32,8 @@ export class ColumnSeries extends Series {
         const rectElement: any = this._seriesTarget.select(`.${this.displayName + this._index}`);
         if (!rectElement[0][0]) {
             this.createItem();
+        } else {
+            rectElement.datum(this.data);
         }
         rectElement.attr('x', this.x)
                    .attr('y', this.y)

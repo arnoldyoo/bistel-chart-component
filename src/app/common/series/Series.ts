@@ -1,21 +1,25 @@
 import { IDisplay } from './../iDisplay.interface';
-import { SeriesParam } from "app/model/ChartParam.interface";
-import { Axe } from "app/common/axis/axe";
+import { SeriesParam } from 'app/model/ChartParam.interface';
+import { Axe } from 'app/common/axis/axe';
 
 export class Series implements IDisplay {
 
     _width: number;
     _height: number;
-    _target: any;//chart-base 에서 group element를 넘겨받음.
+    // chart-base 에서 group element를 넘겨받음.
+    _target: any;
 
-    //api private
-    _displayName: string = '';//한글 사용 금지. why? element의 class 명으로 사용.
+    // api private
+    // 한글 사용 금지. why? element의 class 명으로 사용.
+    _displayName: string = '';
     _xField: string;
     _yField: string;
 
-    //private
+    // private
     _seriesTarget: any;
+    // single data
     _data: any;
+    // total data
     _dataProvider: Array<any>;
     _index: number;
     _xAxe: Axe;
@@ -23,7 +27,7 @@ export class Series implements IDisplay {
     _x: any;
     _y: any;
 
-    constructor(seriesParam:SeriesParam) {
+    constructor(seriesParam: SeriesParam) {
         this.target = seriesParam.target;
         this._xField = seriesParam.config.xField;
         this._yField = seriesParam.config.yField;

@@ -146,7 +146,8 @@ export class ChartBase implements IDisplay {
                 height: this.height,
                 margin: this.margin,
                 domain: this.domain
-            }
+            };
+
             // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
             axis = this.instance_loader.axisFactory(axisConfig.axisClass, axis_params);
             axis.updateDisplay( this.width, this.height );
@@ -201,15 +202,17 @@ export class ChartBase implements IDisplay {
     }
 
     _defaultDomain(axisConfig: any): void {
-        this.domain = this.data.map( d => { return d[axisConfig.field] } );
+        this.domain = this.data.map( d => {
+            return d[axisConfig.field];
+        });
         if ( this.domain.length && _.isNumber(this.domain[0]) ) {
             const tempDomain = [...this.domain];
             this.domain = [];
             let min: number = _.min(tempDomain);
-            if (min > 0) {
+            if (min > 0 && min.toString().length !== 13) {
                 min = 0;
             }
-            const max: number = _.max(tempDomain)
+            const max: number = _.max(tempDomain);
             this.domain.push(min);
             this.domain.push(max);
         }

@@ -22,13 +22,9 @@ export class LineSeries extends Series {
         // setup x, y, width, height
         this.line = d3.svg.line()
             .x((d) => {
-                // console.log(d);
-                console.log(this.xAxe.scale(d[this._xField]));
-                return this.xAxe.scale.rangeBand() / 2 + this.xAxe.scale(d[this._xField]);
+                return this.xAxe.scale(d[this._xField]);
             })
             .y((d) => {
-                // console.log(d);
-                console.log(this.yAxe.scale(d[this._yField]));
                 return this.yAxe.scale(d[this._yField]);
             })
             .interpolate('interpolate');
