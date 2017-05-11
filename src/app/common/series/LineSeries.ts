@@ -22,7 +22,7 @@ export class LineSeries extends Series {
         // setup x, y, width, height
         this.line = d3.svg.line()
             .x((d) => {
-                return this.xAxe.scale(d[this._xField]);
+                return this.xAxe.itemDimensions  / 2 + this.xAxe.scale(d[this._xField]);
             })
             .y((d) => {
                 return this.yAxe.scale(d[this._yField]);

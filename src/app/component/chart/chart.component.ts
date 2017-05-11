@@ -57,7 +57,7 @@ export class ChartComponent implements OnInit {
                     visible: true,
                     title: 'Profit',
                     tickInfo : {
-                        ticks: 20,
+                        ticks: 5,
                         tickFormat: function(d) { return '$' + d3.format(',.0f')(d); }
                     }
                 },
@@ -93,14 +93,14 @@ export class ChartComponent implements OnInit {
                     yField: 'profit',
                     visible: true,
                     displayName: 'Profit'
+                },
+                {
+                    seriesClass: 'LineSeries',
+                    xField: 'category',
+                    yField: 'profit',
+                    visible: true,
+                    displayName: 'Profit'
                 }
-                // {
-                //     seriesClass: 'LineSeries',
-                //     xField: 'date',
-                //     yField: 'profit',
-                //     visible: true,
-                //     displayName: 'Profit'
-                // }
             ]
         }
     }
