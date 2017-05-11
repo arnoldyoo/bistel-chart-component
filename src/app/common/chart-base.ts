@@ -221,17 +221,10 @@ export class ChartBase implements IDisplay {
     _addEvent(): void {};
 
     _setDefaultData(): void {
-        this.data.push( {  category: 'A',
+        for (let i =1; i < 100; i++) {
+            this.data.push( {  category: 'A' + i,
                            date: new Date(2017, 0, 1).getTime(),
                            profit: Math.round( Math.random() * 100 ) } );
-        this.data.push( {  category: 'B',
-                           date: new Date(2017, 0, 2).getTime(),
-                           profit: Math.round( Math.random() * 100 ) } );
-        this.data.push( {  category: 'C',
-                           date: new Date(2017, 0, 3).getTime(),
-                           profit: Math.round( Math.random() * 100 ) } );
-        this.data.push( {  category: 'D',
-                           date: new Date(2017, 0, 4).getTime(),
-                           profit: Math.round( Math.random() * 100 ) } );
+        }
     }
 };
