@@ -156,9 +156,9 @@ export class Series implements IDisplay {
         const tempx = this.xAxe.scale(this._data[this._xField]);
         const tempwidth = this.xAxe.scale.rangeBand();
 
-        const tempy = this.yAxe.scale(this._data[this._yField]);
-        const tempheight = 0;
-        console.log(`Series.gegeneratePosition() => ${tempx}, ${tempwidth} | ${tempy}, ${tempheight}`);
+        let tempy: number = this.yAxe.scale(this._data[this._yField]);
+        let tempheight: number = this.yAxe.scale.range()[0] - tempy;
+        console.log(`Series.generatePosition() => ${tempx}, ${tempwidth} | ${tempy}, ${tempheight}`);
     }
 
     /*
