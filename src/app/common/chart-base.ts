@@ -120,7 +120,7 @@ export class ChartBase implements IDisplay {
             this._axis[i].updateDisplay(this.width, this.height);
         }
 
-        for (let i = 0; i < this.data.length; i++) {
+        for (let i = 0; i < this._series.length; i++) {
             // TODO: 시리즈 돌리고, 데이터 돌려서 매칭해주기.
         }
     };
