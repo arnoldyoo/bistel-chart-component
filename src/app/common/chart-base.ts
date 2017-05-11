@@ -207,8 +207,13 @@ export class ChartBase implements IDisplay {
         if ( this.domain.length && _.isNumber(this.domain[0]) ) {
             const tempDomain = [...this.domain];
             this.domain = [];
-            this.domain.push(_.min(tempDomain));
-            this.domain.push(_.max(tempDomain));
+            let min: number = _.min(tempDomain);
+            if (min > 0) {
+                min = 0;
+            }
+            const max: number = _.max(tempDomain)
+            this.domain.push(min);
+            this.domain.push(max);
         }
     }
 
