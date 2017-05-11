@@ -95,6 +95,7 @@ export class Series implements IDisplay {
         // tslint:disable-next-line:comment-format
         // data가 들어오면 Axe의 scale 정보와 축 정보를 가져와서 그려진 좌표와 series 크기를 설정한다.
         if (this._data) {
+            console.log( 'set data = ', this._data );
             this.generatePosition();
             this.updateDisplay(this.width, this.height);
         }
@@ -147,12 +148,17 @@ export class Series implements IDisplay {
     createChildren(): void {
     }
 
-    updateDisplay(width, height): void {
-    }
+    updateDisplay(width, height): void {}
 
     generatePosition(): void {
         // tslint:disable-next-line:comment-format
         // setup x, y, width, height
+        const tempx = this.xAxe.scale(this._data[this._xField]);
+        const tempwidth = this.xAxe.scale.rangeBand();
+
+        const tempy = this.yAxe.scale(this._data[this._yField]);
+        const tempheight = 0;
+        console.log(`Series.gegeneratePosition() => ${tempx}, ${tempwidth} | ${tempy}, ${tempheight}`);
     }
 
     /*
@@ -160,12 +166,6 @@ export class Series implements IDisplay {
     * description : series data가 0인 point item을 생성한다.
     */
     createItem(): void {}
-
-    /*
-    * title : updateItem
-    * description : series data가 0이 아닌 point item을 update한다.
-    */
-    updateItem(): void {}
 
     /*
     * title : _createContainer

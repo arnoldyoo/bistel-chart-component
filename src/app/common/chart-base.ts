@@ -30,6 +30,7 @@ export class ChartBase implements IDisplay {
         this.margin = this.configuration.chart.margin;
         this._setSize(this.configuration.chart.size.width, this.configuration.chart.size.height);
         this._setDefaultData();
+        this._generateConfiguration();
     }
 
     set configuration( value: any ) {
@@ -96,7 +97,7 @@ export class ChartBase implements IDisplay {
     }
 
     // generate svg element using configuration
-    generateConfiguration(): void {
+    _generateConfiguration(): void {
         this.target = this._createSvg(this.configuration.chart);
         // generate axis component using this.target
         this._axisGroup = this.target.append('g')
@@ -111,19 +112,19 @@ export class ChartBase implements IDisplay {
     };
 
     updateDisplay( width: number, height: number ): void {
+        console.log(`chart-base.updateDisplay(${width}, ${height})`);
         this._setSize(width, height);
         this.target
             .attr('width', width)
             .attr('height', height);
-
-        for (let i = 0 ; i < this._axis.length; i++) {
-            this._axis[i].updateDisplay(this.width, this.height);
-        }
-
-        for (let i = 0; i < this._series.length; i++) {
-            // TODO: 시리즈 돌리고, 데이터 돌려서 매칭해주기.
-        }
+        this._axisUpdate();
+        this._seriesUpdate();
     };
+
+    _setSize(width: number, height: number): void {
+        this.width = width - (this.margin.left + this.margin.right);
+        this.height = height - (this.margin.top + this.margin.bottom);
+    }
 
     _createSvg(chartConfig: any): any {
         return d3.select(chartConfig.selector).append('svg');
@@ -186,9 +187,19 @@ export class ChartBase implements IDisplay {
         }
     }
 
-    _setSize(width: number, height: number): void {
-        this.width = width - (this.margin.left + this.margin.right);
-        this.height = height - (this.margin.top + this.margin.bottom);
+    _axisUpdate(): void {
+        for (let i = 0 ; i < this._axis.length; i++) {
+            this._axis[i].updateDisplay(this.width, this.height);
+        }
+    }
+
+    _seriesUpdate(): void {
+        for (let i = 0; i < this._series.length; i++) {
+            // TODO: 시리즈 돌리고, 데이터 돌려서 매칭해주기.
+            for (let j = 0; j < this.data.length; j++) {
+                this._series[i].data = this.data[j];
+            }
+        }
     }
 
     _defaultDomain(axisConfig: any): void {
