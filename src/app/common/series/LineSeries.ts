@@ -32,18 +32,19 @@ export class LineSeries extends Series {
 
     updateDisplay(): void {
         this.generatePosition();
-        const rectElement: any = this._seriesTarget.select(`.${this.displayName + this._index}`);
-        if (!rectElement[0][0]) {
+        const svgElement: any = this._seriesTarget.select(`.${this.displayName + this._index}`);
+        if (!svgElement[0][0]) {
             this.createItem();
         } else {
-            rectElement.datum(this.dataProvider);
+            svgElement.datum(this.dataProvider);
         }
-        rectElement.attr('d', this.line);
+        svgElement.attr('d', this.line);
     }
 
     createItem(): void {
-        this._seriesTarget.datum(this.data).append('path')
-                                           .attr('class', this.displayName + this._index);
+        this._seriesTarget.datum(this.data)
+                            .append('path')
+                            .attr('class', this.displayName + this._index);
     }
 
 };

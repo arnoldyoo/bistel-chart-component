@@ -42,8 +42,9 @@ export class ColumnSeries extends Series {
     }
 
     createItem(): void {
-        this._seriesTarget.datum(this.data).append('rect')
-                                           .attr('class', this.displayName + this._index);
+        this._seriesTarget.datum(this.data)
+                            .append('rect')
+                            .attr('class', this.displayName + this._index);
     }
 
 };
