@@ -1,3 +1,4 @@
+import { ColumnSeries } from './series/ColumnSeries';
 import { AxisParam, SeriesParam } from './../model/ChartParam.interface';
 import { NumericAxis } from './axis/NumericAxis';
 import { CategoryAxis } from './axis/CategoryAxis';
@@ -13,7 +14,8 @@ export class InstanceLoader {
         this.ctors = {
             CategoryAxis: CategoryAxis,
             NumericAxis: NumericAxis,
-            DateTimeAxis: DateTimeAxis
+            DateTimeAxis: DateTimeAxis,
+            ColumnSeries: ColumnSeries
         };
     }
     _getCtor( name: string ): any {

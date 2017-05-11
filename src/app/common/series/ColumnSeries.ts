@@ -3,7 +3,7 @@ import { SeriesParam } from "app/model/ChartParam.interface";
 
 export class ColumnSeries extends Series {
 
-    constructor( seriesParam:SeriesParam ) {
+    constructor( seriesParam: SeriesParam ) {
         super( seriesParam );
     }
 

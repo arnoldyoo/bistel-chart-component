@@ -17,7 +17,8 @@ export class Series implements IDisplay {
     _seriesTarget: any;
     _data: any;
     _index: number;
-    _axe: Axe;
+    _xAxe: Axe;
+    _yAxe: Axe;
     _x: any;
     _y: any;
 
@@ -111,12 +112,20 @@ export class Series implements IDisplay {
         return this._index;
     }
 
-    set axe(value: Axe) {
-        this._axe = value;
+    set xAxe( value: Axe ) {
+        this._xAxe = value;
     }
 
-    get axe(): Axe {
-        return this._axe;
+    get xAxe(): Axe {
+        return this._xAxe;
+    }
+
+    set yAxe( value: Axe ) {
+        this._yAxe = value;
+    }
+
+    get yAxe(): Axe {
+        return this._yAxe;
     }
 
     set x(value: any) {

@@ -1,4 +1,5 @@
-import { AxisParam } from './../model/ChartParam.interface';
+import { Series } from './series/Series';
+import { AxisParam, SeriesParam } from './../model/ChartParam.interface';
 import { NumericAxis } from './axis/NumericAxis';
 import { DateTimeAxis } from './axis/DateTimeAxis';
 import { CategoryAxis } from './axis/CategoryAxis';
@@ -118,6 +119,10 @@ export class ChartBase implements IDisplay {
         for (let i = 0 ; i < this._axis.length; i++) {
             this._axis[i].updateDisplay(this.width, this.height);
         }
+
+        for (let i = 0; i < this._series.length; i++) {
+            // TODO: 시리즈 돌리고, 데이터 돌려서 매칭해주기.
+        }
     };
 
     _createSvg(chartConfig: any): any {
@@ -126,7 +131,7 @@ export class ChartBase implements IDisplay {
 
     _createAxis(): void {
         this.configuration.axis.map( axisConfig => {
-            let axe: any;
+            let axis: Axis;
             if ( axisConfig.domain ) {
                 this.domain = axisConfig.domain;
             } else {
@@ -141,15 +146,44 @@ export class ChartBase implements IDisplay {
                 domain: this.domain
             }
             // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
-            axe = this.instance_loader.axisFactory(axisConfig.axisClass, axis_params);
-            axe.updateDisplay( this.width, this.height );
-            this._axis.push( axe );
+            axis = this.instance_loader.axisFactory(axisConfig.axisClass, axis_params);
+            axis.updateDisplay( this.width, this.height );
+            this._axis.push( axis );
         });
     }
 
     _createSeries(): void {
         // series loop
         // this._series.push(seires);
+        if ( this.configuration.series.length ) {
+
+            this.configuration.series.map( seriesConfig => {
+                let series: Series;
+                const series_params: SeriesParam = {
+                    config: seriesConfig,
+                    margin: this.margin,
+                    target: this._seriesGroup
+                };
+                series = this.instance_loader.seriesFactory(seriesConfig.seriesClass, series_params);
+                // series.yAxe = _.find(this._axis, 'field', seriesConfig.yField);
+                for ( let i = 0 ; i < this._axis.length; i++ ) {
+                    if ( this._axis[i].field === seriesConfig.xField ) {
+                        series.xAxe =  this._axis[i].axe;
+                        series.xAxe.name = this._axis[i].field;
+                        break;
+                    }
+                }
+
+                for ( let i = 0 ; i < this._axis.length; i++ ) {
+                    if ( this._axis[i].field === seriesConfig.yField ) {
+                        series.yAxe =  this._axis[i].axe;
+                        series.yAxe.name = this._axis[i].field;
+                        break;
+                    }
+                }
+                this._series.push(series);
+            });
+        }
     }
 
     _setSize(width: number, height: number): void {
@@ -170,17 +204,17 @@ export class ChartBase implements IDisplay {
     _addEvent(): void {};
 
     _setDefaultData(): void {
-        this.data.push( {  category: 'A', 
+        this.data.push( {  category: 'A',
                            date: new Date(2017, 0, 1).getTime(),
-                           profit: Math.round( Math.random()*100 ) } );
-        this.data.push( {  category: 'B', 
+                           profit: Math.round( Math.random() * 100 ) } );
+        this.data.push( {  category: 'B',
                            date: new Date(2017, 0, 2).getTime(),
-                           profit: Math.round( Math.random()*100 ) } );
-        this.data.push( {  category: 'C', 
+                           profit: Math.round( Math.random() * 100 ) } );
+        this.data.push( {  category: 'C',
                            date: new Date(2017, 0, 3).getTime(),
-                           profit: Math.round( Math.random()*100 ) } );
-        this.data.push( {  category: 'D', 
+                           profit: Math.round( Math.random() * 100 ) } );
+        this.data.push( {  category: 'D',
                            date: new Date(2017, 0, 4).getTime(),
-                           profit: Math.round( Math.random()*100 ) } );
+                           profit: Math.round( Math.random() * 100 ) } );
     }
 };

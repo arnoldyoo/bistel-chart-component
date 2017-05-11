@@ -1,5 +1,5 @@
 export interface SeriesParam {
-    config: any;
+    config: any ;
     target: any;
     margin: any;
 };
