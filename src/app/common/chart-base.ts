@@ -20,6 +20,7 @@ export class ChartBase implements IDisplay {
     _seriesGroup: any; // series group element
     _margin: any;
     _domain: any;
+    _dataProvider: Array<any>;
 
     instance_loader: InstanceLoader;
     data: Array<any> = [];
@@ -62,10 +63,10 @@ export class ChartBase implements IDisplay {
     }
 
     set dataProvider( data: any[] ) {
-
+        this._dataProvider = data;
     };
     get dataProvider() {
-        return <any>[];
+        return this._dataProvider;
     };
 
     set axis( value: any[] ) {
@@ -107,7 +108,7 @@ export class ChartBase implements IDisplay {
         // generate series component using this.target
         this._seriesGroup = this.target.append('g')
                             .attr('class', 'series')
-                            .attr('transform', 'translate( 0, 0 )');
+                            .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
         this._createSeries();
     };
 
@@ -145,7 +146,8 @@ export class ChartBase implements IDisplay {
                 height: this.height,
                 margin: this.margin,
                 domain: this.domain
-            }
+            };
+
             // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
             axis = this.instance_loader.axisFactory(axisConfig.axisClass, axis_params);
             axis.updateDisplay( this.width, this.height );
@@ -195,23 +197,22 @@ export class ChartBase implements IDisplay {
 
     _seriesUpdate(): void {
         for (let i = 0; i < this._series.length; i++) {
-            // TODO: 시리즈 돌리고, 데이터 돌려서 매칭해주기.
-            for (let j = 0; j < this.data.length; j++) {
-                this._series[i].data = this.data[j];
-            }
+            this._series[i].dataProvider = this.data;
         }
     }
 
     _defaultDomain(axisConfig: any): void {
-        this.domain = this.data.map( d => { return d[axisConfig.field] } );
+        this.domain = this.data.map( d => {
+            return d[axisConfig.field];
+        });
         if ( this.domain.length && _.isNumber(this.domain[0]) ) {
             const tempDomain = [...this.domain];
             this.domain = [];
             let min: number = _.min(tempDomain);
-            if (min > 0) {
+            if (min > 0 && min.toString().length !== 13) {
                 min = 0;
             }
-            const max: number = _.max(tempDomain)
+            const max: number = _.max(tempDomain);
             this.domain.push(min);
             this.domain.push(max);
         }
@@ -220,17 +221,10 @@ export class ChartBase implements IDisplay {
     _addEvent(): void {};
 
     _setDefaultData(): void {
-        this.data.push( {  category: 'A',
+        for (let i =1; i < 100; i++) {
+            this.data.push( {  category: 'A' + i,
                            date: new Date(2017, 0, 1).getTime(),
                            profit: Math.round( Math.random() * 100 ) } );
-        this.data.push( {  category: 'B',
-                           date: new Date(2017, 0, 2).getTime(),
-                           profit: Math.round( Math.random() * 100 ) } );
-        this.data.push( {  category: 'C',
-                           date: new Date(2017, 0, 3).getTime(),
-                           profit: Math.round( Math.random() * 100 ) } );
-        this.data.push( {  category: 'D',
-                           date: new Date(2017, 0, 4).getTime(),
-                           profit: Math.round( Math.random() * 100 ) } );
+        }
     }
 };

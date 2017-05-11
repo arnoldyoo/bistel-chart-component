@@ -1,7 +1,9 @@
 import { Series } from 'app/common/series/Series';
 import { SeriesParam } from 'app/model/ChartParam.interface';
 
-export class ColumnSeries extends Series {
+export class LineSeries extends Series {
+
+    line: any;
 
     constructor( seriesParam: SeriesParam ) {
         super( seriesParam );
@@ -9,9 +11,7 @@ export class ColumnSeries extends Series {
 
     dataSetting(): void {
         super.dataSetting();
-        for (let j = 0; j < this.dataProvider.length; j++) {
-            this.data = this.dataProvider[j];
-            this.index = j;
+        if (this.dataProvider) {
             this.updateDisplay();
         }
     }
@@ -20,29 +20,29 @@ export class ColumnSeries extends Series {
         super.generatePosition();
         // tslint:disable-next-line:comment-format
         // setup x, y, width, height
-        this.x = this.xAxe.scale(this._data[this._xField]);
-        this.width = this.xAxe.scale.rangeBand();
-
-        this.y = this.yAxe.scale(this._data[this._yField]);
-        this.height = this.yAxe.scale.range()[0] - this.y;
+        this.line = d3.svg.line()
+            .x((d) => {
+                return this.xAxe.scale(d[this._xField]);
+            })
+            .y((d) => {
+                return this.yAxe.scale(d[this._yField]);
+            })
+            .interpolate('interpolate');
     }
 
     updateDisplay(): void {
-        super.updateDisplay();
+        this.generatePosition();
         const rectElement: any = this._seriesTarget.select(`.${this.displayName + this._index}`);
         if (!rectElement[0][0]) {
             this.createItem();
         } else {
-            rectElement.datum(this.data);
+            rectElement.datum(this.dataProvider);
         }
-        rectElement.attr('x', this.x)
-                   .attr('y', this.y)
-                   .attr('width', this.width)
-                   .attr('height', this.height);
+        rectElement.attr('d', this.line);
     }
 
     createItem(): void {
-        this._seriesTarget.datum(this.data).append('rect')
+        this._seriesTarget.datum(this.data).append('path')
                                            .attr('class', this.displayName + this._index);
     }
 

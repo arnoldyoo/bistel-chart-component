@@ -1,28 +1,33 @@
 import { IDisplay } from './../iDisplay.interface';
-import { SeriesParam } from "app/model/ChartParam.interface";
-import { Axe } from "app/common/axis/axe";
+import { SeriesParam } from 'app/model/ChartParam.interface';
+import { Axe } from 'app/common/axis/axe';
 
 export class Series implements IDisplay {
 
     _width: number;
     _height: number;
-    _target: any;//chart-base 에서 group element를 넘겨받음.
+    // chart-base 에서 group element를 넘겨받음.
+    _target: any;
 
-    //api private
-    _displayName: string = '';//한글 사용 금지. why? element의 class 명으로 사용.
+    // api private
+    // 한글 사용 금지. why? element의 class 명으로 사용.
+    _displayName: string = '';
     _xField: string;
     _yField: string;
 
-    //private
+    // private
     _seriesTarget: any;
+    // single data
     _data: any;
+    // total data
+    _dataProvider: Array<any>;
     _index: number;
     _xAxe: Axe;
     _yAxe: Axe;
     _x: any;
     _y: any;
 
-    constructor(seriesParam:SeriesParam) {
+    constructor(seriesParam: SeriesParam) {
         this.target = seriesParam.target;
         this._xField = seriesParam.config.xField;
         this._yField = seriesParam.config.yField;
@@ -94,11 +99,6 @@ export class Series implements IDisplay {
         this._data = value;
         // tslint:disable-next-line:comment-format
         // data가 들어오면 Axe의 scale 정보와 축 정보를 가져와서 그려진 좌표와 series 크기를 설정한다.
-        if (this._data) {
-            console.log( 'set data = ', this._data );
-            this.generatePosition();
-            this.updateDisplay(this.width, this.height);
-        }
     }
 
     get data(): any {
@@ -138,21 +138,32 @@ export class Series implements IDisplay {
     }
 
     set y(value: any) {
-        this._x = value;
+        this._y = value;
     }
 
     get y(): any {
-        return this._x;
+        return this._y;
     }
 
-    createChildren(): void {
+    set dataProvider( data: any[] ) {
+        this._dataProvider = data;
+        this.dataSetting();
+    };
+    get dataProvider() {
+        return this._dataProvider;
+    };
+
+    dataSetting(): void { }
+
+    createChildren(): void { }
+
+    updateDisplay(width?: number, height?: number): void {
+        if (this.data) {
+            this.generatePosition();
+        }
     }
 
-    updateDisplay(width, height): void {}
-
-    generatePosition(): void {
-        
-    }
+    generatePosition(): void { }
 
     /*
     * title : createItem
