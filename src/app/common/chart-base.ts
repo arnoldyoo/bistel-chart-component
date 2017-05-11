@@ -20,6 +20,7 @@ export class ChartBase implements IDisplay {
     _seriesGroup: any; // series group element
     _margin: any;
     _domain: any;
+    _dataProvider: Array<any>;
 
     instance_loader: InstanceLoader;
     data: Array<any> = [];
@@ -62,10 +63,10 @@ export class ChartBase implements IDisplay {
     }
 
     set dataProvider( data: any[] ) {
-
+        this._dataProvider = data;
     };
     get dataProvider() {
-        return <any>[];
+        return this._dataProvider;
     };
 
     set axis( value: any[] ) {
@@ -107,7 +108,7 @@ export class ChartBase implements IDisplay {
         // generate series component using this.target
         this._seriesGroup = this.target.append('g')
                             .attr('class', 'series')
-                            .attr('transform', 'translate( 0, 0 )');
+                            .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
         this._createSeries();
     };
 
@@ -195,10 +196,7 @@ export class ChartBase implements IDisplay {
 
     _seriesUpdate(): void {
         for (let i = 0; i < this._series.length; i++) {
-            // TODO: 시리즈 돌리고, 데이터 돌려서 매칭해주기.
-            for (let j = 0; j < this.data.length; j++) {
-                this._series[i].data = this.data[j];
-            }
+            this._series[i].dataProvider = this.data;
         }
     }
 

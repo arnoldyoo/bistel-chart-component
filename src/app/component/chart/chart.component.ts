@@ -93,6 +93,13 @@ export class ChartComponent implements OnInit {
                     yField: 'profit',
                     visible: true,
                     displayName: 'Profit'
+                },
+                {
+                    seriesClass: 'LineSeries',
+                    xField: 'category',
+                    yField: 'profit',
+                    visible: true,
+                    displayName: 'Profit'
                 }
             ]
         }
