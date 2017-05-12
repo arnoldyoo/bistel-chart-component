@@ -14,6 +14,9 @@ export class CategoryAxis extends Axis {
     makeAxisLabel(): void {
         super.makeAxisLabel();
         this.target.call(this.axe.scaleToAxe);
+        if (this.tickInfo.rotate) {
+            this._tickRotate();
+        }
     }
 
     scaleSetting(): void {
@@ -42,9 +45,6 @@ export class CategoryAxis extends Axis {
                 this._domainTruncate();
             }
         }
-        if (this.tickInfo.rotate) {
-            this._tickRotate();
-        }
     }
     _domainTruncate(): void {
         let ticksize: number = Math.round(this.axe.scale.domain().length / this.tickInfo.ticks);
@@ -66,19 +66,7 @@ export class CategoryAxis extends Axis {
         this.axe.scaleToAxe.tickValues(tickArray);
     }
     _tickRotate(): void {
-        console.log('????????');
-
         this.target.selectAll('text').style('text-anchor', 'start')
-                                     .attr('x', function(d) {
-                                         const thatElement: any = d3.select(this);
-
-                                         const thatHeight: number = thatElement.node().getBoundingClientRect().height;
-                                         console.log('height', -1 * thatHeight);
-                                         return -1 * thatHeight;
-                                     })
-                                     .attr('y', function(d) {
-
-                                     })
                                      .attr('transform', function(d) {
                                        return 'rotate(45)';
                                       });
