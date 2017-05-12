@@ -168,6 +168,7 @@ export class ChartBase implements IDisplay {
                     target: this._seriesGroup
                 };
                 series = this.instance_loader.seriesFactory(seriesConfig.seriesClass, series_params);
+
                 // series.yAxe = _.find(this._axis, 'field', seriesConfig.yField);
                 for ( let i = 0 ; i < this._axis.length; i++ ) {
                     if ( this._axis[i].field === seriesConfig.xField ) {
@@ -209,6 +210,7 @@ export class ChartBase implements IDisplay {
             const tempDomain = [...this.domain];
             this.domain = [];
             let min: number = _.min(tempDomain);
+            // date type length 13
             if (min > 0 && min.toString().length !== 13) {
                 min = 0;
             }

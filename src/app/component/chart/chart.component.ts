@@ -70,7 +70,8 @@ export class ChartComponent implements OnInit {
                     visible: true,
                     title: 'Category',
                     tickInfo: {
-                        ticks: 2
+
+                        rotate: true
                     }
                 },
                 {

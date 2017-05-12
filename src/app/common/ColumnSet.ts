@@ -1,4 +1,4 @@
-import { ColumnSeries } from "app/common/series/ColumnSeries";
+import { ColumnSeries } from 'app/common/series/ColumnSeries';
 
 export class ColumnSet {
 
