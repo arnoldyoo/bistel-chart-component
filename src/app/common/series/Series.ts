@@ -11,17 +11,16 @@ export class Series implements IDisplay {
 
     // api private
     // 한글 사용 금지. why? element의 class 명으로 사용.
-    _displayName: string = '';
+    _displayName: string;
     _xField: string;
     _yField: string;
-
-    // private
-    _seriesTarget: any;
-    // single data
-    _data: any;
     // total data
     _dataProvider: Array<any>;
+    // single data
+    _data: any;
     _index: number;
+    // protected
+    _seriesTarget: any;
     _xAxe: Axe;
     _yAxe: Axe;
     _x: any;
