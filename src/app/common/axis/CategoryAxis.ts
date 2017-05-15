@@ -67,7 +67,7 @@ export class CategoryAxis extends Axis {
     }
     _tickRotate(): void {
         this.target.selectAll('text').style('text-anchor', 'start')
-                                     .attr('transform', function(d) {
+                                     .attr('transform', d => {
                                        return 'rotate(45)';
                                       });
     }
