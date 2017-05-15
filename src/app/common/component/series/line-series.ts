@@ -1,5 +1,5 @@
-import { Series } from 'app/common/series/Series';
-import { SeriesParam } from 'app/model/ChartParam.interface';
+import { Series } from './../../series/Series';
+import { SeriesParam } from './../../../model/chart-param.interface';
 
 export class LineSeries extends Series {
 
@@ -9,14 +9,14 @@ export class LineSeries extends Series {
         super( seriesParam );
     }
 
-    dataSetting(): void {
+    dataSetting() {
         super.dataSetting();
         if (this.dataProvider) {
             this.updateDisplay();
         }
     }
 
-    generatePosition(): void {
+    generatePosition() {
         super.generatePosition();
         // tslint:disable-next-line:comment-format
         // setup x, y, width, height
@@ -30,7 +30,7 @@ export class LineSeries extends Series {
             .interpolate('interpolate');
     }
 
-    updateDisplay(): void {
+    updateDisplay() {
         this.generatePosition();
         const svgElement: any = this._seriesTarget.select(`.${this.displayName + this._index}`);
         if (!svgElement[0][0]) {
@@ -41,7 +41,7 @@ export class LineSeries extends Series {
         svgElement.attr('d', this.line);
     }
 
-    createItem(): void {
+    createItem() {
         this._seriesTarget.datum(this.data)
                             .append('path')
                             .attr('class', this.displayName + this._index);

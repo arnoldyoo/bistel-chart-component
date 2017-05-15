@@ -1,16 +1,16 @@
-import { IDisplay } from './../iDisplay.interface';
-import { SeriesParam } from 'app/model/ChartParam.interface';
+import { IDisplay } from './../i-display.interface';
+import { SeriesParam } from 'app/model/chart-param.interface';
 import { Axe } from 'app/common/axis/axe';
 
 export class Series implements IDisplay {
 
     _width: number;
     _height: number;
-    // chart-base 에서 group element를 넘겨받음.
+    // get group element from chart-base
     _target: any;
 
     // api private
-    // 한글 사용 금지. why? element의 class 명으로 사용.
+    // _displayName will be used in class name.
     _displayName: string;
     _xField: string;
     _yField: string;
@@ -32,14 +32,14 @@ export class Series implements IDisplay {
         this._yField = seriesParam.config.yField;
         this.displayName = seriesParam.config.displayName;
         // tslint:disable-next-line:comment-format
-        // displayName 이 없을 시 필드명으로 setup.
+        // setup field name, when displayName is null.
         if (seriesParam.config.displayName) {
             this.displayName = seriesParam.config.displayName;
         } else {
             this.displayName = this._xField;
         }
         // tslint:disable-next-line:comment-format
-        // series 별로 group <g> element를 생성한다.
+        // create group <g> element of series.
         this._createContainer();
     }
 
@@ -96,8 +96,6 @@ export class Series implements IDisplay {
 
     set data(value: any) {
         this._data = value;
-        // tslint:disable-next-line:comment-format
-        // data가 들어오면 Axe의 scale 정보와 축 정보를 가져와서 그려진 좌표와 series 크기를 설정한다.
     }
 
     get data(): any {
@@ -147,34 +145,35 @@ export class Series implements IDisplay {
     set dataProvider( data: any[] ) {
         this._dataProvider = data;
         this.dataSetting();
-    };
+    }
+
     get dataProvider() {
         return this._dataProvider;
-    };
+    }
 
-    dataSetting(): void { }
+    dataSetting() { }
 
-    createChildren(): void { }
+    createChildren() { }
 
-    updateDisplay(width?: number, height?: number): void {
+    updateDisplay(width?: number, height?: number) {
         if (this.data) {
             this.generatePosition();
         }
     }
 
-    generatePosition(): void { }
+    generatePosition() { }
 
     /*
     * title : createItem
-    * description : series data가 0인 point item을 생성한다.
+    * description : create point item for transition. data is setting 0
     */
-    createItem(): void {}
+    createItem() {}
 
     /*
     * title : _createContainer
-    * description : series class에서 단 한번 group element를 생성한다.
+    * description : first time, create group element in series class
     */
-    _createContainer(): void {
+    _createContainer() {
         if (!this._seriesTarget) {
             this._seriesTarget = this.target.append('g').attr('class', this.displayName);
         }

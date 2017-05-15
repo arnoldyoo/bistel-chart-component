@@ -1,17 +1,15 @@
-import { LineSeries } from './series/LineSeries';
-import { ColumnSeries } from './series/ColumnSeries';
-import { AxisParam, SeriesParam } from './../model/ChartParam.interface';
-import { NumericAxis } from './axis/NumericAxis';
-import { CategoryAxis } from './axis/CategoryAxis';
-import { DateTimeAxis } from './axis/DateTimeAxis';
+import { DateTimeAxis, CategoryAxis, NumericAxis } from './component/axis';
+import { ColumnSeries, LineSeries } from './component/series';
+import { AxisParam, SeriesParam } from './../model/chart-param.interface';
 
 export class InstanceLoader {
     ctors: any;
+
     constructor() {
         this._settingInstance();
     }
 
-    _settingInstance(): void {
+    _settingInstance() {
         this.ctors = {
             CategoryAxis: CategoryAxis,
             NumericAxis: NumericAxis,
@@ -28,14 +26,16 @@ export class InstanceLoader {
             return ctor;
         }
     }
+
     // name: string ,config: any, target: any, width: number, height: number, margin: Array<any>, domain: any
-    axisFactory( name: string, axisparams: AxisParam ): any {
+    axisFactory(name: string, axisparams: AxisParam): any {
         const ctor: any = this._getCtor(name);
         const classInstance: any = new ctor(axisparams);
         return classInstance;
     }
+
     // name: string, config: any, target: any, margin: any
-    seriesFactory( name: string, seriesparams: SeriesParam ): any {
+    seriesFactory(name: string, seriesparams: SeriesParam): any {
         const ctor: any = this._getCtor(name);
         const classInstance: any = new ctor(seriesparams);
         return classInstance;

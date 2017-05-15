@@ -1,17 +1,21 @@
-import { AxisParam } from './../../model/ChartParam.interface';
-import { Axe } from './axe';
-import { Axis } from './axis';
+import { Axe } from './../../axis/axe';
+import { AxisParam } from './../../../model/chart-param.interface';
+import { Axis } from '../../axis/axis';
+
 export class CategoryAxis extends Axis {
     _scale: any;
+
     constructor(axisparams: AxisParam) {
         super(axisparams);
         // make Axis
     }
-    updateDisplay(width: number, height: number): void {
+
+    updateDisplay(width: number, height: number) {
         super.updateDisplay(width, height);
     }
+
     // 재정의
-    makeAxisLabel(): void {
+    makeAxisLabel() {
         super.makeAxisLabel();
         this.target.call(this.axe.scaleToAxe);
         if (this.tickInfo.rotate) {
@@ -19,14 +23,14 @@ export class CategoryAxis extends Axis {
         }
     }
 
-    scaleSetting(): void {
+    scaleSetting() {
         super.scaleSetting();
         this._scale = d3.scale.ordinal()
                                 .domain(this.domain)
                                 .rangeBands( [0, this.width], .1 );
     }
 
-    scaleToAxeSetting(): void {
+    scaleToAxeSetting() {
         super.scaleToAxeSetting();
         if (!this.axe) {
             this.axe = new Axe();
@@ -46,7 +50,8 @@ export class CategoryAxis extends Axis {
             }
         }
     }
-    _domainTruncate(): void {
+
+    _domainTruncate() {
         let ticksize: number = Math.round(this.axe.scale.domain().length / this.tickInfo.ticks);
         if (this.tickInfo.ticks % 2) {
             ticksize = ticksize + 1;
@@ -65,7 +70,8 @@ export class CategoryAxis extends Axis {
         const tickArray: Array<any> = tempArray.filter(d =>  d !== 0 );
         this.axe.scaleToAxe.tickValues(tickArray);
     }
-    _tickRotate(): void {
+
+    _tickRotate() {
         this.target.selectAll('text').style('text-anchor', 'start')
                                      .attr('transform', function(d) {
                                        return 'rotate(45)';

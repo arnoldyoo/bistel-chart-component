@@ -6,14 +6,15 @@ export class Axe {
     name: string;
 
     // getter setter method
-    set scaleToAxe( value: any ) {
+    set scaleToAxe(value: any) {
         this._scaleToAxe = value;
     }
+
     get scaleToAxe() {
         return this._scaleToAxe;
     }
 
-    set scale( value: any ) {
+    set scale(value: any) {
         this._scale = value;
         if (this._scale.rangeBand) {
             this.itemDimensions = this._scale.rangeBand();
@@ -21,6 +22,7 @@ export class Axe {
             this.itemDimensions = 0;
         }
     }
+
     get scale() {
         return this._scale;
     }
@@ -28,6 +30,7 @@ export class Axe {
     set itemDimensions(value:number) {
         this._itemDimensions = value;
     }
+
     get itemDimensions(): number {
         return this._itemDimensions;
     }
