@@ -28,7 +28,10 @@ export class ChartBase implements IDisplay {
         this.margin = this.configuration.chart.margin;
         this._setSize(this.configuration.chart.size.width, this.configuration.chart.size.height);
         this._setDefaultData();
-        this._generateConfiguration();
+        this._createSvgElement();
+        if (config) {
+            this._createComponent();
+        }
     }
 
     set configuration( value: any ) {
@@ -103,22 +106,25 @@ export class ChartBase implements IDisplay {
         return this._domain;
     }
 
-    // generate svg element using configuration
-    _generateConfiguration() {
+    _createSvgElement() {
         this.target = this._createSvg(this.configuration.chart);
         // generate axis component using this.target
         this._axisGroup = this.target.append('g')
                               .attr('class', 'axis')
                               .attr('transform', 'translate(0 ,0)');
-        this._createAxis();
         // generate series component using this.target
         this._seriesGroup = this.target.append('g')
                             .attr('class', 'series')
                             .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
-        this._createSeries();
+    }
+
+    // generate svg element using configuration
+    _createComponent() {
+        this._createAxis(this.configuration.axis);
+        this._createSeries(this.configuration.series);
     };
 
-    updateDisplay( width: number, height: number )  {
+    updateDisplay(width: number, height: number)  {
         console.log(`chart-base.updateDisplay(${width}, ${height})`);
         this._setSize(width, height);
         this.target
@@ -137,8 +143,10 @@ export class ChartBase implements IDisplay {
         return d3.select(chartConfig.selector).append('svg');
     }
 
-    _createAxis() {
-        this.configuration.axis.map( axisConfig => {
+    _createAxis(axisList: Array<any>) {
+        // tslint:disable-next-line:curly
+        if (!axisList) return;
+        axisList.map( axisConfig => {
             let axis: Axis;
             if ( axisConfig.domain ) {
                 this.domain = axisConfig.domain;
@@ -161,12 +169,14 @@ export class ChartBase implements IDisplay {
         });
     }
 
-    _createSeries() {
+    _createSeries(seriesList: Array<any>) {
+        // tslint:disable-next-line:curly
+        if (!seriesList) return;
         // series loop
         // this._series.push(seires);
-        if ( this.configuration.series.length ) {
+        if (seriesList.length) {
 
-            this.configuration.series.map( seriesConfig => {
+            seriesList.map( seriesConfig => {
                 let series: Series;
                 const series_params: SeriesParam = {
                     config: seriesConfig,
