@@ -1,9 +1,11 @@
-import { AxisParam } from './../../model/ChartParam.interface';
-import { Axe } from './axe';
-import { Axis } from './axis';
+import { Axe } from './../../axis/axe';
+import { AxisParam } from './../../../model/chart-param.interface';
+import { Axis } from '../../axis/axis';
+
 export class DateTimeAxis extends Axis {
     _scale: any;
     _customTimeFormat: any;
+
     constructor(axisparams: AxisParam) {
         super(axisparams);
         // make Axis
@@ -12,28 +14,31 @@ export class DateTimeAxis extends Axis {
                 [':%S', function(d) { return d.getSeconds(); }],
                 ['%H:%M', function(d) { return d.getMinutes(); }],
                 ['%H:%M', function(d) { return d.getHours(); }],
-                ['%a %d', function(d) { return d.getDay() && d.getDate() != 1; }],
-                ['%b %d', function(d) { return d.getDate() != 1; }],
+                ['%a %d', function(d) { return d.getDay() && d.getDate() !== 1; }],
+                ['%b %d', function(d) { return d.getDate() !== 1; }],
                 ['%B', function(d) { return d.getMonth(); }],
                 ['%Y', function() { return true; }]
              ]);
     }
-    updateDisplay(width: number, height: number): void {
+
+    updateDisplay(width: number, height: number) {
         super.updateDisplay(width, height);
     }
+
     // 재정의
-    makeAxisLabel(): void {
+    makeAxisLabel() {
         super.makeAxisLabel();
         this.target.call(this.axe.scaleToAxe);
     }
 
-    scaleSetting(): void {
+    scaleSetting() {
         super.scaleSetting();
         this._scale = d3.time.scale()
                                 .domain(this.domain)
                                 .range([0, this.width]);
     }
-    scaleToAxeSetting(): void {
+
+    scaleToAxeSetting() {
         super.scaleToAxeSetting();
         if (!this.axe) {
             this.axe = new Axe();

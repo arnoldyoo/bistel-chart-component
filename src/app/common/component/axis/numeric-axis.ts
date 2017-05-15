@@ -1,28 +1,33 @@
-import { AxisParam } from './../../model/ChartParam.interface';
-import { Axe } from './axe';
-import { Axis } from './axis';
+import { Axe } from './../../axis/axe';
+import { AxisParam } from './../../../model/chart-param.interface';
+import { Axis } from '../../axis/axis';
+
 export class NumericAxis extends Axis {
     _scale: any;
+
     constructor(axisparams: AxisParam) {
         super(axisparams);
         // make Axis
     }
-    updateDisplay(width: number, height: number): void {
+
+    updateDisplay(width: number, height: number) {
         super.updateDisplay(width, height);
     }
+
     // 재정의
-    makeAxisLabel(): void {
+    makeAxisLabel() {
         super.makeAxisLabel();
         this.target.call(this.axe.scaleToAxe);
     }
 
-    scaleSetting(): void {
+    scaleSetting() {
         super.scaleSetting();
         this._scale = d3.scale.linear()
                                 .domain(this.domain)
                                 .range([this.height, 0]);
     }
-    scaleToAxeSetting(): void {
+
+    scaleToAxeSetting() {
         super.scaleToAxeSetting();
         if (!this.axe) {
             this.axe = new Axe();
@@ -35,7 +40,7 @@ export class NumericAxis extends Axis {
             this.axe.scaleToAxe.ticks(this.tickInfo.ticks);
         }
         if ( this.tickInfo.tickFormat ) {
-            this.axe.scaleToAxe.tickFormat( this.tickInfo.tickFormat );
+            this.axe.scaleToAxe.tickFormat(this.tickInfo.tickFormat);
         }
     }
 }

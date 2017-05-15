@@ -20,19 +20,23 @@ import { Component, HostListener, OnInit, ViewEncapsulation } from '@angular/cor
 export class ChartComponent implements OnInit {
     baseChart: ChartBase;
     chartConfig: any;
+
     constructor() { }
+
     ngOnInit() {
         this._setChartJson();
         this.baseChart = new ChartBase(this.chartConfig);
         this.baseChart.updateDisplay(this.chartConfig.chart.size.width, this.chartConfig.chart.size.height);
         window.dispatchEvent(new Event('resize'));
     }
+
     @HostListener('window:resize', ['$event'])
     onResize(event) {
         const elem = window.document.getElementById('div_01');
         this.baseChart.updateDisplay(elem.offsetWidth, elem.offsetHeight);
     }
-    _setChartJson(): void {
+
+    _setChartJson() {
         this.chartConfig = {
             chart: {
                 selector: '#div_01',
@@ -70,7 +74,6 @@ export class ChartComponent implements OnInit {
                     visible: true,
                     title: 'Category',
                     tickInfo: {
-
                         rotate: true
                     }
                 },
@@ -103,6 +106,6 @@ export class ChartComponent implements OnInit {
                     displayName: 'Profit'
                 }
             ]
-        }
+        };
     }
 }

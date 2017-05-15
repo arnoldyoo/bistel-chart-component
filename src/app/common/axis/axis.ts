@@ -1,8 +1,8 @@
-import { AxisParam } from './../../model/ChartParam.interface';
+import { AxisParam } from './../../model/chart-param.interface';
 import { Axe } from './axe';
-import { IDisplay } from './../iDisplay.interface';
+import { IDisplay } from './../i-display.interface';
 
-export class Axis implements IDisplay {
+export abstract class Axis implements IDisplay {
     axe: Axe;
 
     _field: string;
@@ -31,6 +31,7 @@ export class Axis implements IDisplay {
     set target( value: any ) {
         this._target = value;
     }
+
     get target(): any {
         return this._target;
     }
@@ -38,6 +39,7 @@ export class Axis implements IDisplay {
     set width(value: number) {
         this._width = value;
     }
+
     get width() {
         return this._width;
     }
@@ -45,6 +47,7 @@ export class Axis implements IDisplay {
     set height(value: number) {
         this._height = value;
     }
+
     get height() {
         return this._height;
     }
@@ -52,6 +55,7 @@ export class Axis implements IDisplay {
     set field( value: string ) {
         this._field = value;
     }
+
     get field() {
         return this._field;
     }
@@ -59,6 +63,7 @@ export class Axis implements IDisplay {
     set format( value: any ) {
         this._format = value;
     }
+
     get format() {
         return this._format;
     }
@@ -66,6 +71,7 @@ export class Axis implements IDisplay {
     set visible( value: boolean ) {
         this._visible = value;
     }
+
     get visible() {
         return this._visible;
     }
@@ -73,6 +79,7 @@ export class Axis implements IDisplay {
     set title( value: string ) {
         this._title = value;
     }
+
     get title() {
         return this._title;
     }
@@ -87,6 +94,7 @@ export class Axis implements IDisplay {
     set type( value: string ) {
         this._type = value;
     }
+
     get type() {
         return this._type;
     }
@@ -94,6 +102,7 @@ export class Axis implements IDisplay {
     set orient( value: string ) {
         this._orient = value;
     }
+
     get orient() {
         return this._orient;
     }
@@ -101,6 +110,7 @@ export class Axis implements IDisplay {
     set margin( value: any ) {
         this._margin = value;
     }
+
     get margin() {
         return this._margin;
     }
@@ -108,29 +118,31 @@ export class Axis implements IDisplay {
     set tickInfo( value: any ) {
         this._tickInfo = value;
     }
+
     get tickInfo() {
         return this._tickInfo;
     }
 
-    updateDisplay(width: number, height: number): void {
+    updateDisplay(width: number, height: number) {
         this.width = width;
         this.height = height;
         this._updateContainerPosition();
         this._setupAxe();
         this.makeAxisLabel();
     }
-    _setupAxe(): void {
+
+    _setupAxe() {
         this.scaleSetting();
         this.scaleToAxeSetting();
     }
 
-    scaleToAxeSetting(): void { }
+    scaleToAxeSetting() { }
 
-    scaleSetting(): void { }
+    scaleSetting() { }
 
-    makeAxisLabel(): void { }
+    makeAxisLabel() { }
 
-    _configGenerator(config: any): void {
+    _configGenerator(config: any) {
         this.field = config.field;
         this.format = config.format;
         this.visible = config.visible;
@@ -142,12 +154,12 @@ export class Axis implements IDisplay {
         }
     }
 
-    _createContainer(axisTarget: any): void {
+    _createContainer(axisTarget: any) {
         this.target = axisTarget.append('g').attr('class', `${this.type} ${this.orient}`);
         this.updateDisplay(this.width, this.height);
     }
 
-    _updateContainerPosition(): void {
+    _updateContainerPosition() {
         if (this.orient === 'bottom') {
             this.target.attr('transform', `translate(${this.margin.left}, ${this.height+this.margin.top})`);
         } else if (this.orient === 'top' ) {

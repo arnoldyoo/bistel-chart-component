@@ -1,11 +1,8 @@
+import { AxisParam, SeriesParam } from './../model/chart-param.interface';
 import { Series } from './series/Series';
-import { AxisParam, SeriesParam } from './../model/ChartParam.interface';
-import { NumericAxis } from './axis/NumericAxis';
-import { DateTimeAxis } from './axis/DateTimeAxis';
-import { CategoryAxis } from './axis/CategoryAxis';
 import { Axis } from './axis/axis';
-import { IDisplay } from './iDisplay.interface';
-import { InstanceLoader } from './InstanceLoader';
+import { IDisplay } from './i-display.interface';
+import { InstanceLoader } from './instance-loader';
 
 export class ChartBase implements IDisplay {
 
@@ -25,7 +22,7 @@ export class ChartBase implements IDisplay {
     instance_loader: InstanceLoader;
     data: Array<any> = [];
 
-    constructor( config: any ) {
+    constructor( config?: any ) {
         this.instance_loader = new InstanceLoader();
         this.configuration = config;
         this.margin = this.configuration.chart.margin;
@@ -37,6 +34,7 @@ export class ChartBase implements IDisplay {
     set configuration( value: any ) {
         this._configuration = value;
     }
+
     get configuration() {
         return this._configuration;
     }
@@ -44,6 +42,7 @@ export class ChartBase implements IDisplay {
     set target( value: any ) {
         this._target = value;
     }
+
     get target(): any {
         return this._target;
     }
@@ -51,6 +50,7 @@ export class ChartBase implements IDisplay {
     set width( value: number ) {
         this._width = value;
     }
+
     get width(): number {
         return this._width;
     }
@@ -58,34 +58,39 @@ export class ChartBase implements IDisplay {
     set height( value: number ) {
         this._height = value;
     }
+
     get height() {
         return this._height;
     }
 
     set dataProvider( data: any[] ) {
         this._dataProvider = data;
-    };
+    }
+
     get dataProvider() {
         return this._dataProvider;
-    };
+    }
 
     set axis( value: any[] ) {
         this._axis = value;
-    };
+    }
+
     get axis(): any[] {
         return this._axis;
-    };
+    }
 
     set series( value: any[] ) {
         this._series = value;
-    };
+    }
+
     get series(): any[] {
         return this._series;
-    };
+    }
 
     set margin( value: any ) {
         this._margin = value;
     }
+
     get margin() {
         return this._margin;
     }
@@ -93,12 +98,13 @@ export class ChartBase implements IDisplay {
     set domain( value: any ) {
         this._domain = value;
     }
+
     get domain() {
         return this._domain;
     }
 
     // generate svg element using configuration
-    _generateConfiguration(): void {
+    _generateConfiguration() {
         this.target = this._createSvg(this.configuration.chart);
         // generate axis component using this.target
         this._axisGroup = this.target.append('g')
@@ -112,7 +118,7 @@ export class ChartBase implements IDisplay {
         this._createSeries();
     };
 
-    updateDisplay( width: number, height: number ): void {
+    updateDisplay( width: number, height: number )  {
         console.log(`chart-base.updateDisplay(${width}, ${height})`);
         this._setSize(width, height);
         this.target
@@ -122,7 +128,7 @@ export class ChartBase implements IDisplay {
         this._seriesUpdate();
     };
 
-    _setSize(width: number, height: number): void {
+    _setSize(width: number, height: number)  {
         this.width = width - (this.margin.left + this.margin.right);
         this.height = height - (this.margin.top + this.margin.bottom);
     }
@@ -131,7 +137,7 @@ export class ChartBase implements IDisplay {
         return d3.select(chartConfig.selector).append('svg');
     }
 
-    _createAxis(): void {
+    _createAxis() {
         this.configuration.axis.map( axisConfig => {
             let axis: Axis;
             if ( axisConfig.domain ) {
@@ -155,7 +161,7 @@ export class ChartBase implements IDisplay {
         });
     }
 
-    _createSeries(): void {
+    _createSeries() {
         // series loop
         // this._series.push(seires);
         if ( this.configuration.series.length ) {
@@ -190,19 +196,19 @@ export class ChartBase implements IDisplay {
         }
     }
 
-    _axisUpdate(): void {
+    _axisUpdate() {
         for (let i = 0 ; i < this._axis.length; i++) {
             this._axis[i].updateDisplay(this.width, this.height);
         }
     }
 
-    _seriesUpdate(): void {
+    _seriesUpdate() {
         for (let i = 0; i < this._series.length; i++) {
             this._series[i].dataProvider = this.data;
         }
     }
 
-    _defaultDomain(axisConfig: any): void {
+    _defaultDomain(axisConfig: any) {
         this.domain = this.data.map( d => {
             return d[axisConfig.field];
         });
@@ -220,9 +226,9 @@ export class ChartBase implements IDisplay {
         }
     }
 
-    _addEvent(): void {};
+    _addEvent() {};
 
-    _setDefaultData(): void {
+    _setDefaultData() {
         for (let i = 0; i < 31; i++) {
             this.data.push( {  category: 'A' + i,
                            date: new Date(2017, 0, i).getTime(),

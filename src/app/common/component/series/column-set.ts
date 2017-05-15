@@ -1,4 +1,4 @@
-import { ColumnSeries } from 'app/common/series/ColumnSeries';
+import { ColumnSeries } from './column-series';
 
 export class ColumnSet {
 
@@ -19,6 +19,7 @@ export class ColumnSet {
     set type(value: string) {
         this._type = value;
     }
+
     get type(): string {
         return this._type;
     }

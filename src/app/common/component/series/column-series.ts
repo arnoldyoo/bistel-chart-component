@@ -1,5 +1,5 @@
-import { Series } from 'app/common/series/Series';
-import { SeriesParam } from 'app/model/ChartParam.interface';
+import { Series } from './../../series/Series';
+import { SeriesParam } from './../../../model/chart-param.interface';
 
 export class ColumnSeries extends Series {
 
@@ -7,7 +7,7 @@ export class ColumnSeries extends Series {
         super( seriesParam );
     }
 
-    dataSetting(): void {
+    dataSetting() {
         super.dataSetting();
         for (let j = 0; j < this.dataProvider.length; j++) {
             this.data = this.dataProvider[j];
@@ -16,7 +16,7 @@ export class ColumnSeries extends Series {
         }
     }
 
-    generatePosition(): void {
+    generatePosition() {
         super.generatePosition();
         // tslint:disable-next-line:comment-format
         // setup x, y, width, height
@@ -27,7 +27,7 @@ export class ColumnSeries extends Series {
         this.height = this.yAxe.scale.range()[0] - this.y;
     }
 
-    updateDisplay(): void {
+    updateDisplay() {
         super.updateDisplay();
         const rectElement: any = this._seriesTarget.select(`.${this.displayName + this._index}`);
         if (!rectElement[0][0]) {
@@ -41,7 +41,7 @@ export class ColumnSeries extends Series {
                    .attr('height', this.height);
     }
 
-    createItem(): void {
+    createItem() {
         this._seriesTarget.datum(this.data)
                             .append('rect')
                             .attr('class', this.displayName + this._index);
