@@ -11,4 +11,5 @@ export interface AxisParam {
     width: number;
     height: number;
     domain: Array<any>;
+    data: Array<any>;
 }

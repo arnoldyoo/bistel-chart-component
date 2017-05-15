@@ -148,17 +148,13 @@ export class ChartBase implements IDisplay {
         if (!axisList) return;
         axisList.map( axisConfig => {
             let axis: Axis;
-            if ( axisConfig.domain ) {
-                this.domain = axisConfig.domain;
-            } else {
-                this._defaultDomain( axisConfig );
-            }
             const axis_params: AxisParam = {
                 config: axisConfig,
                 target: this._axisGroup,
                 width: this.width,
                 height: this.height,
                 margin: this.margin,
+                data: this.data,
                 domain: this.domain
             };
 
@@ -208,6 +204,7 @@ export class ChartBase implements IDisplay {
 
     _axisUpdate() {
         for (let i = 0 ; i < this._axis.length; i++) {
+            this._axis[i].dataProvider = this.data;
             this._axis[i].updateDisplay(this.width, this.height);
         }
     }
@@ -215,24 +212,6 @@ export class ChartBase implements IDisplay {
     _seriesUpdate() {
         for (let i = 0; i < this._series.length; i++) {
             this._series[i].dataProvider = this.data;
-        }
-    }
-
-    _defaultDomain(axisConfig: any) {
-        this.domain = this.data.map( d => {
-            return d[axisConfig.field];
-        });
-        if ( this.domain.length && _.isNumber(this.domain[0]) ) {
-            const tempDomain = [...this.domain];
-            this.domain = [];
-            let min: number = _.min(tempDomain);
-            // date type length 13
-            if (min > 0 && min.toString().length !== 13) {
-                min = 0;
-            }
-            const max: number = _.max(tempDomain);
-            this.domain.push(min);
-            this.domain.push(max);
         }
     }
 

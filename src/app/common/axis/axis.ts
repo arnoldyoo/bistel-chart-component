@@ -17,15 +17,17 @@ export abstract class Axis implements IDisplay {
     _width: number;
     _height: number;
     _tickInfo: any;
+    _dataProvider: Array<any>;
 
     // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
-    constructor(axixparams: AxisParam) {
-        this.width = axixparams.width;
-        this.height = axixparams.height;
-        this.margin = axixparams.margin;
-        this.domain = axixparams.domain;
-        this._configGenerator(axixparams.config);
-        this._createContainer(axixparams.target);
+    constructor(axisparams: AxisParam) {
+        this.width = axisparams.width;
+        this.height = axisparams.height;
+        this.margin = axisparams.margin;
+        this.domain = axisparams.domain;
+        this._configGenerator(axisparams.config);
+        this.dataProvider = axisparams.data;
+        this._createContainer(axisparams.target);
     }
 
     set target( value: any ) {
@@ -123,6 +125,17 @@ export abstract class Axis implements IDisplay {
         return this._tickInfo;
     }
 
+    set dataProvider( value: Array<any> ) {
+        this._dataProvider = value;
+        if ( !this.domain ) {
+            this._createDefaultDomain();
+        }
+    }
+
+    get dataProvider() {
+        return this._dataProvider;
+    }
+
     updateDisplay(width: number, height: number) {
         this.width = width;
         this.height = height;
@@ -168,6 +181,24 @@ export abstract class Axis implements IDisplay {
             this.target.attr('transform', `translate(${this.width}, 0)`);
         } else {
             this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+        }
+    }
+
+    _createDefaultDomain() {
+        this.domain = this.dataProvider.map( d => {
+            return d[this.field];
+        });
+        if ( this.domain.length && _.isNumber(this.domain[0]) ) {
+            const tempDomain = [...this.domain];
+            this.domain = [];
+            let min: number = _.min(tempDomain);
+            // date type length 13
+            if (min > 0 && min.toString().length !== 13) {
+                min = 0;
+            }
+            const max: number = _.max(tempDomain);
+            this.domain.push(min);
+            this.domain.push(max);
         }
     }
 }
