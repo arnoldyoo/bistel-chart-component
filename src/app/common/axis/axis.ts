@@ -5,6 +5,7 @@ import { IDisplay } from './../i-display.interface';
 export abstract class Axis implements IDisplay {
     axe: Axe;
 
+    _configuration: AxisParam;
     _field: string;
     _format: any;
     _visible: boolean;
@@ -20,14 +21,27 @@ export abstract class Axis implements IDisplay {
     _dataProvider: Array<any>;
 
     // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
-    constructor(axisparams: AxisParam) {
-        this.width = axisparams.width;
-        this.height = axisparams.height;
-        this.margin = axisparams.margin;
-        this.domain = axisparams.domain;
-        this._configGenerator(axisparams.config);
-        this.dataProvider = axisparams.data;
-        this._createContainer(axisparams.target);
+    constructor(axisparams?: AxisParam) {
+        if (axisparams) {
+            this.configuration = axisparams;
+        }
+    }
+
+    set configuration( value: any ) {
+        this._configuration = value;
+        if (this._configuration) {
+            this.width = this._configuration.width;
+            this.height = this._configuration.height;
+            this.margin = this._configuration.margin;
+            this.domain = this._configuration.domain;
+            this._configGenerator(this._configuration.config);
+            this.dataProvider = this._configuration.data;
+            this._createContainer(this._configuration.target);
+        }
+    }
+
+    get configuration() {
+        return this._configuration;
     }
 
     set target( value: any ) {
@@ -196,7 +210,8 @@ export abstract class Axis implements IDisplay {
             if (min > 0 && min.toString().length !== 13) {
                 min = 0;
             }
-            const max: number = _.max(tempDomain);
+            let max: number = _.max(tempDomain);
+            max = max + (max * 0.1);
             this.domain.push(min);
             this.domain.push(max);
         }

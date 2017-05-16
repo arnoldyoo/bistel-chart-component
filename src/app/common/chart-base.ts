@@ -19,23 +19,26 @@ export class ChartBase implements IDisplay {
     _domain: any;
     _dataProvider: Array<any>;
 
-    instance_loader: InstanceLoader;
+    _instance_loader: InstanceLoader;
     data: Array<any> = [];
 
     constructor( config?: any ) {
-        this.instance_loader = new InstanceLoader();
-        this.configuration = config;
-        this.margin = this.configuration.chart.margin;
-        this._setSize(this.configuration.chart.size.width, this.configuration.chart.size.height);
+        this._instance_loader = new InstanceLoader();
         this._setDefaultData();
-        this._createSvgElement();
         if (config) {
-            this._createComponent();
+            this.configuration = config;
         }
     }
 
     set configuration( value: any ) {
         this._configuration = value;
+        if (this._configuration) {
+            this._clear();
+            this.margin = this.configuration.chart.margin;
+            this._setSize(this.configuration.chart.size.width, this.configuration.chart.size.height);
+            this._createSvgElement();
+            this._createComponent();
+        }
     }
 
     get configuration() {
@@ -120,8 +123,8 @@ export class ChartBase implements IDisplay {
 
     // generate svg element using configuration
     _createComponent() {
-        this._createAxis(this.configuration.axis);
-        this._createSeries(this.configuration.series);
+        this._axis = this._createAxis(this.configuration.axis);
+        this._series = this._createSeries(this.configuration.series);
     };
 
     updateDisplay(width: number, height: number)  {
@@ -146,6 +149,7 @@ export class ChartBase implements IDisplay {
     _createAxis(axisList: Array<any>) {
         // tslint:disable-next-line:curly
         if (!axisList) return;
+        const tempList = [];
         axisList.map( axisConfig => {
             let axis: Axis;
             const axis_params: AxisParam = {
@@ -159,10 +163,11 @@ export class ChartBase implements IDisplay {
             };
 
             // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
-            axis = this.instance_loader.axisFactory(axisConfig.axisClass, axis_params);
+            axis = this._instance_loader.axisFactory(axisConfig.axisClass, axis_params);
             axis.updateDisplay( this.width, this.height );
-            this._axis.push( axis );
+            tempList.push( axis );
         });
+        return tempList;
     }
 
     _createSeries(seriesList: Array<any>) {
@@ -170,6 +175,7 @@ export class ChartBase implements IDisplay {
         if (!seriesList) return;
         // series loop
         // this._series.push(seires);
+        const tempList = [];
         if (seriesList.length) {
 
             seriesList.map( seriesConfig => {
@@ -179,7 +185,7 @@ export class ChartBase implements IDisplay {
                     margin: this.margin,
                     target: this._seriesGroup
                 };
-                series = this.instance_loader.seriesFactory(seriesConfig.seriesClass, series_params);
+                series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, series_params);
 
                 // series.yAxe = _.find(this._axis, 'field', seriesConfig.yField);
                 for ( let i = 0 ; i < this._axis.length; i++ ) {
@@ -197,12 +203,15 @@ export class ChartBase implements IDisplay {
                         break;
                     }
                 }
-                this._series.push(series);
+                tempList.push(series);
             });
         }
+        return tempList;
     }
 
     _axisUpdate() {
+        // tslint:disable-next-line:curly
+        if (!this._axis) return;
         for (let i = 0 ; i < this._axis.length; i++) {
             this._axis[i].dataProvider = this.data;
             this._axis[i].updateDisplay(this.width, this.height);
@@ -210,8 +219,19 @@ export class ChartBase implements IDisplay {
     }
 
     _seriesUpdate() {
+        // tslint:disable-next-line:curly
+        if (!this._series) return;
         for (let i = 0; i < this._series.length; i++) {
             this._series[i].dataProvider = this.data;
+        }
+    }
+
+    _clear() {
+        if (this.target) {
+            this.target.remove();
+            this.target = null;
+            this._axis = null;
+            this._series = null;
         }
     }
 
