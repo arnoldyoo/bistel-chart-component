@@ -1,6 +1,6 @@
-export interface SeriesParam {
-    config: any ;
-    target: any;
+export interface SeriesConfiguration {
+    condition: SeriesConditions;
+    target?: any;
     margin: any;
 };
 
@@ -22,4 +22,11 @@ export interface AxisConditions {
     type: string;
     orient: string;
     tickInfo?: any;
+}
+
+export interface SeriesConditions {
+    xField: string;
+    yField: string;
+    displayName: string;
+    visible: boolean;
 }

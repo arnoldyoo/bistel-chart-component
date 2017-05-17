@@ -1,5 +1,6 @@
+import { SeriesConditions } from './../../model/chart-param.interface';
 import { IDisplay } from './../i-display.interface';
-import { SeriesParam } from 'app/model/chart-param.interface';
+import { SeriesConfiguration } from 'app/model/chart-param.interface';
 import { Axe } from 'app/common/axis/axe';
 
 export class Series implements IDisplay {
@@ -25,22 +26,22 @@ export class Series implements IDisplay {
     _yAxe: Axe;
     _x: any;
     _y: any;
+    _configuration: any;
 
-    constructor(seriesParam: SeriesParam) {
-        this.target = seriesParam.target;
-        this._xField = seriesParam.config.xField;
-        this._yField = seriesParam.config.yField;
-        this.displayName = seriesParam.config.displayName;
-        // tslint:disable-next-line:comment-format
-        // setup field name, when displayName is null.
-        if (seriesParam.config.displayName) {
-            this.displayName = seriesParam.config.displayName;
-        } else {
-            this.displayName = this._xField;
+    constructor(seriesConfig?: SeriesConfiguration) {
+        if (seriesConfig) {
+            this.configuration = seriesConfig;
         }
-        // tslint:disable-next-line:comment-format
-        // create group <g> element of series.
-        this._createContainer();
+    }
+
+    set configuration(value: SeriesConfiguration) {
+        this._configuration = value;
+        if (this._configuration) {
+            this._setConditions(this._configuration.condition);
+        }
+        if (this._configuration.target) {
+            this.target = this._configuration.target;
+        }
     }
 
     set width(value: number) {
@@ -60,7 +61,7 @@ export class Series implements IDisplay {
     }
 
     set target(value: any) {
-        this._target = value;
+        this._createContainer(value);
     }
 
     get target(): any {
@@ -173,9 +174,20 @@ export class Series implements IDisplay {
     * title : _createContainer
     * description : first time, create group element in series class
     */
-    _createContainer() {
-        if (!this._seriesTarget) {
-            this._seriesTarget = this.target.append('g').attr('class', this.displayName);
+    _createContainer(seriesTarget: any) {
+
+        this._target = seriesTarget.append('g').attr('class', this.displayName);
+
+    }
+    _setConditions(conditions: SeriesConditions) {
+        this._xField = conditions.xField;
+        this._yField = conditions.yField;
+        this.displayName = conditions.displayName;
+        // setup field name, when displayName is null.
+        if (conditions.displayName) {
+            this.displayName = conditions.displayName;
+        } else {
+            this.displayName = this._xField;
         }
     }
 
