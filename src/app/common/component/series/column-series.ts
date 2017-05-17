@@ -1,9 +1,9 @@
 import { Series } from './../../series/Series';
-import { SeriesParam } from './../../../model/chart-param.interface';
+import { SeriesConfiguration } from './../../../model/chart-param.interface';
 
 export class ColumnSeries extends Series {
 
-    constructor( seriesParam: SeriesParam ) {
+    constructor( seriesParam: SeriesConfiguration ) {
         super( seriesParam );
     }
 
@@ -29,7 +29,7 @@ export class ColumnSeries extends Series {
 
     updateDisplay() {
         super.updateDisplay();
-        const rectElement: any = this._seriesTarget.select(`.${this.displayName + this._index}`);
+        const rectElement: any = this.target.select(`.${this.displayName + this._index}`);
         if (!rectElement[0][0]) {
             this.createItem();
         } else {
@@ -42,7 +42,7 @@ export class ColumnSeries extends Series {
     }
 
     createItem() {
-        this._seriesTarget.datum(this.data)
+        this.target.datum(this.data)
                             .append('rect')
                             .attr('class', this.displayName + this._index);
     }

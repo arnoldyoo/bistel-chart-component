@@ -1,11 +1,11 @@
 import { Series } from './../../series/Series';
-import { SeriesParam } from './../../../model/chart-param.interface';
+import { SeriesConfiguration } from './../../../model/chart-param.interface';
 
 export class LineSeries extends Series {
 
     line: any;
 
-    constructor( seriesParam: SeriesParam ) {
+    constructor( seriesParam: SeriesConfiguration ) {
         super( seriesParam );
     }
 
@@ -32,7 +32,7 @@ export class LineSeries extends Series {
 
     updateDisplay() {
         this.generatePosition();
-        const svgElement: any = this._seriesTarget.select(`.${this.displayName + this._index}`);
+        const svgElement: any = this.target.select(`.${this.displayName + this._index}`);
         if (!svgElement[0][0]) {
             this.createItem();
         } else {
@@ -42,7 +42,7 @@ export class LineSeries extends Series {
     }
 
     createItem() {
-        this._seriesTarget.datum(this.data)
+        this.target.datum(this.data)
                             .append('path')
                             .attr('class', this.displayName + this._index);
     }

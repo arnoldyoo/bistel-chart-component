@@ -5,8 +5,8 @@ import { Axis } from '../../axis/axis';
 export class CategoryAxis extends Axis {
     _scale: any;
 
-    constructor(axisparams: AxisConfiguration) {
-        super(axisparams);
+    constructor(axisconfig: AxisConfiguration) {
+        super(axisconfig);
         // make Axis
     }
 

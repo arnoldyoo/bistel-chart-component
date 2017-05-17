@@ -1,4 +1,4 @@
-import { AxisConfiguration, SeriesParam } from './../model/chart-param.interface';
+import { AxisConfiguration, SeriesConditions, SeriesConfiguration } from './../model/chart-param.interface';
 import { Series } from './series/Series';
 import { Axis } from './axis/axis';
 import { IDisplay } from './i-display.interface';
@@ -163,14 +163,17 @@ export class ChartBase implements IDisplay {
             };
 
             // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
+
             // case 1 : configuration
             axis = this._instance_loader.axisFactory(axisConfig.axisClass, axis_params);
             axis.updateDisplay( this.width, this.height );
+
             // case 2 : properties
             // axis = this._instance_loader.axisFactory(axisConfig.axisClass, null);
             // axis.configuration = axis_params;
             // axis.target = this._axisGroup;
-            tempList.push( axis );
+
+            tempList.push(axis);
         });
         return tempList;
     }
@@ -185,12 +188,12 @@ export class ChartBase implements IDisplay {
 
             seriesList.map( seriesConfig => {
                 let series: Series;
-                const series_params: SeriesParam = {
-                    config: seriesConfig,
+                const series_configuration: SeriesConfiguration = {
+                    condition: seriesConfig,
                     margin: this.margin,
                     target: this._seriesGroup
                 };
-                series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, series_params);
+                series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, series_configuration);
 
                 // series.yAxe = _.find(this._axis, 'field', seriesConfig.yField);
                 for ( let i = 0 ; i < this._axis.length; i++ ) {
@@ -208,6 +211,12 @@ export class ChartBase implements IDisplay {
                         break;
                     }
                 }
+
+                // case2 : property
+                // series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, null);
+                // series.configuration = series_configuration;
+                // series.target = this._seriesGroup;
+
                 tempList.push(series);
             });
         }

@@ -6,8 +6,8 @@ export class DateTimeAxis extends Axis {
     _scale: any;
     _customTimeFormat: any;
 
-    constructor(axisparams: AxisConfiguration) {
-        super(axisparams);
+    constructor(axisconfig: AxisConfiguration) {
+        super(axisconfig);
         // make Axis
         this._customTimeFormat = d3.time.format.multi([
                 ['.%L', function(d) { return d.getMilliseconds(); }],
