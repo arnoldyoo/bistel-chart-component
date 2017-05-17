@@ -1,11 +1,11 @@
-import { AxisParam } from './../../model/chart-param.interface';
+import { AxisConfiguration, AxisConditions } from './../../model/chart-param.interface';
 import { Axe } from './axe';
 import { IDisplay } from './../i-display.interface';
 
 export abstract class Axis implements IDisplay {
     axe: Axe;
 
-    _configuration: AxisParam;
+    _configuration: AxisConfiguration;
     _field: string;
     _format: any;
     _visible: boolean;
@@ -21,22 +21,26 @@ export abstract class Axis implements IDisplay {
     _dataProvider: Array<any>;
 
     // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
-    constructor(axisparams?: AxisParam) {
-        if (axisparams) {
-            this.configuration = axisparams;
+    constructor(axisconfig?: AxisConfiguration) {
+        if (axisconfig) {
+            this.configuration = axisconfig;
         }
     }
 
-    set configuration( value: any ) {
+    set configuration( value: AxisConfiguration ) {
         this._configuration = value;
         if (this._configuration) {
             this.width = this._configuration.width;
             this.height = this._configuration.height;
             this.margin = this._configuration.margin;
             this.domain = this._configuration.domain;
-            this._configGenerator(this._configuration.config);
+            if (this._configuration.conditions) {
+                this._setConditions(this._configuration.conditions);
+            }
             this.dataProvider = this._configuration.data;
-            this._createContainer(this._configuration.target);
+            if (this._configuration.target) {
+                this.target = this._configuration.target;
+            }
         }
     }
 
@@ -45,7 +49,7 @@ export abstract class Axis implements IDisplay {
     }
 
     set target( value: any ) {
-        this._target = value;
+        this._createContainer(value);
     }
 
     get target(): any {
@@ -169,20 +173,20 @@ export abstract class Axis implements IDisplay {
 
     makeAxisLabel() { }
 
-    _configGenerator(config: any) {
-        this.field = config.field;
-        this.format = config.format;
-        this.visible = config.visible;
-        this.title = config.title;
-        this.type = config.type;
-        this.orient = config.orient;
-        if (config.tickInfo) {
-            this.tickInfo = config.tickInfo;
+    _setConditions(conditions: AxisConditions) {
+        this.field = conditions.field;
+        this.format = conditions.format;
+        this.visible = conditions.visible;
+        this.title = conditions.title;
+        this.type = conditions.type;
+        this.orient = conditions.orient;
+        if (conditions.tickInfo) {
+            this.tickInfo = conditions.tickInfo;
         }
     }
 
     _createContainer(axisTarget: any) {
-        this.target = axisTarget.append('g').attr('class', `${this.type} ${this.orient}`);
+        this._target = axisTarget.append('g').attr('class', `${this.type} ${this.orient}`);
         this.updateDisplay(this.width, this.height);
     }
 

@@ -1,11 +1,11 @@
 import { Axe } from './../../axis/axe';
-import { AxisParam } from './../../../model/chart-param.interface';
+import { AxisConfiguration } from './../../../model/chart-param.interface';
 import { Axis } from '../../axis/axis';
 
 export class CategoryAxis extends Axis {
     _scale: any;
 
-    constructor(axisparams: AxisParam) {
+    constructor(axisparams: AxisConfiguration) {
         super(axisparams);
         // make Axis
     }
