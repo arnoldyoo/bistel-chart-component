@@ -1,12 +1,12 @@
 import { Axe } from './../../axis/axe';
-import { AxisParam } from './../../../model/chart-param.interface';
+import { AxisConfiguration } from './../../../model/chart-param.interface';
 import { Axis } from '../../axis/axis';
 
 export class DateTimeAxis extends Axis {
     _scale: any;
     _customTimeFormat: any;
 
-    constructor(axisparams: AxisParam) {
+    constructor(axisparams: AxisConfiguration) {
         super(axisparams);
         // make Axis
         this._customTimeFormat = d3.time.format.multi([

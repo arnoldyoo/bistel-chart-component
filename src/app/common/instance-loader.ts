@@ -1,6 +1,6 @@
 import { DateTimeAxis, CategoryAxis, NumericAxis } from './component/axis';
 import { ColumnSeries, LineSeries } from './component/series';
-import { AxisParam, SeriesParam } from './../model/chart-param.interface';
+import { AxisConfiguration, SeriesParam } from './../model/chart-param.interface';
 
 export class InstanceLoader {
     ctors: any;
@@ -28,7 +28,7 @@ export class InstanceLoader {
     }
 
     // name: string ,config: any, target: any, width: number, height: number, margin: Array<any>, domain: any
-    axisFactory(name: string, axisparams: AxisParam): any {
+    axisFactory(name: string, axisparams: AxisConfiguration): any {
         const ctor: any = this._getCtor(name);
         const classInstance: any = new ctor(axisparams);
         return classInstance;

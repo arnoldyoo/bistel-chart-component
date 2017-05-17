@@ -1,4 +1,4 @@
-import { AxisParam, SeriesParam } from './../model/chart-param.interface';
+import { AxisConfiguration, SeriesParam } from './../model/chart-param.interface';
 import { Series } from './series/Series';
 import { Axis } from './axis/axis';
 import { IDisplay } from './i-display.interface';
@@ -152,8 +152,8 @@ export class ChartBase implements IDisplay {
         const tempList = [];
         axisList.map( axisConfig => {
             let axis: Axis;
-            const axis_params: AxisParam = {
-                config: axisConfig,
+            const axis_params: AxisConfiguration = {
+                conditions: axisConfig,
                 target: this._axisGroup,
                 width: this.width,
                 height: this.height,
@@ -163,8 +163,13 @@ export class ChartBase implements IDisplay {
             };
 
             // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
+            // case 1 : configuration
             axis = this._instance_loader.axisFactory(axisConfig.axisClass, axis_params);
             axis.updateDisplay( this.width, this.height );
+            // case 2 : properties
+            // axis = this._instance_loader.axisFactory(axisConfig.axisClass, null);
+            // axis.configuration = axis_params;
+            // axis.target = this._axisGroup;
             tempList.push( axis );
         });
         return tempList;
