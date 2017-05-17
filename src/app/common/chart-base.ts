@@ -147,9 +147,10 @@ export class ChartBase implements IDisplay {
     }
 
     _createAxis(axisList: Array<any>) {
-        // tslint:disable-next-line:curly
-        if (!axisList) return;
         const tempList = [];
+        // tslint:disable-next-line:curly
+        if (!axisList) return tempList;
+
         axisList.map( axisConfig => {
             let axis: Axis;
             const axis_params: AxisConfiguration = {
@@ -179,11 +180,10 @@ export class ChartBase implements IDisplay {
     }
 
     _createSeries(seriesList: Array<any>) {
-        // tslint:disable-next-line:curly
-        if (!seriesList) return;
-        // series loop
-        // this._series.push(seires);
         const tempList = [];
+        // tslint:disable-next-line:curly
+        if (!seriesList) return tempList;
+
         if (seriesList.length) {
 
             seriesList.map( seriesConfig => {

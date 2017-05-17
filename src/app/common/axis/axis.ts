@@ -192,7 +192,7 @@ export abstract class Axis implements IDisplay {
 
     _updateContainerPosition() {
         if (this.orient === 'bottom') {
-            this.target.attr('transform', `translate(${this.margin.left}, ${this.height+this.margin.top})`);
+            this.target.attr('transform', `translate(${this.margin.left}, ${this.height + this.margin.top})`);
         } else if (this.orient === 'top' ) {
             this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
         } else if (this.orient === 'right') {
