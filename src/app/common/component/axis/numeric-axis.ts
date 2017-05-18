@@ -7,7 +7,6 @@ export class NumericAxis extends Axis {
 
     constructor(axisconfig: AxisConfiguration) {
         super(axisconfig);
-        // make Axis
     }
 
     updateDisplay(width: number, height: number) {
@@ -24,7 +23,7 @@ export class NumericAxis extends Axis {
         super.scaleSetting();
         this._scale = d3.scale.linear()
                                 .domain(this.domain)
-                                .range([this.height, 0]);
+                                .range(this._range);
     }
 
     scaleToAxeSetting() {

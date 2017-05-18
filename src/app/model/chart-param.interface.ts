@@ -1,7 +1,8 @@
 export interface SeriesConfiguration {
     condition: SeriesConditions;
-    target?: any;
     margin: any;
+    target?: any;
+    type?: any;
 };
 
 export interface AxisConfiguration {

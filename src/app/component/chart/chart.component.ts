@@ -55,7 +55,7 @@ export class ChartComponent implements OnInit {
                 {
                     axisClass: 'NumericAxis',
                     type: 'y',
-                    field: 'profit',
+                    field: 'profit,revenue',
                     format: undefined,
                     orient: 'left',
                     visible: true,
@@ -91,12 +91,41 @@ export class ChartComponent implements OnInit {
                 }
             ],
             series: [
+                // {
+                //     seriesClass: 'ColumnSeries',
+                //     xField: 'category',
+                //     yField: 'profit',
+                //     visible: true,
+                //     displayName: 'Profit'
+                // },
+                // {
+                //     seriesClass: 'LineSeries',
+                //     xField: 'category',
+                //     yField: 'profit',
+                //     visible: true,
+                //     displayName: 'Profit'
+                // }
                 {
-                    seriesClass: 'ColumnSeries',
-                    xField: 'category',
-                    yField: 'profit',
+                    seriesClass: 'ColumnSet',
                     visible: true,
-                    displayName: 'Profit'
+                    type: 'group',
+                    series: [
+                        {
+                            seriesClass: 'ColumnSeries',
+                            xField: 'category',
+                            yField: 'profit',
+                            visible: true,
+                            displayName: 'Profit'
+                        }
+                        ,
+                        {
+                            seriesClass: 'ColumnSeries',
+                            xField: 'category',
+                            yField: 'revenue',
+                            visible: true,
+                            displayName: 'Revenue'
+                        }
+                    ]
                 },
                 {
                     seriesClass: 'LineSeries',
