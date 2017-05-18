@@ -42,4 +42,29 @@ export class NumericAxis extends Axis {
             this.axe.scaleToAxe.tickFormat(this.tickInfo.tickFormat);
         }
     }
+
+    _createDefaultDomain() {
+        const targetArray: Array<any> = this.field.split(',');
+        if (targetArray.length > 1) {
+            const tempArray: Array<any> = [];
+            for (let i = 0; i < targetArray.length; i++) {
+                const maxTmp: any = _.maxBy(this.dataProvider, targetArray[i]);
+                const minTmp: any = _.minBy(this.dataProvider, targetArray[i]);
+                const obj: any = {
+                  field: targetArray[i],
+                  minValue: minTmp[targetArray[i]],
+                  maxValue: maxTmp[targetArray[i]]
+                };
+                tempArray.push(obj);
+            }
+            const max: any = _.maxBy(tempArray, 'maxValue');
+            const min: any = _.minBy(tempArray, 'minValue');
+
+            this.domain = [];
+            this.domain.push(min.minValue);
+            this.domain.push(max.maxValue + (max.maxValue * 0.1));
+        } else {
+            super._createDefaultDomain();
+        }
+    }
 }

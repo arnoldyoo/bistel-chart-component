@@ -213,7 +213,8 @@ export abstract class Axis implements IDisplay {
     }
 
     _createDefaultDomain() {
-        const targetField = this.field.split(',')[0];
+        const targetArray: Array<any> = this.field.split(',');
+        const targetField: string = targetArray[0];
         this.domain = this.dataProvider.map( d => {
             return d[targetField];
         });
