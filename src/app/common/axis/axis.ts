@@ -19,6 +19,7 @@ export abstract class Axis implements IDisplay {
     _height: number;
     _tickInfo: any;
     _dataProvider: Array<any>;
+    _range: Array<number>;
 
     // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
     constructor(axisconfig?: AxisConfiguration) {
@@ -169,7 +170,16 @@ export abstract class Axis implements IDisplay {
 
     scaleToAxeSetting() { }
 
-    scaleSetting() { }
+    scaleSetting() {
+        this._range = [];
+        if (this.type === 'x') {
+            this._range.push(0);
+            this._range.push(this.width);
+        } else {
+            this._range.push(this.height);
+            this._range.push(0);
+        }
+    }
 
     makeAxisLabel() { }
 
@@ -196,15 +206,16 @@ export abstract class Axis implements IDisplay {
         } else if (this.orient === 'top' ) {
             this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
         } else if (this.orient === 'right') {
-            this.target.attr('transform', `translate(${this.width}, 0)`);
+            this.target.attr('transform', `translate(${this.margin.left + this.width}, ${this.margin.top})`);
         } else {
             this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
         }
     }
 
     _createDefaultDomain() {
+        const targetField = this.field.split(',')[0];
         this.domain = this.dataProvider.map( d => {
-            return d[this.field];
+            return d[targetField];
         });
         if ( this.domain.length && _.isNumber(this.domain[0]) ) {
             const tempDomain = [...this.domain];

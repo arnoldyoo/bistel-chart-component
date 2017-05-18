@@ -35,7 +35,7 @@ export class DateTimeAxis extends Axis {
         super.scaleSetting();
         this._scale = d3.time.scale()
                                 .domain(this.domain)
-                                .range([0, this.width]);
+                                .range(this._range);
     }
 
     scaleToAxeSetting() {

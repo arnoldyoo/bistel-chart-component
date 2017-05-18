@@ -10,6 +10,8 @@ export class Series implements IDisplay {
     // get group element from chart-base
     _target: any;
 
+    _color: any;
+
     // api private
     // _displayName will be used in class name.
     _displayName: string;
@@ -66,6 +68,14 @@ export class Series implements IDisplay {
 
     get target(): any {
         return this._target;
+    }
+
+    set color(value: any) {
+        this._color = value;
+    }
+
+    get color(): any {
+        return this._color;
     }
 
     set displayName(value: string) {
@@ -175,10 +185,9 @@ export class Series implements IDisplay {
     * description : first time, create group element in series class
     */
     _createContainer(seriesTarget: any) {
-
         this._target = seriesTarget.append('g').attr('class', this.displayName);
-
     }
+
     _setConditions(conditions: SeriesConditions) {
         this._xField = conditions.xField;
         this._yField = conditions.yField;

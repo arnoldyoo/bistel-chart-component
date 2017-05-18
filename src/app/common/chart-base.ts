@@ -6,6 +6,8 @@ import { InstanceLoader } from './instance-loader';
 
 export class ChartBase implements IDisplay {
 
+    colors = ['#00ff00', '#00ffff', '#0000ff'];
+
     _configuration: any;
 
     _target: any; // target svg element
@@ -185,19 +187,26 @@ export class ChartBase implements IDisplay {
         if (!seriesList) return tempList;
 
         if (seriesList.length) {
-
-            seriesList.map( seriesConfig => {
-                let series: Series;
+            seriesList.map( (seriesConfig, j) => {
+                let series: any;
+                const type = seriesConfig.type;
+                console.log(j, 'series type : ', type);
                 const series_configuration: SeriesConfiguration = {
                     condition: seriesConfig,
                     margin: this.margin,
                     target: this._seriesGroup
                 };
                 series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, series_configuration);
-
+                series.color = this.colors[j];
+                if (type === 'group' || type === 'stacked') { // column set series
+                    console.log('column set series create!!!!!!');
+                    series.series = this._createSeries(seriesConfig.series);
+                } else {
+                }
                 // series.yAxe = _.find(this._axis, 'field', seriesConfig.yField);
                 for ( let i = 0 ; i < this._axis.length; i++ ) {
-                    if ( this._axis[i].field === seriesConfig.xField ) {
+                    if (this._axis[i].field.split(',').indexOf(seriesConfig.xField) > -1) {
+                        console.log('series set xaxis');
                         series.xAxe =  this._axis[i].axe;
                         series.xAxe.name = this._axis[i].field;
                         break;
@@ -205,7 +214,8 @@ export class ChartBase implements IDisplay {
                 }
 
                 for ( let i = 0 ; i < this._axis.length; i++ ) {
-                    if ( this._axis[i].field === seriesConfig.yField ) {
+                    if (this._axis[i].field.split(',').indexOf(seriesConfig.yField) > -1) {
+                        console.log('series set yaxis');
                         series.yAxe =  this._axis[i].axe;
                         series.yAxe.name = this._axis[i].field;
                         break;
@@ -236,6 +246,8 @@ export class ChartBase implements IDisplay {
         // tslint:disable-next-line:curly
         if (!this._series) return;
         for (let i = 0; i < this._series.length; i++) {
+            this._series[i].width = this.width;
+            this._series[i].height = this.height;
             this._series[i].dataProvider = this.data;
         }
     }
@@ -255,6 +267,7 @@ export class ChartBase implements IDisplay {
         for (let i = 0; i < 31; i++) {
             this.data.push( {  category: 'A' + i,
                            date: new Date(2017, 0, i).getTime(),
+                           revenue: Math.round( Math.random() * 120 ),
                            profit: Math.round( Math.random() * 100 ) } );
         }
     }

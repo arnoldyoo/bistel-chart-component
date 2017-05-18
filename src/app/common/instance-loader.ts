@@ -1,5 +1,5 @@
 import { DateTimeAxis, CategoryAxis, NumericAxis } from './component/axis';
-import { ColumnSeries, LineSeries } from './component/series';
+import { ColumnSeries, LineSeries, ColumnSet } from './component/series';
 import { AxisConfiguration, SeriesConfiguration } from './../model/chart-param.interface';
 
 export class InstanceLoader {
@@ -15,6 +15,7 @@ export class InstanceLoader {
             NumericAxis: NumericAxis,
             DateTimeAxis: DateTimeAxis,
             ColumnSeries: ColumnSeries,
+            ColumnSet: ColumnSet,
             LineSeries: LineSeries
         };
     }

@@ -1,16 +1,72 @@
 import { ColumnSeries } from './column-series';
+import { IDisplay } from './../../i-display.interface';
+import { Axe } from './../../axis/axe';
+import { InstanceLoader } from './../../instance-loader';
+import { SeriesConfiguration } from './../../../model/chart-param.interface';
 
-export class ColumnSet {
+export class ColumnSet implements IDisplay {
+
+    _width: number;
+    _height: number;
+    _target: any;
 
     _series: Array<ColumnSeries>;
     _type: string;
+    _configuration: SeriesConfiguration;
 
-    constructor() {
-        this._type = 'group';
+    _dataProvider: Array<any>;
+    _xAxe: Axe;
+    _yAxe: Axe;
+    _x: any;
+    _y: any;
+
+    _seriesCnt: number;
+
+    constructor(configuration?: SeriesConfiguration) {
+        if (configuration) {
+            this.configuration = configuration;
+        }
+    }
+
+    set configuration(value: any) {
+        this._configuration = value;
+        if (this._configuration) {
+            this.type = 'group';
+        }
+    }
+
+    set width(value: number) {
+        this._width = value;
+    }
+
+    get width(): number {
+        return this._width;
+    }
+
+    set height(value: number) {
+        this._height = value;
+    }
+
+    get height(): number {
+        return this._height;
+    }
+
+    set target(value: any) {
+        this._target = value;
+    }
+
+    get target(): any {
+        return this._target;
     }
 
     set series(value: Array<ColumnSeries>) {
         this._series = value;
+        if (this._series) {
+            this._seriesCnt = this._series.length;
+            console.log('series : ', this._series);
+            // const seriesConfigurations = this._series.map( d => { return d.configuration; } );
+            // this._createSeries(seriesConfigurations);
+        }
     }
     get series(): Array<ColumnSeries> {
         return this._series;
@@ -22,5 +78,63 @@ export class ColumnSet {
 
     get type(): string {
         return this._type;
+    }
+
+    set xAxe( value: Axe ) {
+        this._xAxe = value;
+    }
+
+    get xAxe(): Axe {
+        return this._xAxe;
+    }
+
+    set yAxe( value: Axe ) {
+        this._yAxe = value;
+    }
+
+    get yAxe(): Axe {
+        return this._yAxe;
+    }
+
+    set x(value: any) {
+        this._x = value;
+    }
+
+    get x(): any {
+        return this._x;
+    }
+
+    set y(value: any) {
+        this._y = value;
+    }
+
+    get y(): any {
+        return this._y;
+    }
+
+    set dataProvider( data: any[] ) {
+        this._dataProvider = data;
+        console.log(`ColumnSet ===> ${data}`);
+        this.updateDisplay(this.width, this.height);
+    }
+
+    get dataProvider() {
+        return this._dataProvider;
+    }
+
+    generatePosition() {
+        // tslint:disable-next-line:comment-format
+        // setup x, y, width, height
+        if (this.type !== 'group') {
+        }
+    }
+
+    updateDisplay(width?: number, height?: number) {
+        console.log(`ColumnSet ===> updateDisplay(${width}, ${height})`);
+        for ( let i = 0; i < this.series.length; i++ ) {
+            this.series[i].seriesCnt = this.series.length;
+            this.series[i].seriesIndex = i;
+            this.series[i].dataProvider = this._dataProvider;
+        }
     }
 }
