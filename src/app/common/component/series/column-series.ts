@@ -3,22 +3,22 @@ import { SeriesConfiguration } from './../../../model/chart-param.interface';
 
 export class ColumnSeries extends Series {
 
-    _rectDimensions: number;
+    _rectWidthDimensions: number;
     _seriesCnt: number;
     _seriesIndex: number;
 
     constructor( seriesParam: SeriesConfiguration ) {
         super( seriesParam );
         this._seriesCnt = 1;
-        this._rectDimensions = 0;
+        this._rectWidthDimensions = 0;
     }
 
-    set rectDimensions(value: number) {
-        this._rectDimensions = value;
+    set rectWidthDimensions(value: number) {
+        this._rectWidthDimensions = value;
     }
 
-    get rectDimensions(): number {
-        return this._rectDimensions;
+    get rectWidthDimensions(): number {
+        return this._rectWidthDimensions;
     }
 
     set seriesCnt(value: number) {
@@ -51,14 +51,18 @@ export class ColumnSeries extends Series {
         // tslint:disable-next-line:comment-format
         // setup x, y, width, height
         if (this.seriesCnt > 1) {
-            this.rectDimensions = this.xAxe.itemDimensions / this.seriesCnt;
+            this.rectWidthDimensions = this.xAxe.itemDimensions / this.seriesCnt;
         }
-        console.log(`column series : ${this.index} ${this.rectDimensions}`);
-        this.x = this.xAxe.scale(this._data[this._xField]) + this.seriesIndex * this.rectDimensions;
-        this.width = this.xAxe.itemDimensions / this.seriesCnt;
+        console.log(`column series : ${this.index} ${this.rectWidthDimensions}`);
+        if (this.xAxe) {
+            this.x = this.xAxe.scale(this._data[this._xField]) + this.seriesIndex * this.rectWidthDimensions;
+            this.width = this.xAxe.itemDimensions / this.seriesCnt;
+        }
 
-        this.y = this.yAxe.scale(this._data[this._yField]);
-        this.height = this.yAxe.scale.range()[0] - this.y;
+        if (this.yAxe) {
+            this.y = this.yAxe.scale(this._data[this._yField]);
+            this.height = this.yAxe.scale.range()[0] - this.y;
+        }
     }
 
     updateDisplay() {
