@@ -64,8 +64,6 @@ export class ColumnSet implements IDisplay {
         if (this._series) {
             this._seriesCnt = this._series.length;
             console.log('series : ', this._series);
-            // const seriesConfigurations = this._series.map( d => { return d.configuration; } );
-            // this._createSeries(seriesConfigurations);
         }
     }
     get series(): Array<ColumnSeries> {
