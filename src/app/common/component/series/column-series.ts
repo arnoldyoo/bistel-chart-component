@@ -13,6 +13,7 @@ export class ColumnSeries extends Series {
 
     constructor( seriesParam: SeriesConfiguration ) {
         super( seriesParam );
+        this._seriesIndex = 0;
         this._seriesCnt = 1;
         this._rectWidthDimensions = 0;
         this._recrHeightDimensions = 0;
@@ -117,7 +118,7 @@ export class ColumnSeries extends Series {
     _normal() {
         if (this.xAxe) {
             this.x = this.xAxe.scale(this._data[this._xField]) + this.seriesIndex * this.rectWidthDimensions;
-            this.width = this.rectWidthDimensions;
+            this.width = this.xAxe.itemDimensions;
         }
         if (this.yAxe) {
             this.y = this.yAxe.scale(this._data[this._yField]);
@@ -149,7 +150,14 @@ export class ColumnSeries extends Series {
         if (this.seriesCnt > 1) {// case : multi series
             this.rectWidthDimensions = (this.xAxe.itemDimensions / this.seriesCnt);
         }
-        this._normal();
+        if (this.xAxe) {
+            this.x = this.xAxe.scale(this._data[this._xField]) + this.seriesIndex * this.rectWidthDimensions;
+            this.width = this.rectWidthDimensions;
+        }
+        if (this.yAxe) {
+            this.y = this.yAxe.scale(this._data[this._yField]);
+            this.height = this.yAxe.scale.range()[0] - this.y;
+        }
     }
 
 };

@@ -3,7 +3,7 @@ import { IDisplay } from './../i-display.interface';
 import { SeriesConfiguration } from 'app/model/chart-param.interface';
 import { Axe } from 'app/common/axis/axe';
 
-export class Series implements IDisplay {
+export abstract class Series implements IDisplay {
 
     _width: number;
     _height: number;
