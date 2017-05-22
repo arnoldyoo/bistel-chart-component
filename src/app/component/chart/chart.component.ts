@@ -121,7 +121,7 @@ export class ChartComponent implements OnInit {
                 {
                     seriesClass: 'ColumnSet',
                     visible: true,
-                    type: 'stacked',
+                    type: 'group', // stacked
                     series: [
                         {
                             seriesClass: 'ColumnSeries',

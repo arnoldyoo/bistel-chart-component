@@ -63,7 +63,6 @@ export class ColumnSet implements IDisplay {
         this._series = value;
         if (this._series) {
             this._seriesCnt = this._series.length;
-            console.log('series : ', this._series);
         }
     }
     get series(): Array<ColumnSeries> {
@@ -113,7 +112,6 @@ export class ColumnSet implements IDisplay {
 
     set dataProvider( data: any[] ) {
         this._dataProvider = data;
-        console.log(`ColumnSet ===> ${data}`);
         this.updateDisplay(this.width, this.height);
     }
 
