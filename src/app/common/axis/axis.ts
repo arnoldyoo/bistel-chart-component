@@ -23,6 +23,9 @@ export abstract class Axis implements IDisplay {
 
     _isStacked: boolean;
 
+    numeric_min: number;
+    numeric_max: number;
+
     // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
     constructor(axisconfig?: AxisConfiguration) {
         if (axisconfig) {
@@ -214,13 +217,6 @@ export abstract class Axis implements IDisplay {
     _updateContainerPosition() {
         if (this.orient === 'bottom') {
             this.target.attr('transform', `translate(${this.margin.left}, ${this.height + this.margin.top})`);
-            /*
-            let scaley = this.height + this.margin.top;
-            if (this.axe.scale) {
-                scaley = this.axe.scale(0);
-            }
-            this.target.attr('transform', `translate(${this.margin.left}, ${scaley})`);
-            */
         } else if (this.orient === 'top' ) {
             this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
         } else if (this.orient === 'right') {
