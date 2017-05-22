@@ -22,6 +22,26 @@ export class CategoryAxis extends Axis {
             this._tickRotate();
         }
     }
+    _updateContainerPosition() {
+        if (this.numeric_min && this.numeric_max && this.numeric_min < 0) {
+            const temp_range: Array<number> = [];
+            if (this.type === 'y') {
+                temp_range.push(0);
+                temp_range.push(this.width);
+            } else {
+                temp_range.push(this.height);
+                temp_range.push(0);
+            }
+            const temp_scale: any = this._scale = d3.scale.linear()
+                                .domain([this.numeric_min, this.numeric_max])
+                                .range(temp_range);
+
+            const scaley: number = temp_scale(0);
+            this.target.attr('transform', `translate(${this.margin.left}, ${scaley + this.margin.top}) `);
+        } else {
+            super._updateContainerPosition();
+        }
+    }
 
     scaleSetting() {
         super.scaleSetting();

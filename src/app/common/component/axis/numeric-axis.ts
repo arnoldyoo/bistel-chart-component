@@ -22,6 +22,8 @@ export class NumericAxis extends Axis {
 
     scaleSetting() {
         super.scaleSetting();
+        this.numeric_min = this.domain[0];
+        this.numeric_max = this.domain[1];
         this._scale = d3.scale.linear()
                                 .domain(this.domain)
                                 .range(this._range);
@@ -90,6 +92,7 @@ export class NumericAxis extends Axis {
                 min = _.minBy(tempArray, 'minValue').minValue;
                 this.domain.push(min);
                 this.domain.push(max + (max * 0.1));
+                console.log(this.domain);
             }
         } else {
             super._createDefaultDomain();

@@ -25,6 +25,9 @@ export class ChartBase implements IDisplay {
     _isStacked = false;
     data: Array<any> = [];
 
+    min: number;
+    max: number;
+
     constructor( config?: any ) {
         this._instance_loader = new InstanceLoader();
         this._setDefaultData();
@@ -182,6 +185,11 @@ export class ChartBase implements IDisplay {
             axis = this._instance_loader.axisFactory(axisConfig.axisClass, axis_params);
             axis.updateDisplay( this.width, this.height );
 
+            if (axis.numeric_max && axis.numeric_min) {
+                this.min = axis.numeric_min;
+                this.max = axis.numeric_max;
+            }
+
             // case 2 : properties
             // axis = this._instance_loader.axisFactory(axisConfig.axisClass, null);
             // axis.configuration = axis_params;
@@ -247,6 +255,8 @@ export class ChartBase implements IDisplay {
         if (!this._axis) return;
         for (let i = 0 ; i < this._axis.length; i++) {
             this._axis[i].dataProvider = this.data;
+            this._axis[i].numeric_min = this.min;
+            this._axis[i].numeric_max = this.max;
             this._axis[i].updateDisplay(this.width, this.height);
         }
     }
@@ -277,9 +287,9 @@ export class ChartBase implements IDisplay {
             this.data.push( {  category: 'A' + i,
                            date: new Date(2017, 0, i).getTime(),
                            rate: Math.round( Math.random() * 10 ),
-                           ratio: Math.round( Math.random() * 110 ),
-                           revenue: Math.round( Math.random() * 120 ),
-                           profit: Math.round( Math.random() * 100 ) } );
+                           ratio: Math.round( Math.random() * 110 ) - 40,
+                           revenue: Math.round( Math.random() * 120 ) - 40,
+                           profit: Math.round( Math.random() * 100 ) - 40 } );
         }
     }
 };
