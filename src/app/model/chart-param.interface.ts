@@ -2,7 +2,7 @@ export interface SeriesConfiguration {
     condition: SeriesConditions;
     margin: any;
     target?: any;
-    type?: any;
+    type: any;
 };
 
 export interface AxisConfiguration {
@@ -13,6 +13,7 @@ export interface AxisConfiguration {
     height: number;
     domain?: Array<any>;
     data?: Array<any>;
+    isStacked: boolean;
 }
 
 export interface AxisConditions {

@@ -21,6 +21,8 @@ export abstract class Axis implements IDisplay {
     _dataProvider: Array<any>;
     _range: Array<number>;
 
+    _isStacked: boolean;
+
     // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
     constructor(axisconfig?: AxisConfiguration) {
         if (axisconfig) {
@@ -35,6 +37,7 @@ export abstract class Axis implements IDisplay {
             this.height = this._configuration.height;
             this.margin = this._configuration.margin;
             this.domain = this._configuration.domain;
+            this.isStacked = this._configuration.isStacked;
             if (this._configuration.conditions) {
                 this._setConditions(this._configuration.conditions);
             }
@@ -155,11 +158,19 @@ export abstract class Axis implements IDisplay {
         return this._dataProvider;
     }
 
+    set isStacked(value: boolean) {
+        this._isStacked = value;
+    }
+
+    get isStacked() {
+        return this._isStacked;
+    }
+
     updateDisplay(width: number, height: number) {
         this.width = width;
         this.height = height;
-        this._updateContainerPosition();
         this._setupAxe();
+        this._updateContainerPosition();
         this.makeAxisLabel();
     }
 
@@ -203,6 +214,13 @@ export abstract class Axis implements IDisplay {
     _updateContainerPosition() {
         if (this.orient === 'bottom') {
             this.target.attr('transform', `translate(${this.margin.left}, ${this.height + this.margin.top})`);
+            /*
+            let scaley = this.height + this.margin.top;
+            if (this.axe.scale) {
+                scaley = this.axe.scale(0);
+            }
+            this.target.attr('transform', `translate(${this.margin.left}, ${scaley})`);
+            */
         } else if (this.orient === 'top' ) {
             this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
         } else if (this.orient === 'right') {
@@ -231,5 +249,9 @@ export abstract class Axis implements IDisplay {
             this.domain.push(min);
             this.domain.push(max);
         }
+    }
+
+    _minusPosition() {
+
     }
 }

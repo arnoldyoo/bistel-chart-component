@@ -4,13 +4,18 @@ import { SeriesConfiguration } from './../../../model/chart-param.interface';
 export class ColumnSeries extends Series {
 
     _rectWidthDimensions: number;
+    _recrHeightDimensions: number;
     _seriesCnt: number;
     _seriesIndex: number;
+    _type: string;
+    _stackField: Array<string>;
+    _seriesWidth: number;
 
     constructor( seriesParam: SeriesConfiguration ) {
         super( seriesParam );
         this._seriesCnt = 1;
         this._rectWidthDimensions = 0;
+        this._recrHeightDimensions = 0;
     }
 
     set rectWidthDimensions(value: number) {
@@ -19,6 +24,14 @@ export class ColumnSeries extends Series {
 
     get rectWidthDimensions(): number {
         return this._rectWidthDimensions;
+    }
+
+    set recrHeightDimensions(value: number) {
+        this._recrHeightDimensions = value;
+    }
+
+    get recrHeightDimensions(): number {
+        return this._recrHeightDimensions;
     }
 
     set seriesCnt(value: number) {
@@ -37,6 +50,22 @@ export class ColumnSeries extends Series {
         return this._seriesIndex;
     }
 
+    set type(value: string) {
+        this._type = value;
+    }
+
+    get type(): string {
+        return this._type;
+    }
+
+    set stackField(value: Array<string>) {
+        this._stackField = value;
+    }
+
+    get stackField() {
+        return this._stackField;
+    }
+
     dataSetting() {
         super.dataSetting();
         for (let j = 0; j < this.dataProvider.length; j++) {
@@ -50,24 +79,21 @@ export class ColumnSeries extends Series {
         super.generatePosition();
         // tslint:disable-next-line:comment-format
         // setup x, y, width, height
-        if (this.seriesCnt > 1) {
-            this.rectWidthDimensions = this.xAxe.itemDimensions / this.seriesCnt;
-        }
-        console.log(`column series : ${this.index} ${this.rectWidthDimensions}`);
-        if (this.xAxe) {
-            this.x = this.xAxe.scale(this._data[this._xField]) + this.seriesIndex * this.rectWidthDimensions;
-            this.width = this.xAxe.itemDimensions / this.seriesCnt;
-        }
-
-        if (this.yAxe) {
-            this.y = this.yAxe.scale(this._data[this._yField]);
-            this.height = this.yAxe.scale.range()[0] - this.y;
+        switch (this.type) {
+            case 'stacked' :
+                this._stacked();
+            break;
+            case 'group' :
+                this._group();
+            break;
+            default :
+                this._normal();
+            break;
         }
     }
 
     updateDisplay() {
         super.updateDisplay();
-        console.log(`column series ===> updateDisplay( index : ${this.displayName} ${this._index})`);
         const rectElement: any = this.target.select(`.${this.displayName + this._index}`);
         if (!rectElement[0][0]) {
             this.createItem();
@@ -84,7 +110,46 @@ export class ColumnSeries extends Series {
         this.target.datum(this.data)
                             .append('rect')
                             .attr('class', this.displayName + this._index)
+                            .attr('value', this._data[this._yField])
                             .style('fill', this.color);
+    }
+
+    _normal() {
+        if (this.xAxe) {
+            this.x = this.xAxe.scale(this._data[this._xField]) + this.seriesIndex * this.rectWidthDimensions;
+            this.width = this.rectWidthDimensions;
+        }
+        if (this.yAxe) {
+            this.y = this.yAxe.scale(this._data[this._yField]);
+            this.height = this.yAxe.scale.range()[0] - this.y;
+        }
+    }
+
+    _stacked() {
+        if (this.xAxe) {
+            this.x = this.xAxe.scale(this._data[this._xField]);
+            this.width = this.xAxe.itemDimensions;
+        }
+        if (this.yAxe) {
+            this.y = this.yAxe.scale(this._data[this._yField]);
+            this.height = this.yAxe.scale.range()[0] - this.y;
+            let compareValue = 0;
+            let currentField = '';
+            if (this.seriesIndex > 0) {
+                for (let i = 0; i < this.seriesIndex; i++) {
+                    currentField = this.stackField[i];
+                    compareValue += this._data[currentField];
+                }
+            }
+            this.y = this.yAxe.scale(this._data[this._yField] + compareValue);
+        }
+    }
+
+    _group() {
+        if (this.seriesCnt > 1) {// case : multi series
+            this.rectWidthDimensions = (this.xAxe.itemDimensions / this.seriesCnt);
+        }
+        this._normal();
     }
 
 };
