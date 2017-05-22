@@ -22,6 +22,7 @@ export class ChartBase implements IDisplay {
     _dataProvider: Array<any>;
 
     _instance_loader: InstanceLoader;
+    _isStacked = false;
     data: Array<any> = [];
 
     constructor( config?: any ) {
@@ -111,6 +112,16 @@ export class ChartBase implements IDisplay {
         return this._domain;
     }
 
+    updateDisplay(width: number, height: number)  {
+        console.log(`chart-base.updateDisplay(${width}, ${height})`);
+        this._setSize(width, height);
+        this.target
+            .attr('width', width)
+            .attr('height', height);
+        this._axisUpdate();
+        this._seriesUpdate();
+    };
+
     _createSvgElement() {
         this.target = this._createSvg(this.configuration.chart);
         // generate axis component using this.target
@@ -125,18 +136,17 @@ export class ChartBase implements IDisplay {
 
     // generate svg element using configuration
     _createComponent() {
+        // stacked check
+        if (this.configuration.series) {
+            this.configuration.series.map( seriesConfig => {
+                const type = seriesConfig.type;
+                if (type === 'stacked') { // special case
+                    this._isStacked = true;
+                }
+            } );
+        }
         this._axis = this._createAxis(this.configuration.axis);
         this._series = this._createSeries(this.configuration.series);
-    };
-
-    updateDisplay(width: number, height: number)  {
-        console.log(`chart-base.updateDisplay(${width}, ${height})`);
-        this._setSize(width, height);
-        this.target
-            .attr('width', width)
-            .attr('height', height);
-        this._axisUpdate();
-        this._seriesUpdate();
     };
 
     _setSize(width: number, height: number)  {
@@ -162,7 +172,8 @@ export class ChartBase implements IDisplay {
                 height: this.height,
                 margin: this.margin,
                 data: this.data,
-                domain: this.domain
+                domain: this.domain,
+                isStacked: this._isStacked
             };
 
             // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
@@ -190,11 +201,11 @@ export class ChartBase implements IDisplay {
             seriesList.map( (seriesConfig, j) => {
                 let series: any;
                 const type = seriesConfig.type;
-                console.log(j, 'series type : ', type);
                 const series_configuration: SeriesConfiguration = {
                     condition: seriesConfig,
                     margin: this.margin,
-                    target: this._seriesGroup
+                    target: this._seriesGroup,
+                    type: type
                 };
                 series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, series_configuration);
                 series.color = this.colors[j];
@@ -206,7 +217,6 @@ export class ChartBase implements IDisplay {
                 // series.yAxe = _.find(this._axis, 'field', seriesConfig.yField);
                 for ( let i = 0 ; i < this._axis.length; i++ ) {
                     if (this._axis[i].field.split(',').indexOf(seriesConfig.xField) > -1) {
-                        console.log('series set xaxis');
                         series.xAxe =  this._axis[i].axe;
                         series.xAxe.name = this._axis[i].field;
                         break;
@@ -215,7 +225,6 @@ export class ChartBase implements IDisplay {
 
                 for ( let i = 0 ; i < this._axis.length; i++ ) {
                     if (this._axis[i].field.split(',').indexOf(seriesConfig.yField) > -1) {
-                        console.log('series set yaxis');
                         series.yAxe =  this._axis[i].axe;
                         series.yAxe.name = this._axis[i].field;
                         break;
@@ -267,6 +276,8 @@ export class ChartBase implements IDisplay {
         for (let i = 0; i < 31; i++) {
             this.data.push( {  category: 'A' + i,
                            date: new Date(2017, 0, i).getTime(),
+                           rate: Math.round( Math.random() * 10 ),
+                           ratio: Math.round( Math.random() * 110 ),
                            revenue: Math.round( Math.random() * 120 ),
                            profit: Math.round( Math.random() * 100 ) } );
         }

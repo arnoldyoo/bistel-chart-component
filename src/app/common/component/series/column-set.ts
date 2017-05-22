@@ -31,7 +31,7 @@ export class ColumnSet implements IDisplay {
     set configuration(value: any) {
         this._configuration = value;
         if (this._configuration) {
-            this.type = 'group';
+            this.type = this._configuration.type;
         }
     }
 
@@ -72,6 +72,7 @@ export class ColumnSet implements IDisplay {
 
     set type(value: string) {
         this._type = value;
+        console.log('set type : ', this._type);
     }
 
     get type(): string {
@@ -120,18 +121,14 @@ export class ColumnSet implements IDisplay {
         return this._dataProvider;
     }
 
-    generatePosition() {
-        // tslint:disable-next-line:comment-format
-        // setup x, y, width, height
-        if (this.type !== 'group') {
-        }
-    }
-
     updateDisplay(width?: number, height?: number) {
-        console.log(`ColumnSet ===> updateDisplay(${width}, ${height})`);
+        const fieldSet: Array<string> = this.series.map(d => { return d.yField; });
+        console.log(`ColumnSet ===> total field ${fieldSet}`);
         for ( let i = 0; i < this.series.length; i++ ) {
             this.series[i].seriesCnt = this.series.length;
             this.series[i].seriesIndex = i;
+            this.series[i].type = this.type;
+            this.series[i].stackField = fieldSet;
             this.series[i].dataProvider = this._dataProvider;
         }
     }

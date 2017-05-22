@@ -55,7 +55,7 @@ export class ChartComponent implements OnInit {
                 {
                     axisClass: 'NumericAxis',
                     type: 'y',
-                    field: 'profit,revenue',
+                    field: 'profit,revenue,ratio',
                     format: undefined,
                     orient: 'left',
                     visible: true,
@@ -88,6 +88,19 @@ export class ChartComponent implements OnInit {
                     tickInfo: {
                         ticks: 12
                     }
+                },
+                {
+                    axisClass: 'NumericAxis',
+                    type: 'y',
+                    field: 'rate',
+                    format: undefined,
+                    orient: 'right',
+                    visible: true,
+                    title: 'Rate',
+                    tickInfo : {
+                        ticks: 5,
+                        tickFormat: function(d) { return d3.format(',.0f')(d) + '%'; }
+                    }
                 }
             ],
             series: [
@@ -108,7 +121,7 @@ export class ChartComponent implements OnInit {
                 {
                     seriesClass: 'ColumnSet',
                     visible: true,
-                    type: 'group',
+                    type: 'stacked',
                     series: [
                         {
                             seriesClass: 'ColumnSeries',
@@ -116,23 +129,29 @@ export class ChartComponent implements OnInit {
                             yField: 'profit',
                             visible: true,
                             displayName: 'Profit'
-                        }
-                        ,
+                        },
                         {
                             seriesClass: 'ColumnSeries',
                             xField: 'category',
                             yField: 'revenue',
                             visible: true,
                             displayName: 'Revenue'
+                        },
+                        {
+                            seriesClass: 'ColumnSeries',
+                            xField: 'category',
+                            yField: 'ratio',
+                            visible: true,
+                            displayName: 'Ratio'
                         }
                     ]
                 },
                 {
                     seriesClass: 'LineSeries',
                     xField: 'category',
-                    yField: 'profit',
+                    yField: 'rate',
                     visible: true,
-                    displayName: 'Profit'
+                    displayName: 'Rate'
                 }
             ]
         };
