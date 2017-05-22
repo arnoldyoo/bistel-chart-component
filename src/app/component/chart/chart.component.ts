@@ -111,17 +111,17 @@ export class ChartComponent implements OnInit {
                     visible: true,
                     displayName: 'Profit'
                 },
-                // {
-                //     seriesClass: 'LineSeries',
-                //     xField: 'category',
-                //     yField: 'profit',
-                //     visible: true,
-                //     displayName: 'Profit'
-                // }
+                {
+                    seriesClass: 'LineSeries',
+                    xField: 'category',
+                    yField: 'profit',
+                    visible: true,
+                    displayName: 'Profit'
+                }
                 // {
                 //     seriesClass: 'ColumnSet',
                 //     visible: true,
-                //     type: 'group', // stacked
+                //     type: 'stacked', // stacked
                 //     series: [
                 //         {
                 //             seriesClass: 'ColumnSeries',
@@ -146,13 +146,13 @@ export class ChartComponent implements OnInit {
                 //         }
                 //     ]
                 // },
-                {
-                    seriesClass: 'LineSeries',
-                    xField: 'category',
-                    yField: 'rate',
-                    visible: true,
-                    displayName: 'Rate'
-                }
+                // {
+                //     seriesClass: 'LineSeries',
+                //     xField: 'category',
+                //     yField: 'rate',
+                //     visible: true,
+                //     displayName: 'Rate'
+                // }
             ]
         };
     }
