@@ -26,27 +26,9 @@ export class CategoryAxis extends Axis {
 
     _updateContainerPosition() {
         super._updateContainerPosition();
-        this._showZeroLine();
-        /*
         if (this.numeric_min && this.numeric_max && this.numeric_min < 0) {
-            const temp_range: Array<number> = [];
-            if (this.type === 'y') {
-                temp_range.push(0);
-                temp_range.push(this.width);
-            } else {
-                temp_range.push(this.height);
-                temp_range.push(0);
-            }
-            const temp_scale: any = this._scale = d3.scale.linear()
-                                .domain([this.numeric_min, this.numeric_max])
-                                .range(temp_range);
-
-            const scaley: number = temp_scale(0);
-            this.target.attr('transform', `translate(${this.margin.left}, ${scaley + this.margin.top}) `);
-        } else {
-            super._updateContainerPosition();
-        }
-        */
+            this._showZeroLine();
+        };
     }
 
     scaleSetting() {
@@ -106,7 +88,36 @@ export class CategoryAxis extends Axis {
 
     _showZeroLine() {
         if (this._zero) {
-
+            this._zero.remove();
         }
+        const rootSvg: any = d3.select(this.target[0][0].nearestViewportElement);
+        this._zero = rootSvg.append('g').attr('class', 'zero');
+        this._zero.attr('transform', `translate(${this.margin.left}, ${this._getNumericScale() + this.margin.top})`);
+
+        const median: any = this._zero.append('line');
+        median.attr('x1', 0)
+                .attr('y1', 0)
+                .attr('x2', this.width)
+                .attr('y2', 0)
+                .attr('stroke-width', 1)
+                .attr('stroke', 'black');
+    }
+
+    _getNumericScale(): any {
+        const temp_range: Array<number> = [];
+        if (this.type === 'y') {
+            temp_range.push(0);
+            temp_range.push(this.width);
+        } else {
+            temp_range.push(this.height);
+            temp_range.push(0);
+        }
+        const temp_scale: any = d3.scale.linear()
+                            .domain([this.numeric_min, this.numeric_max])
+                            .range(temp_range);
+
+        const scaley: number = temp_scale(0);
+        console.log(scaley);
+        return scaley;
     }
 }
