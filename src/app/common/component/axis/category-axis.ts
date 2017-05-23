@@ -4,6 +4,7 @@ import { Axis } from '../../axis/axis';
 
 export class CategoryAxis extends Axis {
     _scale: any;
+    _zero: any;
 
     constructor(axisconfig: AxisConfiguration) {
         super(axisconfig);
@@ -22,7 +23,11 @@ export class CategoryAxis extends Axis {
             this._tickRotate();
         }
     }
+
     _updateContainerPosition() {
+        super._updateContainerPosition();
+        this._showZeroLine();
+        /*
         if (this.numeric_min && this.numeric_max && this.numeric_min < 0) {
             const temp_range: Array<number> = [];
             if (this.type === 'y') {
@@ -41,6 +46,7 @@ export class CategoryAxis extends Axis {
         } else {
             super._updateContainerPosition();
         }
+        */
     }
 
     scaleSetting() {
@@ -96,5 +102,11 @@ export class CategoryAxis extends Axis {
                                      .attr('transform', d => {
                                        return 'rotate(45)';
                                       });
+    }
+
+    _showZeroLine() {
+        if (this._zero) {
+
+        }
     }
 }

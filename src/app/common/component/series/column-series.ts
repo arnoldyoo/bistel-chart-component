@@ -148,8 +148,9 @@ export class ColumnSeries extends Series {
             this.width = this.xAxe.itemDimensions;
         }
         if (this.yAxe) {
-            this.y = this.yAxe.scale(this._data[this._yField]);
-            this.height = this.yAxe.scale.range()[0] - this.y;
+            const min = this.yAxe.scale.domain()[0];
+            const max = this.yAxe.scale.domain()[1];
+            const targetvalue = this._data[this._yField];
             let compareValue = 0;
             let currentField = '';
             if (this.seriesIndex > 0) {
@@ -158,7 +159,8 @@ export class ColumnSeries extends Series {
                     compareValue += this._data[currentField];
                 }
             }
-            this.y = this.yAxe.scale(this._data[this._yField] + compareValue);
+            this.y = this.yAxe.scale(targetvalue + compareValue);
+            this.height = this.yAxe.scale.range()[0] - this.yAxe.scale(targetvalue);
         }
     }
 
