@@ -246,8 +246,4 @@ export abstract class Axis implements IDisplay {
             this.domain.push(max);
         }
     }
-
-    _minusPosition() {
-
-    }
 }
