@@ -287,9 +287,9 @@ export class ChartBase implements IDisplay {
             this.data.push( {  category: 'A' + i,
                            date: new Date(2017, 0, i).getTime(),
                            rate: Math.round( Math.random() * 10 ),
-                           ratio: Math.round( Math.random() * 110 ),
-                           revenue: Math.round( Math.random() * 120 ),
-                           profit: Math.round( Math.random() * 100 ) - 40 } );
+                           ratio: Math.round( Math.random() * 110 - 40 ),
+                           revenue: Math.round( Math.random() * 120 - 40 ),
+                           profit: Math.round( Math.random() * 100 - 40 ) } );
         }
     }
 };

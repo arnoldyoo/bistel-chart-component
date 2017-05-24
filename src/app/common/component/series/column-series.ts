@@ -153,14 +153,36 @@ export class ColumnSeries extends Series {
             const targetvalue = this._data[this._yField];
             let compareValue = 0;
             let currentField = '';
-            if (this.seriesIndex > 0) {
-                for (let i = 0; i < this.seriesIndex; i++) {
-                    currentField = this.stackField[i];
-                    compareValue += this._data[currentField];
+            if (targetvalue < 0) {
+                if (this.seriesIndex > 0) {
+                    for (let i = 0; i < this.seriesIndex; i++) {
+                        currentField = this.stackField[i];
+                        const compareTmpValue = this._data[currentField];
+                        if (compareTmpValue < 0) {
+                            compareValue += compareTmpValue;
+                        }
+                    }
                 }
+                if (compareValue !== 0) {
+                    this.y = this.yAxe.scale(compareValue);
+                } else {
+                    this.y = this.yAxe.scale(0);
+                }
+                this.height = this.yAxe.scale(targetvalue + max);
+            } else {
+                if (this.seriesIndex > 0) {
+                    for (let i = 0; i < this.seriesIndex; i++) {
+                        currentField = this.stackField[i];
+                        const compareTmpValue = this._data[currentField];
+                        if (compareTmpValue > 0) {
+                            compareValue += compareTmpValue;
+                        }
+                    }
+                }
+                this.y = this.yAxe.scale(targetvalue + compareValue);
+                const cmp = this.yAxe.scale(targetvalue + min);
+                this.height = this.yAxe.scale.range()[0] - cmp;
             }
-            this.y = this.yAxe.scale(targetvalue + compareValue);
-            this.height = this.yAxe.scale.range()[0] - this.yAxe.scale(targetvalue);
         }
     }
 
