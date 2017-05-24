@@ -54,10 +54,10 @@ export class ChartComponent implements OnInit {
             axis: [
                 {
                     axisClass: 'NumericAxis',
-                    type: 'y',
+                    type: 'x',
                     field: 'profit,revenue,ratio',
                     format: undefined,
-                    orient: 'left',
+                    orient: 'bottom',
                     visible: true,
                     title: 'Profit',
                     tickInfo : {
@@ -67,14 +67,15 @@ export class ChartComponent implements OnInit {
                 },
                 {
                     axisClass: 'CategoryAxis',
-                    type: 'x',
+                    type: 'y',
                     field: 'category',
                     format: undefined,
-                    orient: 'bottom',
+                    orient: 'left',
                     visible: true,
                     title: 'Category',
                     tickInfo: {
-                        rotate: true
+                        rotate: false,
+                        ticks: 5
                     }
                 },
                 {
@@ -118,34 +119,34 @@ export class ChartComponent implements OnInit {
                 //     visible: true,
                 //     displayName: 'Profit'
                 // }
-                {
-                    seriesClass: 'ColumnSet',
-                    visible: true,
-                    type: 'stacked', // stacked
-                    series: [
-                        {
-                            seriesClass: 'ColumnSeries',
-                            xField: 'category',
-                            yField: 'profit',
-                            visible: true,
-                            displayName: 'Profit'
-                        },
-                        {
-                            seriesClass: 'ColumnSeries',
-                            xField: 'category',
-                            yField: 'revenue',
-                            visible: true,
-                            displayName: 'Revenue'
-                        },
-                        {
-                            seriesClass: 'ColumnSeries',
-                            xField: 'category',
-                            yField: 'ratio',
-                            visible: true,
-                            displayName: 'Ratio'
-                        }
-                    ]
-                },
+                // {
+                //     seriesClass: 'ColumnSet',
+                //     visible: true,
+                //     type: 'stacked', // stacked
+                //     series: [
+                //         {
+                //             seriesClass: 'ColumnSeries',
+                //             xField: 'category',
+                //             yField: 'profit',
+                //             visible: true,
+                //             displayName: 'Profit'
+                //         },
+                //         {
+                //             seriesClass: 'ColumnSeries',
+                //             xField: 'category',
+                //             yField: 'revenue',
+                //             visible: true,
+                //             displayName: 'Revenue'
+                //         },
+                //         {
+                //             seriesClass: 'ColumnSeries',
+                //             xField: 'category',
+                //             yField: 'ratio',
+                //             visible: true,
+                //             displayName: 'Ratio'
+                //         }
+                //     ]
+                // },
                 // {
                 //     seriesClass: 'LineSeries',
                 //     xField: 'category',
@@ -153,6 +154,13 @@ export class ChartComponent implements OnInit {
                 //     visible: true,
                 //     displayName: 'Rate'
                 // }
+                {
+                    seriesClass: 'BarSeries',
+                    xField: 'profit',
+                    yField: 'category',
+                    visible: true,
+                    displayName: 'Category'
+                }
             ]
         };
     }
