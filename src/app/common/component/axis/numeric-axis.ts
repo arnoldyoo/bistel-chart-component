@@ -115,12 +115,23 @@ export class NumericAxis extends Axis {
         }
         this._zero.attr('transform', `translate(${this.margin.left}, ${this._getNumericScale() + this.margin.top})`);
         const median = this._zero.select('line');
-        median.attr('x1', 0)
+        if (this.type === 'y') {
+            this._zero.attr('transform', `translate(${this.margin.left}, ${this._getNumericScale() + this.margin.top})`);
+            median.attr('x1', 0)
                 .attr('y1', 0)
                 .attr('x2', this.width)
                 .attr('y2', 0)
                 .attr('stroke-width', 1)
                 .attr('stroke', 'black');
+        } else {
+            this._zero.attr('transform', `translate(${this._getNumericScale() + this.margin.left}, ${this.margin.top})`);
+            median.attr('x1', 0)
+                .attr('y1', 0)
+                .attr('x2', 0)
+                .attr('y2', this.height)
+                .attr('stroke-width', 1)
+                .attr('stroke', 'black');
+        }
     }
 
     _getNumericScale(): any {
