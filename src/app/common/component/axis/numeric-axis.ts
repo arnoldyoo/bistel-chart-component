@@ -55,7 +55,7 @@ export class NumericAxis extends Axis {
             let max = 0;
             let maxTmp = 0;
             let minTmp = 0;
-            let currentFiled = '';
+            let currentField = '';
             this.domain = [];
             if (this.isStacked) {
                 for (let i = 0; i < this.dataProvider.length; i++) {
@@ -63,10 +63,10 @@ export class NumericAxis extends Axis {
                     maxTmp = 0;
                     minTmp = 0;
                     for (let j = 0; j < targetArray.length; j++) {
-                        currentFiled = targetArray[j];
-                        maxTmp += currentObj[currentFiled];
-                        if (currentObj[currentFiled] < 0) {
-                            minTmp -= currentObj[currentFiled];
+                        currentField = targetArray[j];
+                        maxTmp += currentObj[currentField];
+                        if (currentObj[currentField] < 0) {
+                            minTmp += currentObj[currentField];
                         }
                     }
                     if (max < maxTmp) {
