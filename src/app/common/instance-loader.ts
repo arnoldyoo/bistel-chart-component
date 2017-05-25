@@ -1,5 +1,5 @@
-import { DateTimeAxis, CategoryAxis, NumericAxis } from './component/axis';
-import { ColumnSeries, LineSeries, ColumnSet, BarSeries } from './component/series';
+import { DateTimeAxis, CategoryAxis, NumericAxis } from './component/axis/index';
+import { ColumnSeries, LineSeries, ColumnSet, BarSeries, BarSet } from './component/series/index';
 import { AxisConfiguration, SeriesConfiguration } from './../model/chart-param.interface';
 
 export class InstanceLoader {
@@ -17,7 +17,8 @@ export class InstanceLoader {
             ColumnSeries: ColumnSeries,
             ColumnSet: ColumnSet,
             LineSeries: LineSeries,
-            BarSeries: BarSeries
+            BarSeries: BarSeries,
+            BarSet: BarSet
         };
     }
     _getCtor( name: string ): any {

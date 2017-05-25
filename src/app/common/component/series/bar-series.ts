@@ -78,20 +78,20 @@ export class BarSeries extends Series {
 
     generatePosition() {
         super.generatePosition();
-        this._normal();
+
         // tslint:disable-next-line:comment-format
         // setup x, y, width, height
-        // switch (this.type) {
-        //     case 'stacked' :
-        //         this._stacked();
-        //     break;
-        //     case 'group' :
-        //         this._group();
-        //     break;
-        //     default :
-        //         this._normal();
-        //     break;
-        // }
+        switch (this.type) {
+            case 'stacked' :
+                this._stacked();
+            break;
+            case 'group' :
+                this._group();
+            break;
+            default :
+                this._normal();
+            break;
+        }
     }
 
     updateDisplay() {
@@ -131,7 +131,7 @@ export class BarSeries extends Series {
                 }
 
             } else {
-                this.x = this.xAxe.scale(0);
+                this.x = 0;
                 this.width = this.xAxe.scale(this.data[this.xField]);
             }
         }
@@ -141,62 +141,75 @@ export class BarSeries extends Series {
         }
     }
 
-    // _stacked() {
-    //     if (this.xAxe) {
-    //         this.x = this.xAxe.scale(this._data[this._xField]);
-    //         this.width = this.xAxe.itemDimensions;
-    //     }
-    //     if (this.yAxe) {
-    //         const min = this.yAxe.scale.domain()[0];
-    //         const max = this.yAxe.scale.domain()[1];
-    //         const targetvalue = this._data[this._yField];
-    //         let compareValue = 0;
-    //         let currentField = '';
-    //         if (targetvalue < 0) {
-    //             if (this.seriesIndex > 0) {
-    //                 for (let i = 0; i < this.seriesIndex; i++) {
-    //                     currentField = this.stackField[i];
-    //                     const compareTmpValue = this._data[currentField];
-    //                     if (compareTmpValue < 0) {
-    //                         compareValue += compareTmpValue;
-    //                     }
-    //                 }
-    //             }
-    //             if (compareValue !== 0) {
-    //                 this.y = this.yAxe.scale(compareValue);
-    //             } else {
-    //                 this.y = this.yAxe.scale(0);
-    //             }
-    //             this.height = this.yAxe.scale(targetvalue + max);
-    //         } else {
-    //             if (this.seriesIndex > 0) {
-    //                 for (let i = 0; i < this.seriesIndex; i++) {
-    //                     currentField = this.stackField[i];
-    //                     const compareTmpValue = this._data[currentField];
-    //                     if (compareTmpValue > 0) {
-    //                         compareValue += compareTmpValue;
-    //                     }
-    //                 }
-    //             }
-    //             this.y = this.yAxe.scale(targetvalue + compareValue);
-    //             const cmp = this.yAxe.scale(targetvalue + min);
-    //             this.height = this.yAxe.scale.range()[0] - cmp;
-    //         }
-    //     }
-    // }
+    _stacked() {
+        if (this.xAxe) {
+            const min: number = this.xAxe.scale.domain()[0];
+            const max: number = this.xAxe.scale.domain()[1];
+            const targetvalue = this.data[this.xField];
+            let compareValue = 0;
+            let currentField = '';
+            if (targetvalue < 0) {
+                if (this.seriesIndex > 0) {
+                    for (let i = 0; i < this.seriesIndex; i++) {
+                        currentField = this.stackField[i];
+                        const compareTmpValue = this._data[currentField];
+                        if (compareTmpValue < 0) {
+                            compareValue += compareTmpValue;
+                        }
+                    }
+                }
+                if ( compareValue !== 0) {
+                    this.x = this.xAxe.scale(this.data[this.xField] + compareValue);
+                } else {
+                    this.x = this.xAxe.scale(this.data[this.xField]);
+                }
+                this.width = this.xAxe.scale(0) - this.xAxe.scale(targetvalue);
+            } else {
+                if (this.seriesIndex > 0) {
+                    for (let i = 0; i < this.seriesIndex; i++) {
+                        currentField = this.stackField[i];
+                        const compareTmpValue = this._data[currentField];
+                        if ( compareTmpValue > 0) {
+                            compareValue += compareTmpValue;
+                        }
+                    }
+                }
+                this.x = this.xAxe.scale.range()[0] + this.xAxe.scale(compareValue);
+                this.width = this.xAxe.scale(targetvalue + min);
+            }
 
-    // _group() {
-    //     if (this.seriesCnt > 1) {// case : multi series
-    //         this.rectWidthDimensions = (this.xAxe.itemDimensions / this.seriesCnt);
-    //     }
-    //     if (this.xAxe) {
-    //         this.x = this.xAxe.scale(this._data[this._xField]) + this.seriesIndex * this.rectWidthDimensions;
-    //         this.width = this.rectWidthDimensions;
-    //     }
-    //     if (this.yAxe) {
-    //         this.y = this.yAxe.scale(this._data[this._yField]);
-    //         this.height = this.yAxe.scale.range()[0] - this.y;
-    //     }
-    // }
+        }
+        if (this.yAxe) {
+            this.y = this.yAxe.scale(this.data[this.yField]);
+            this.height = this.yAxe.scale.rangeBand();
+        }
+    }
+
+    _group() {
+        if (this.seriesCnt > 1) {// case : multi series
+            this.rectHeightDimensions = (this.yAxe.itemDimensions / this.seriesCnt);
+        }
+        if (this.xAxe) {
+            const min = this.xAxe.scale.domain()[0];
+            const max = this.xAxe.scale.domain()[1];
+            const targetvalue = this.data[this.xField];
+            if (min < 0) {
+                if (targetvalue < 0) {
+                    this.x = this.xAxe.scale(this.data[this.xField]);
+                    this.width = this.xAxe.scale(0) - this.xAxe.scale(targetvalue);
+                } else {
+                    this.x = this.xAxe.scale(0);
+                    this.width = this.xAxe.scale(targetvalue + min);
+                }
+            } else {
+                this.x = 0;
+                this.width = this.xAxe.scale(this.data[this.xField]);
+            }
+        }
+        if (this.yAxe) {
+            this.y = this.yAxe.scale(this.data[this.yField]) + this.seriesIndex * this.rectHeightDimensions;
+            this.height = this.rectHeightDimensions;
+        }
+    }
 
 };
