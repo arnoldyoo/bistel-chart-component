@@ -1,10 +1,10 @@
 import { Series } from './../../series/Series';
 import { SeriesConfiguration } from './../../../model/chart-param.interface';
 
-export class ColumnSeries extends Series {
+export class BarSeries extends Series {
 
     _rectWidthDimensions: number;
-    _recrHeightDimensions: number;
+    _rectHeightDimensions: number;
     _seriesCnt: number;
     _seriesIndex: number;
     _type: string;
@@ -16,7 +16,7 @@ export class ColumnSeries extends Series {
         this._seriesIndex = 0;
         this._seriesCnt = 1;
         this._rectWidthDimensions = 0;
-        this._recrHeightDimensions = 0;
+        this._rectHeightDimensions = 0;
     }
 
     set rectWidthDimensions(value: number) {
@@ -27,12 +27,12 @@ export class ColumnSeries extends Series {
         return this._rectWidthDimensions;
     }
 
-    set recrHeightDimensions(value: number) {
-        this._recrHeightDimensions = value;
+    set rectHeightDimensions(value: number) {
+        this._rectHeightDimensions = value;
     }
 
-    get recrHeightDimensions(): number {
-        return this._recrHeightDimensions;
+    get rectHeightDimensions(): number {
+        return this._rectHeightDimensions;
     }
 
     set seriesCnt(value: number) {
@@ -78,6 +78,7 @@ export class ColumnSeries extends Series {
 
     generatePosition() {
         super.generatePosition();
+
         // tslint:disable-next-line:comment-format
         // setup x, y, width, height
         switch (this.type) {
@@ -111,46 +112,40 @@ export class ColumnSeries extends Series {
         this.target.datum(this.data)
                             .append('rect')
                             .attr('class', this.displayName + this._index)
-                            .attr('value', this._data[this._yField])
+                            .attr('value', this._data[this._xField])
                             .style('fill', this.color);
     }
 
     _normal() {
         if (this.xAxe) {
-            this.x = this.xAxe.scale(this._data[this._xField]) + this.seriesIndex * this.rectWidthDimensions;
-            this.width = this.xAxe.itemDimensions;
-        }
-        if (this.yAxe) {
-            const min = this.yAxe.scale.domain()[0];
-            const max = this.yAxe.scale.domain()[1];
-            const targetvalue = this._data[this._yField];
+            const min = this.xAxe.scale.domain()[0];
+            const max = this.xAxe.scale.domain()[1];
+            const targetvalue = this.data[this.xField];
             if (min < 0) {
                 if (targetvalue < 0) {
-                    this.y = this.yAxe.scale(0);
-                    this.height = this.yAxe.scale(targetvalue + max);
+                    this.x = this.xAxe.scale(this.data[this.xField]);
+                    this.width = this.xAxe.scale(0) - this.xAxe.scale(targetvalue);
                 } else {
-                    this.y = this.yAxe.scale(targetvalue);
-                    const comparevalue = this.yAxe.scale(targetvalue + min);
-                    this.height = this.yAxe.scale.range()[0] - comparevalue;
+                    this.x = this.xAxe.scale(0);
+                    this.width = this.xAxe.scale(targetvalue + min);
                 }
+
             } else {
-                this.y = this.yAxe.scale(targetvalue);
-                this.height = this.yAxe.scale.range()[0] - this.y;
+                this.x = 0;
+                this.width = this.xAxe.scale(this.data[this.xField]);
             }
-            // this.y = this.yAxe.scale(this._data[this._yField]);
-            // this.height = this.yAxe.scale.range()[0] - this.y;
+        }
+        if (this.yAxe) {
+            this.y = this.yAxe.scale(this.data[this.yField]);
+            this.height = this.yAxe.scale.rangeBand();
         }
     }
 
     _stacked() {
         if (this.xAxe) {
-            this.x = this.xAxe.scale(this._data[this._xField]);
-            this.width = this.xAxe.itemDimensions;
-        }
-        if (this.yAxe) {
-            const min = this.yAxe.scale.domain()[0];
-            const max = this.yAxe.scale.domain()[1];
-            const targetvalue = this._data[this._yField];
+            const min: number = this.xAxe.scale.domain()[0];
+            const max: number = this.xAxe.scale.domain()[1];
+            const targetvalue = this.data[this.xField];
             let compareValue = 0;
             let currentField = '';
             if (targetvalue < 0) {
@@ -163,54 +158,57 @@ export class ColumnSeries extends Series {
                         }
                     }
                 }
-                if (compareValue !== 0) {
-                    this.y = this.yAxe.scale(compareValue);
+                if ( compareValue !== 0) {
+                    this.x = this.xAxe.scale(this.data[this.xField] + compareValue);
                 } else {
-                    this.y = this.yAxe.scale(0);
+                    this.x = this.xAxe.scale(this.data[this.xField]);
                 }
-                this.height = this.yAxe.scale(targetvalue + max);
+                this.width = this.xAxe.scale(0) - this.xAxe.scale(targetvalue);
             } else {
                 if (this.seriesIndex > 0) {
                     for (let i = 0; i < this.seriesIndex; i++) {
                         currentField = this.stackField[i];
                         const compareTmpValue = this._data[currentField];
-                        if (compareTmpValue > 0) {
+                        if ( compareTmpValue > 0) {
                             compareValue += compareTmpValue;
                         }
                     }
                 }
-                this.y = this.yAxe.scale(targetvalue + compareValue);
-                const cmp = this.yAxe.scale(targetvalue + min);
-                this.height = this.yAxe.scale.range()[0] - cmp;
+                this.x = this.xAxe.scale.range()[0] + this.xAxe.scale(compareValue);
+                this.width = this.xAxe.scale(targetvalue + min);
             }
+
+        }
+        if (this.yAxe) {
+            this.y = this.yAxe.scale(this.data[this.yField]);
+            this.height = this.yAxe.scale.rangeBand();
         }
     }
 
     _group() {
         if (this.seriesCnt > 1) {// case : multi series
-            this.rectWidthDimensions = (this.xAxe.itemDimensions / this.seriesCnt);
+            this.rectHeightDimensions = (this.yAxe.itemDimensions / this.seriesCnt);
         }
         if (this.xAxe) {
-            this.x = this.xAxe.scale(this._data[this._xField]) + this.seriesIndex * this.rectWidthDimensions;
-            this.width = this.rectWidthDimensions;
-        }
-        if (this.yAxe) {
-            const min = this.yAxe.scale.domain()[0];
-            const max = this.yAxe.scale.domain()[1];
-            const targetvalue = this._data[this._yField];
+            const min = this.xAxe.scale.domain()[0];
+            const max = this.xAxe.scale.domain()[1];
+            const targetvalue = this.data[this.xField];
             if (min < 0) {
                 if (targetvalue < 0) {
-                    this.y = this.yAxe.scale(0);
-                    this.height = this.yAxe.scale(targetvalue + max);
+                    this.x = this.xAxe.scale(this.data[this.xField]);
+                    this.width = this.xAxe.scale(0) - this.xAxe.scale(targetvalue);
                 } else {
-                    this.y = this.yAxe.scale(targetvalue);
-                    const comparevalue = this.yAxe.scale(targetvalue + min);
-                    this.height = this.yAxe.scale.range()[0] - comparevalue;
+                    this.x = this.xAxe.scale(0);
+                    this.width = this.xAxe.scale(targetvalue + min);
                 }
             } else {
-                this.y = this.yAxe.scale(targetvalue);
-                this.height = this.yAxe.scale.range()[0] - this.y;
+                this.x = 0;
+                this.width = this.xAxe.scale(this.data[this.xField]);
             }
+        }
+        if (this.yAxe) {
+            this.y = this.yAxe.scale(this.data[this.yField]) + this.seriesIndex * this.rectHeightDimensions;
+            this.height = this.rectHeightDimensions;
         }
     }
 

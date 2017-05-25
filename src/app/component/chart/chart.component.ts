@@ -74,7 +74,8 @@ export class ChartComponent implements OnInit {
                     visible: true,
                     title: 'Category',
                     tickInfo: {
-                        rotate: true
+                        rotate: false,
+                        ticks: 5
                     }
                 },
                 {
@@ -121,7 +122,7 @@ export class ChartComponent implements OnInit {
                 {
                     seriesClass: 'ColumnSet',
                     visible: true,
-                    type: 'stacked', // stacked
+                    type: 'group', // stacked
                     series: [
                         {
                             seriesClass: 'ColumnSeries',
@@ -153,6 +154,42 @@ export class ChartComponent implements OnInit {
                 //     visible: true,
                 //     displayName: 'Rate'
                 // }
+                // {
+                //     seriesClass: 'BarSeries',
+                //     xField: 'revenue',
+                //     yField: 'category',
+                //     visible: true,
+                //     displayName: 'Category'
+                // }
+                // {
+                //     seriesClass: 'BarSet',
+                //     visible: true,
+                //     type: 'group', // stacked
+                //     series: [
+                //         {
+                //             seriesClass: 'BarSeries',
+                //             xField: 'profit',
+                //             yField: 'category',
+                //             visible: true,
+                //             displayName: 'Profit'
+                //         },
+                //         {
+                //             seriesClass: 'BarSeries',
+                //             xField: 'revenue',
+                //             yField: 'category',
+                //             visible: true,
+                //             displayName: 'Revenue'
+                //         },
+                //         {
+                //             seriesClass: 'BarSeries',
+                //             xField: 'ratio',
+                //             yField: 'category',
+                //             visible: true,
+                //             displayName: 'Ratio'
+                //         }
+                //     ]
+                // }
+
             ]
         };
     }
