@@ -215,15 +215,27 @@ export abstract class Axis implements IDisplay {
     }
 
     _updateContainerPosition() {
-        if (this.orient === 'bottom') {
-            this.target.attr('transform', `translate(${this.margin.left}, ${this.height + this.margin.top})`);
-        } else if (this.orient === 'top' ) {
-            this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
-        } else if (this.orient === 'right') {
-            this.target.attr('transform', `translate(${this.margin.left + this.width}, ${this.margin.top})`);
-        } else {
-            this.target.attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+        let px = 0;
+        let py = 0;
+        switch (this.orient) {
+            case 'bottom' :
+                px = this.margin.left;
+                py = this.height + this.margin.top;
+            break;
+            case 'top' :
+                px = this.margin.left;
+                py = this.margin.top;
+            break;
+            case 'right' :
+                px = this.margin.left + this.width;
+                py = this.margin.top;
+            break;
+            default :
+                px = this.margin.left;
+                py = this.margin.top;
+            break;
         }
+        this.target.attr('transform', `translate(${px}, ${py})`);
     }
 
     _createDefaultDomain() {
