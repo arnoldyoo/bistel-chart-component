@@ -9,6 +9,7 @@ export abstract class Axis implements IDisplay {
     _field: string;
     _format: any;
     _visible: boolean;
+    _gridline: boolean;
     _title: string;
     _domain: Array<any>;
     _type: string;
@@ -20,6 +21,7 @@ export abstract class Axis implements IDisplay {
     _tickInfo: any;
     _dataProvider: Array<any>;
     _range: Array<number>;
+    _scale: any;
 
     _isStacked: boolean;
 
@@ -93,6 +95,14 @@ export abstract class Axis implements IDisplay {
 
     get format() {
         return this._format;
+    }
+
+    set gridline( value: boolean ) {
+        this._gridline = value;
+    }
+
+    get gridline() {
+        return this._gridline;
     }
 
     set visible( value: boolean ) {
@@ -169,33 +179,10 @@ export abstract class Axis implements IDisplay {
         return this._isStacked;
     }
 
-    updateDisplay(width: number, height: number) {
-        this.width = width;
-        this.height = height;
-        this._setupAxe();
-        this._updateContainerPosition();
-        this.makeAxisLabel();
-    }
-
-    _setupAxe() {
+    protected _setupAxe() {
         this.scaleSetting();
         this.scaleToAxeSetting();
     }
-
-    scaleToAxeSetting() { }
-
-    scaleSetting() {
-        this._range = [];
-        if (this.type === 'x') {
-            this._range.push(0);
-            this._range.push(this.width);
-        } else {
-            this._range.push(this.height);
-            this._range.push(0);
-        }
-    }
-
-    makeAxisLabel() { }
 
     _setConditions(conditions: AxisConditions) {
         this.field = conditions.field;
@@ -204,6 +191,7 @@ export abstract class Axis implements IDisplay {
         this.title = conditions.title;
         this.type = conditions.type;
         this.orient = conditions.orient;
+        this.gridline = conditions.gridline;
         if (conditions.tickInfo) {
             this.tickInfo = conditions.tickInfo;
         }
@@ -214,7 +202,7 @@ export abstract class Axis implements IDisplay {
         this.updateDisplay(this.width, this.height);
     }
 
-    _updateContainerPosition() {
+    protected _updateContainerPosition(svgtarget) {
         let px = 0;
         let py = 0;
         switch (this.orient) {
@@ -230,15 +218,19 @@ export abstract class Axis implements IDisplay {
                 px = this.margin.left + this.width;
                 py = this.margin.top;
             break;
+            case 'left' :
+                px = this.margin.left;
+                py = this.margin.top;
+            break;
             default :
                 px = this.margin.left;
                 py = this.margin.top;
             break;
         }
-        this.target.attr('transform', `translate(${px}, ${py})`);
+        svgtarget.attr('transform', `translate(${px}, ${py})`);
     }
 
-    _createDefaultDomain() {
+    protected _createDefaultDomain() {
         const targetArray: Array<any> = this.field.split(',');
         const targetField: string = targetArray[0];
         this.domain = this.dataProvider.map( d => {
@@ -258,4 +250,81 @@ export abstract class Axis implements IDisplay {
             this.domain.push(max);
         }
     }
+
+    _drawGridLine() {
+        if (this._target) {
+            const rootSvg: any = d3.select(this.target[0][0].nearestViewportElement);
+            const gridGroup = rootSvg.select(`.grid-line-${this.type}-${this.orient}`);
+            if (!gridGroup[0][0]) {
+                console.log('create grid group ');
+                rootSvg.insert('g', '.background')
+                        .attr('class', `grid-line-${this.type}-${this.orient}`)
+                        .style('stroke', '#CCC');
+            }
+            if (this.gridline && this.axe.scaleToAxe) {
+                let px = 0;
+                let py = 0;
+                switch (this.orient) {
+                    case 'bottom' :
+                        px = this.margin.left;
+                        py = this.height + this.margin.top;
+                    break;
+                    case 'top' :
+                        px = this.margin.left;
+                        py = this.margin.top;
+                    break;
+                    case 'right' :
+                        px = this.margin.left + this.width;
+                        py = this.margin.top;
+                    break;
+                    case 'left' :
+                        px = this.margin.left;
+                        py = this.margin.top;
+                    break;
+                    default :
+                        px = this.margin.left;
+                        py = this.margin.top;
+                    break;
+                }
+                // this._updateContainerPosition(gridGroup);
+                gridGroup.attr('transform', `translate(${px}, ${py})`);
+                const gridScale = d3.svg.axis()
+                                    .scale(this._scale)
+                                    .orient(this.orient);
+                if (this.type === 'y') {
+                    gridScale.tickSize(-(this.width), 0, 0)
+                             .tickFormat('');
+                } else {
+                    gridScale.innerTickSize(-(this.height))
+                             .outerTickSize(0)
+                             .tickFormat('');
+                }
+                gridGroup.call(gridScale);
+            }
+        }
+    }
+
+    updateDisplay(width: number, height: number) {
+        this.width = width;
+        this.height = height;
+        this._setupAxe();
+        this._drawGridLine();
+        this._updateContainerPosition(this.target);
+        this.makeAxisLabel();
+    }
+
+    protected scaleToAxeSetting() { }
+
+    protected scaleSetting() {
+        this._range = [];
+        if (this.type === 'x') {
+            this._range.push(0);
+            this._range.push(this.width);
+        } else {
+            this._range.push(this.height);
+            this._range.push(0);
+        }
+    }
+
+    protected makeAxisLabel() { }
 }

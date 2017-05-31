@@ -20,6 +20,7 @@ import { Component, HostListener, OnInit, ViewEncapsulation } from '@angular/cor
 export class ChartComponent implements OnInit {
     baseChart: ChartBase;
     chartConfig: any;
+    currentData: any;
 
     constructor() { }
 
@@ -36,6 +37,11 @@ export class ChartComponent implements OnInit {
         this.baseChart.updateDisplay(elem.offsetWidth, elem.offsetHeight);
     }
 
+    chartItemClick(event: any) {
+        this.currentData = event.data;
+        console.log('chartItemClick : ', this.currentData);
+    }
+
     _setChartJson() {
         this.chartConfig = {
             chart: {
@@ -49,6 +55,9 @@ export class ChartComponent implements OnInit {
                     right: 50,
                     top: 50,
                     bottom: 50
+                },
+                event: {
+                    itemClick: this.chartItemClick
                 }
             },
             axis: [
@@ -59,6 +68,7 @@ export class ChartComponent implements OnInit {
                     format: undefined,
                     orient: 'left',
                     visible: true,
+                    gridline: true,
                     title: 'Profit',
                     tickInfo : {
                         ticks: 5,
@@ -72,6 +82,7 @@ export class ChartComponent implements OnInit {
                     format: undefined,
                     orient: 'bottom',
                     visible: true,
+                    gridline: false,
                     title: 'Category',
                     tickInfo: {
                         rotate: false,
@@ -85,6 +96,7 @@ export class ChartComponent implements OnInit {
                     format: undefined,
                     orient: 'top',
                     visible: true,
+                    gridline: false,
                     title: 'date',
                     tickInfo: {
                         ticks: 12
@@ -97,6 +109,7 @@ export class ChartComponent implements OnInit {
                     format: undefined,
                     orient: 'right',
                     visible: true,
+                    gridline: false,
                     title: 'Rate',
                     tickInfo : {
                         ticks: 5,

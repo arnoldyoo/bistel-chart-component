@@ -20,6 +20,7 @@ export interface AxisConditions {
     field: string;
     format: any;
     visible: boolean;
+    gridline: boolean;
     title: string;
     type: string;
     orient: string;

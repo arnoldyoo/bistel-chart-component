@@ -3,7 +3,6 @@ import { AxisConfiguration } from './../../../model/chart-param.interface';
 import { Axis } from '../../axis/axis';
 
 export class CategoryAxis extends Axis {
-    _scale: any;
 
     constructor(axisconfig: AxisConfiguration) {
         super(axisconfig);
@@ -27,7 +26,7 @@ export class CategoryAxis extends Axis {
         super.scaleSetting();
         this._scale = d3.scale.ordinal()
                                 .domain(this.domain)
-                                .rangeBands( this._range, .1 );
+                                .rangeBands( this._range, .2 );
     }
 
     scaleToAxeSetting() {
