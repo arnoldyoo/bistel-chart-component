@@ -52,59 +52,93 @@ export class ChartComponent implements OnInit {
                 }
             },
             axis: [
-                {
-                    axisClass: 'NumericAxis',
-                    type: 'y',
-                    field: 'profit,revenue,ratio',
-                    format: undefined,
-                    orient: 'left',
-                    visible: true,
-                    title: 'Profit',
-                    tickInfo : {
-                        ticks: 5,
-                        tickFormat: function(d) { return '$' + d3.format(',.0f')(d); }
-                    }
-                },
-                {
-                    axisClass: 'CategoryAxis',
-                    type: 'x',
-                    field: 'category',
-                    format: undefined,
-                    orient: 'bottom',
-                    visible: true,
-                    title: 'Category',
-                    tickInfo: {
-                        rotate: false,
-                        ticks: 5
-                    }
-                },
-                {
-                    axisClass: 'DateTimeAxis',
-                    type: 'x',
-                    field: 'date',
-                    format: undefined,
-                    orient: 'top',
-                    visible: true,
-                    title: 'date',
-                    tickInfo: {
-                        ticks: 12
-                    }
-                },
-                {
-                    axisClass: 'NumericAxis',
-                    type: 'y',
-                    field: 'rate',
-                    format: undefined,
-                    orient: 'right',
-                    visible: true,
-                    title: 'Rate',
-                    tickInfo : {
-                        ticks: 5,
-                        tickFormat: function(d) { return d3.format(',.0f')(d) + '%'; }
-                    }
-                }
+                // {
+                //     axisClass: 'NumericAxis',
+                //     type: 'y',
+                //     field: 'profit,revenue,ratio',
+                //     format: undefined,
+                //     orient: 'left',
+                //     visible: true,
+                //     title: 'Profit',
+                //     tickInfo : {
+                //         ticks: 5,
+                //         tickFormat: function(d) { return '$' + d3.format(',.0f')(d); }
+                //     }
+                // },
+                // {
+                //     axisClass: 'CategoryAxis',
+                //     type: 'x',
+                //     field: 'category',
+                //     format: undefined,
+                //     orient: 'bottom',
+                //     visible: true,
+                //     title: 'Category',
+                //     tickInfo: {
+                //         rotate: false,
+                //         ticks: 5
+                //     }
+                // },
+                // {
+                //     axisClass: 'DateTimeAxis',
+                //     type: 'x',
+                //     field: 'date',
+                //     format: undefined,
+                //     orient: 'top',
+                //     visible: true,
+                //     title: 'date',
+                //     tickInfo: {
+                //         ticks: 12
+                //     }
+                // },
+                // {
+                //     axisClass: 'NumericAxis',
+                //     type: 'y',
+                //     field: 'rate',
+                //     format: undefined,
+                //     orient: 'right',
+                //     visible: true,
+                //     title: 'Rate',
+                //     tickInfo : {
+                //         ticks: 5,
+                //         tickFormat: function(d) { return d3.format(',.0f')(d) + '%'; }
+                //     }
+                // }
             ],
             series: [
+                {
+                    seriesClass: 'PieSet',
+                    visible: true,
+                    type: 'group', // stacked
+                    series: [
+                        {
+                            seriesClass: 'PieSeries',
+                            xField: 'profit',
+                            yField: 'profit',
+                            visible: true,
+                            displayName: 'Profit',
+                            label: true
+                        },
+                        {
+                            seriesClass: 'PieSeries',
+                            xField: 'revenue',
+                            yField: 'revenue',
+                            visible: true,
+                            displayName: 'Revenue',
+                            label: true
+                        }
+                    ]
+                },
+
+
+                // {
+                //     seriesClass: 'PieSeries',
+                //     xField: 'profit',
+                //     yField: 'profit',
+                //     visible: true,
+                //     displayName: 'Profit',
+                //     label: true
+                // },
+
                 // {
                 //     seriesClass: 'ColumnSeries',
                 //     xField: 'category',
@@ -119,34 +153,34 @@ export class ChartComponent implements OnInit {
                 //     visible: true,
                 //     displayName: 'Profit'
                 // }
-                {
-                    seriesClass: 'ColumnSet',
-                    visible: true,
-                    type: 'group', // stacked
-                    series: [
-                        {
-                            seriesClass: 'ColumnSeries',
-                            xField: 'category',
-                            yField: 'profit',
-                            visible: true,
-                            displayName: 'Profit'
-                        },
-                        {
-                            seriesClass: 'ColumnSeries',
-                            xField: 'category',
-                            yField: 'revenue',
-                            visible: true,
-                            displayName: 'Revenue'
-                        },
-                        {
-                            seriesClass: 'ColumnSeries',
-                            xField: 'category',
-                            yField: 'ratio',
-                            visible: true,
-                            displayName: 'Ratio'
-                        }
-                    ]
-                },
+                // {
+                //     seriesClass: 'ColumnSet',
+                //     visible: true,
+                //     type: 'group', // stacked
+                //     series: [
+                //         {
+                //             seriesClass: 'ColumnSeries',
+                //             xField: 'category',
+                //             yField: 'profit',
+                //             visible: true,
+                //             displayName: 'Profit'
+                //         },
+                //         {
+                //             seriesClass: 'ColumnSeries',
+                //             xField: 'category',
+                //             yField: 'revenue',
+                //             visible: true,
+                //             displayName: 'Revenue'
+                //         },
+                //         {
+                //             seriesClass: 'ColumnSeries',
+                //             xField: 'category',
+                //             yField: 'ratio',
+                //             visible: true,
+                //             displayName: 'Ratio'
+                //         }
+                //     ]
+                // },
                 // {
                 //     seriesClass: 'LineSeries',
                 //     xField: 'category',

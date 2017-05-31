@@ -1,5 +1,6 @@
+import { PieSet } from './component/series/pie-set';
 import { DateTimeAxis, CategoryAxis, NumericAxis } from './component/axis/index';
-import { ColumnSeries, LineSeries, ColumnSet, BarSeries, BarSet } from './component/series/index';
+import { ColumnSeries, LineSeries, ColumnSet, BarSeries, BarSet, PieSeries } from './component/series/index';
 import { AxisConfiguration, SeriesConfiguration } from './../model/chart-param.interface';
 
 export class InstanceLoader {
@@ -18,7 +19,9 @@ export class InstanceLoader {
             ColumnSet: ColumnSet,
             LineSeries: LineSeries,
             BarSeries: BarSeries,
-            BarSet: BarSet
+            BarSet: BarSet,
+            PieSeries: PieSeries,
+            PieSet: PieSet
         };
     }
     _getCtor( name: string ): any {

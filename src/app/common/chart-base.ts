@@ -218,7 +218,6 @@ export class ChartBase implements IDisplay {
                 series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, series_configuration);
                 series.color = this.colors[j];
                 if (type === 'group' || type === 'stacked') { // column set series
-                    console.log('column set series create!!!!!!');
                     series.series = this._createSeries(seriesConfig.series);
                 } else {
                 }
@@ -283,13 +282,13 @@ export class ChartBase implements IDisplay {
     _addEvent() {};
 
     _setDefaultData() {
-        for (let i = 0; i < 31; i++) {
+        for (let i = 0; i < 5; i++) {
             this.data.push( {  category: 'A' + i,
-                           date: new Date(2017, 0, i).getTime(),
+                          //  date: new Date(2017, 0, i).getTime(),
                            rate: Math.round( Math.random() * 10 ),
-                           ratio: Math.round( Math.random() * 110 - 40 ),
-                           revenue: Math.round( Math.random() * 120 - 40 ),
-                           profit: Math.round( Math.random() * 100 - 40 ) } );
+                           ratio: Math.round( Math.random() * 110  ),
+                           revenue: Math.round( Math.random() * 120  ),
+                           profit: Math.round( Math.random() * 100  ) } );
         }
     }
 };
