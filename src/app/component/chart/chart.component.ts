@@ -20,6 +20,7 @@ import { Component, HostListener, OnInit, ViewEncapsulation } from '@angular/cor
 export class ChartComponent implements OnInit {
     baseChart: ChartBase;
     chartConfig: any;
+    currentData: any;
 
     constructor() { }
 
@@ -36,6 +37,11 @@ export class ChartComponent implements OnInit {
         this.baseChart.updateDisplay(elem.offsetWidth, elem.offsetHeight);
     }
 
+    chartItemClick(event: any) {
+        this.currentData = event.data;
+        console.log('chartItemClick : ', this.currentData);
+    }
+
     _setChartJson() {
         this.chartConfig = {
             chart: {
@@ -49,60 +55,67 @@ export class ChartComponent implements OnInit {
                     right: 50,
                     top: 50,
                     bottom: 50
+                },
+                event: {
+                    itemClick: this.chartItemClick
                 }
             },
             axis: [
-                // {
-                //     axisClass: 'NumericAxis',
-                //     type: 'y',
-                //     field: 'profit,revenue,ratio',
-                //     format: undefined,
-                //     orient: 'left',
-                //     visible: true,
-                //     title: 'Profit',
-                //     tickInfo : {
-                //         ticks: 5,
-                //         tickFormat: function(d) { return '$' + d3.format(',.0f')(d); }
-                //     }
-                // },
-                // {
-                //     axisClass: 'CategoryAxis',
-                //     type: 'x',
-                //     field: 'category',
-                //     format: undefined,
-                //     orient: 'bottom',
-                //     visible: true,
-                //     title: 'Category',
-                //     tickInfo: {
-                //         rotate: false,
-                //         ticks: 5
-                //     }
-                // },
-                // {
-                //     axisClass: 'DateTimeAxis',
-                //     type: 'x',
-                //     field: 'date',
-                //     format: undefined,
-                //     orient: 'top',
-                //     visible: true,
-                //     title: 'date',
-                //     tickInfo: {
-                //         ticks: 12
-                //     }
-                // },
-                // {
-                //     axisClass: 'NumericAxis',
-                //     type: 'y',
-                //     field: 'rate',
-                //     format: undefined,
-                //     orient: 'right',
-                //     visible: true,
-                //     title: 'Rate',
-                //     tickInfo : {
-                //         ticks: 5,
-                //         tickFormat: function(d) { return d3.format(',.0f')(d) + '%'; }
-                //     }
-                // }
+                {
+                    axisClass: 'NumericAxis',
+                    type: 'y',
+                    field: 'profit,revenue,ratio',
+                    format: undefined,
+                    orient: 'left',
+                    visible: true,
+                    gridline: true,
+                    title: 'Profit',
+                    tickInfo : {
+                        ticks: 5,
+                        tickFormat: function(d) { return '$' + d3.format(',.0f')(d); }
+                    }
+                },
+                {
+                    axisClass: 'CategoryAxis',
+                    type: 'x',
+                    field: 'category',
+                    format: undefined,
+                    orient: 'bottom',
+                    visible: true,
+                    gridline: false,
+                    title: 'Category',
+                    tickInfo: {
+                        rotate: false,
+                        ticks: 5
+                    }
+                },
+                {
+                    axisClass: 'DateTimeAxis',
+                    type: 'x',
+                    field: 'date',
+                    format: undefined,
+                    orient: 'top',
+                    visible: true,
+                    gridline: false,
+                    title: 'date',
+                    tickInfo: {
+                        ticks: 12
+                    }
+                },
+                {
+                    axisClass: 'NumericAxis',
+                    type: 'y',
+                    field: 'rate',
+                    format: undefined,
+                    orient: 'right',
+                    visible: true,
+                    gridline: false,
+                    title: 'Rate',
+                    tickInfo : {
+                        ticks: 5,
+                        tickFormat: function(d) { return d3.format(',.0f')(d) + '%'; }
+                    }
+                }
             ],
             series: [
                 // {

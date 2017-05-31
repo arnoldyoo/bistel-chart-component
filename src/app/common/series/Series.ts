@@ -171,9 +171,9 @@ export abstract class Series implements IDisplay {
         return this._dataProvider;
     }
 
-    dataSetting() { }
+    protected dataSetting() { }
 
-    createChildren() { }
+    protected createChildren() { }
 
     updateDisplay(width?: number, height?: number) {
         if (this.data) {
@@ -181,13 +181,31 @@ export abstract class Series implements IDisplay {
         }
     }
 
-    generatePosition() { }
+    protected generatePosition() { }
 
     /*
     * title : createItem
     * description : create point item for transition. data is setting 0
     */
-    createItem() {}
+    protected createItem() { }
+
+    /*
+    * title : addEvent
+    * description : add eventlistener of created svg element
+    */
+    addEvent(element: any) {
+        element
+        .on('click', d => {
+            const cX = (d3.event.offsetX);
+            const cY = (d3.event.offsetY);
+            console.log('element click ==> :', d3.event);
+        })
+        .on('mousemove', d => {
+            const cX = (d3.event.offsetX);
+            const cY = (d3.event.offsetY);
+            // console.log('element click ==> x :', cX, ' , y : ', cY);
+        });
+    }
 
     /*
     * title : _createContainer
