@@ -18,6 +18,7 @@ export class ChartBase implements IDisplay {
     _axisGroup: any; // axis group element
     _seriesGroup: any; // series group element
     _backgroundGroup: any; // background element
+    _gridLineGroup: any; // grid line group element
     _margin: any;
     _domain: any;
     _dataProvider: Array<any>;
@@ -129,10 +130,33 @@ export class ChartBase implements IDisplay {
         this._seriesUpdate();
     };
 
+    _itemClick(event: any) {
+        if (this._configuration.chart && this._configuration.chart.event) {
+            if (this._configuration.chart.event.itemClick) {
+                this._configuration.chart.event.itemClick(event);
+            }
+        }
+    }
+
     _createSvgElement() {
         this.target = this._createSvg(this.configuration.chart)
                           .on('click', d => {
-                              console.log('svg click ==> event :', d3.event.target);
+                              if (d3.event.target) {
+                                  const currentEvent = {
+                                      event: d3.event,
+                                      data: d3.select(d3.event.target)[0][0].__data__
+                                  };
+                                  this._itemClick(currentEvent);
+                              }
+                          })
+                          .on('mousemove', d => {
+                              const cX = (d3.event.offsetX - this.margin.left);
+                              const cY = (d3.event.offsetY - this.margin.top);
+                              // console.log('background mousemove ==> x :', cX, ' , y : ', cY);
+                              // console.log('background click ==> event :', d3.event);
+                          })
+                          .on('remove', d => {
+                              console.log('this element removing');
                           });
         // create background element
         this._backgroundGroup = this.target.append('g')
@@ -142,13 +166,12 @@ export class ChartBase implements IDisplay {
                              .attr('class', 'background-rect')
                              .style('fill', '#ccc')
                              .style('pointer-events', 'all')
-                             .style('opacity', 0);
-                            //  .on('click', d => {
-                            //      const cX = (d3.event.offsetX - this.margin.left);
-                            //      const cY = (d3.event.offsetY - this.margin.top);
-                            //      console.log('background click ==> x :', cX, ' , y : ', cY);
-                            //     // console.log('background click ==> event :', d3.event);
-                            //  });
+                             .style('opacity', 0)
+                             ;
+        // create grid line group
+        // this._gridLineGroup = this.target.append('g')
+        //                                  .attr('class', 'grid-line-group')
+        //                                  .attr('transform', 'translate( 0, 0)');
         // generate axis component using this.target
         this._axisGroup = this.target.append('g')
                               .attr('class', 'axis')
@@ -158,6 +181,12 @@ export class ChartBase implements IDisplay {
                                 .attr('class', 'series')
                                 .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
     }
+
+    // _drawGridLine() {
+    //     if (this._target) {
+    //         const gridGroup = this.target.select(`.grid-line-group`);
+    //     }
+    // }
 
     // generate svg element using configuration
     _createComponent() {

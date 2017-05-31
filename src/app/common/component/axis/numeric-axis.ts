@@ -4,7 +4,6 @@ import { Axis } from '../../axis/axis';
 
 export class NumericAxis extends Axis {
 
-    _scale: any;
     _zero: any;
 
     constructor(axisconfig: AxisConfiguration) {
@@ -100,7 +99,7 @@ export class NumericAxis extends Axis {
     }
 
     _updateContainerPosition() {
-        super._updateContainerPosition();
+        super._updateContainerPosition(this.target);
         if (this.numeric_min && this.numeric_max && this.numeric_min < 0) {
             this._showZeroLine();
         };
