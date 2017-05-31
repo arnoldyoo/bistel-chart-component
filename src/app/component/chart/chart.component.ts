@@ -118,6 +118,40 @@ export class ChartComponent implements OnInit {
                 }
             ],
             series: [
+                {
+                    seriesClass: 'PieSet',
+                    visible: true,
+                    type: 'group', // stacked
+                    series: [
+                        {
+                            seriesClass: 'PieSeries',
+                            xField: 'profit',
+                            yField: 'profit',
+                            visible: true,
+                            displayName: 'Profit',
+                            label: true
+                        },
+                        {
+                            seriesClass: 'PieSeries',
+                            xField: 'revenue',
+                            yField: 'revenue',
+                            visible: true,
+                            displayName: 'Revenue',
+                            label: true
+                        }
+                    ]
+                },
+
+
+                // {
+                //     seriesClass: 'PieSeries',
+                //     xField: 'profit',
+                //     yField: 'profit',
+                //     visible: true,
+                //     displayName: 'Profit',
+                //     label: true
+                // },
+
                 // {
                 //     seriesClass: 'ColumnSeries',
                 //     xField: 'category',
@@ -132,34 +166,34 @@ export class ChartComponent implements OnInit {
                 //     visible: true,
                 //     displayName: 'Profit'
                 // }
-                {
-                    seriesClass: 'ColumnSet',
-                    visible: true,
-                    type: 'group', // stacked
-                    series: [
-                        {
-                            seriesClass: 'ColumnSeries',
-                            xField: 'category',
-                            yField: 'profit',
-                            visible: true,
-                            displayName: 'Profit'
-                        },
-                        {
-                            seriesClass: 'ColumnSeries',
-                            xField: 'category',
-                            yField: 'revenue',
-                            visible: true,
-                            displayName: 'Revenue'
-                        },
-                        {
-                            seriesClass: 'ColumnSeries',
-                            xField: 'category',
-                            yField: 'ratio',
-                            visible: true,
-                            displayName: 'Ratio'
-                        }
-                    ]
-                },
+                // {
+                //     seriesClass: 'ColumnSet',
+                //     visible: true,
+                //     type: 'group', // stacked
+                //     series: [
+                //         {
+                //             seriesClass: 'ColumnSeries',
+                //             xField: 'category',
+                //             yField: 'profit',
+                //             visible: true,
+                //             displayName: 'Profit'
+                //         },
+                //         {
+                //             seriesClass: 'ColumnSeries',
+                //             xField: 'category',
+                //             yField: 'revenue',
+                //             visible: true,
+                //             displayName: 'Revenue'
+                //         },
+                //         {
+                //             seriesClass: 'ColumnSeries',
+                //             xField: 'category',
+                //             yField: 'ratio',
+                //             visible: true,
+                //             displayName: 'Ratio'
+                //         }
+                //     ]
+                // },
                 // {
                 //     seriesClass: 'LineSeries',
                 //     xField: 'category',

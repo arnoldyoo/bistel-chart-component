@@ -1,7 +1,7 @@
 import { SeriesConditions } from './../../model/chart-param.interface';
 import { IDisplay } from './../i-display.interface';
-import { SeriesConfiguration } from 'app/model/chart-param.interface';
-import { Axe } from 'app/common/axis/axe';
+import { SeriesConfiguration } from '../../model/chart-param.interface';
+import { Axe } from '../../common/axis/axe';
 
 export abstract class Series implements IDisplay {
 
@@ -29,6 +29,7 @@ export abstract class Series implements IDisplay {
     _x: any;
     _y: any;
     _configuration: any;
+    _label: boolean;
 
     constructor(seriesConfig?: SeriesConfiguration) {
         if (seriesConfig) {
@@ -95,6 +96,14 @@ export abstract class Series implements IDisplay {
 
     get xField(): string {
         return this._xField;
+    }
+
+    set label(value: boolean) {
+        this._label = value;
+    }
+
+    get label(): boolean {
+        return this._label;
     }
 
     set yField(value: string) {
@@ -215,6 +224,10 @@ export abstract class Series implements IDisplay {
             this.displayName = conditions.displayName;
         } else {
             this.displayName = this._xField;
+        }
+
+        if (conditions.label) {
+          this.label = conditions.label;
         }
     }
 

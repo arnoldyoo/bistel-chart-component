@@ -32,4 +32,5 @@ export interface SeriesConditions {
     yField: string;
     displayName: string;
     visible: boolean;
+    label?: boolean;
 }

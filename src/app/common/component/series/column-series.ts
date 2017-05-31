@@ -71,6 +71,7 @@ export class ColumnSeries extends Series {
         super.dataSetting();
         for (let j = 0; j < this.dataProvider.length; j++) {
             this.data = this.dataProvider[j];
+            console.log(this.data);
             this.index = j;
             this.updateDisplay();
         }
@@ -138,8 +139,6 @@ export class ColumnSeries extends Series {
                 this.y = this.yAxe.scale(targetvalue);
                 this.height = this.yAxe.scale.range()[0] - this.y;
             }
-            // this.y = this.yAxe.scale(this._data[this._yField]);
-            // this.height = this.yAxe.scale.range()[0] - this.y;
         }
     }
 
