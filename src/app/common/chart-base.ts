@@ -17,6 +17,7 @@ export class ChartBase implements IDisplay {
     _series: any[] = [];
     _axisGroup: any; // axis group element
     _seriesGroup: any; // series group element
+    _backgroundGroup: any; // background element
     _margin: any;
     _domain: any;
     _dataProvider: Array<any>;
@@ -121,20 +122,41 @@ export class ChartBase implements IDisplay {
         this.target
             .attr('width', width)
             .attr('height', height);
+        this._backgroundGroup.select('.background-rect')
+                             .attr('width', width - this.margin.left - this.margin.right)
+                             .attr('height', height - this.margin.bottom - this.margin.top);
         this._axisUpdate();
         this._seriesUpdate();
     };
 
     _createSvgElement() {
-        this.target = this._createSvg(this.configuration.chart);
+        this.target = this._createSvg(this.configuration.chart)
+                          .on('click', d => {
+                              console.log('svg click ==> event :', d3.event.target);
+                          });
+        // create background element
+        this._backgroundGroup = this.target.append('g')
+                                    .attr('class', 'background')
+                                    .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+        this._backgroundGroup.append('rect')
+                             .attr('class', 'background-rect')
+                             .style('fill', '#ccc')
+                             .style('pointer-events', 'all')
+                             .style('opacity', 0);
+                            //  .on('click', d => {
+                            //      const cX = (d3.event.offsetX - this.margin.left);
+                            //      const cY = (d3.event.offsetY - this.margin.top);
+                            //      console.log('background click ==> x :', cX, ' , y : ', cY);
+                            //     // console.log('background click ==> event :', d3.event);
+                            //  });
         // generate axis component using this.target
         this._axisGroup = this.target.append('g')
                               .attr('class', 'axis')
                               .attr('transform', 'translate(0 ,0)');
         // generate series component using this.target
         this._seriesGroup = this.target.append('g')
-                            .attr('class', 'series')
-                            .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+                                .attr('class', 'series')
+                                .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
     }
 
     // generate svg element using configuration

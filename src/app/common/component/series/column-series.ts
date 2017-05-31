@@ -113,7 +113,13 @@ export class ColumnSeries extends Series {
                             .append('rect')
                             .attr('class', this.displayName + this._index)
                             .attr('value', this._data[this._yField])
-                            .style('fill', this.color);
+                            .style('fill', this.color)
+                            .on('click', d => {
+                                 const cX = (d3.event.offsetX);
+                                 const cY = (d3.event.offsetY);
+                                 console.log('background click ==> x :', cX, ' , y : ', cY);
+                                // console.log('background click ==> event :', d3.event);
+                             });
     }
 
     _normal() {
