@@ -29,7 +29,7 @@ export abstract class Series implements IDisplay {
     _x: any;
     _y: any;
     _configuration: any;
-    _label: boolean;
+    _label: any;
 
     constructor(seriesConfig?: SeriesConfiguration) {
         if (seriesConfig) {
@@ -98,11 +98,11 @@ export abstract class Series implements IDisplay {
         return this._xField;
     }
 
-    set label(value: boolean) {
+    set label(value: any) {
         this._label = value;
     }
 
-    get label(): boolean {
+    get label(): any {
         return this._label;
     }
 
@@ -208,7 +208,7 @@ export abstract class Series implements IDisplay {
             this.displayName = this._xField;
         }
 
-        if (conditions.label) {
+        if (conditions.label.visible) {
           this.label = conditions.label;
         }
     }
