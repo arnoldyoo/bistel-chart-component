@@ -118,39 +118,40 @@ export class ChartComponent implements OnInit {
                 }
             ],
             series: [
-                {
-                    seriesClass: 'PieSet',
-                    visible: true,
-                    type: 'group', // stacked
-                    series: [
-                        {
-                            seriesClass: 'PieSeries',
-                            xField: 'profit',
-                            yField: 'profit',
-                            visible: true,
-                            displayName: 'Profit',
-                            label: true
-                        },
-                        {
-                            seriesClass: 'PieSeries',
-                            xField: 'revenue',
-                            yField: 'revenue',
-                            visible: true,
-                            displayName: 'Revenue',
-                            label: true
-                        }
-                    ]
-                },
-
-
                 // {
-                //     seriesClass: 'PieSeries',
-                //     xField: 'profit',
-                //     yField: 'profit',
+                //     seriesClass: 'PieSet',
                 //     visible: true,
-                //     displayName: 'Profit',
-                //     label: true
+                //     type: 'group', // stacked
+                //     series: [
+                //         {
+                //             seriesClass: 'PieSeries',
+                //             xField: 'profit',
+                //             yField: 'profit',
+                //             visible: true,
+                //             displayName: 'Profit',
+                //             label: true
+                //         },
+                //         {
+                //             seriesClass: 'PieSeries',
+                //             xField: 'revenue',
+                //             yField: 'revenue',
+                //             visible: true,
+                //             displayName: 'Revenue',
+                //             label: true
+                //         }
+                //     ]
                 // },
+                {
+                    seriesClass: 'PieSeries',
+                    xField: 'profit',
+                    yField: 'profit',
+                    visible: true,
+                    displayName: 'Profit',
+                    label: {
+                      visible: true,
+                      side: 'out'
+                    }
+                },
 
                 // {
                 //     seriesClass: 'ColumnSeries',

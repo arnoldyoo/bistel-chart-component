@@ -96,16 +96,44 @@ export class PieSeries extends Series {
             .attr('class', this.displayName + this._index)
             .attr('d', this._arc);
 
-        if ( this.label ) {
-            const label: any = this._createLabel();
-            pieTarget.append('text')
-                        .attr('transform', (d) => {
-                            return `translate(${label.centroid(d)})`;
-                        })
-                        .attr('dy', '0.35em')
-                        .text((d) => {
-                            return d.value;
-                        });
+        if ( this.label.visible ) {
+            if (this.label.side === 'in') {
+                const label: any = this._createInnerLabel();
+                pieTarget.append('text')
+                          .attr('transform', (d) => {
+                              return `translate(${label.centroid(d)})`;
+                          })
+                          .attr('dy', '0.35em')
+                          .text((d) => {
+                              return d.value;
+                          });
+            } else {
+                const outsideLabel: any = this._createOutsideLabel();
+                const arc: any = this._createArc();
+
+                pieTarget.append('text')
+                         .attr('text-anchor', 'end')
+                         .attr('transform', (d) => {
+                             const pos: any = outsideLabel.centroid(d);
+                             pos[0] = this.radius * 1.7 * (this._midAngle(d) < Math.PI ? 1 : -1);
+                             return `translate(${pos})`;
+                         })
+                         .text((d) => {
+                             return d.value;
+                         });
+
+                pieTarget.append('g')
+                         .append('polyline')
+                         .attr('points', (d) => {
+                             const pos = outsideLabel.centroid(d);
+                             pos[0] = this.radius * 1.55 * (this._midAngle(d) < Math.PI ? 1 : -1);
+                             return [this._arc.centroid(d), outsideLabel.centroid(d), pos];
+                         })
+                         .style('fill', 'none')
+                         .style('stroke', 'black')
+                         .style('stroke-width', '1px');
+
+            }
         }
     }
 
@@ -120,11 +148,20 @@ export class PieSeries extends Series {
                           .outerRadius(this.outerRadius);
     }
 
-    _createLabel() {
+    _createInnerLabel() {
         const label_position = (this.innerRadius + this.outerRadius) / 2;
         return d3.svg.arc()
                      .innerRadius(label_position)
                      .outerRadius(label_position);
+    }
+
+    _createOutsideLabel() {
+        return d3.svg.arc().innerRadius(this.radius * 1.5)
+                       .outerRadius(this.radius * 1.5);
+    }
+
+    _midAngle(data: any) {
+        return data.startAngle + (data.endAngle - data.startAngle) / 2;
     }
 
 };
