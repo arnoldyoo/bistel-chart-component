@@ -112,7 +112,7 @@ export class PieSeries extends Series {
                 const arc: any = this._createArc();
 
                 pieTarget.append('text')
-                         .attr('text-anchor', 'end')
+                         .attr('text-anchor', 'middle')
                          .attr('transform', (d) => {
                              const pos: any = outsideLabel.centroid(d);
                              pos[0] = this.radius * 1.7 * (this._midAngle(d) < Math.PI ? 1 : -1);
