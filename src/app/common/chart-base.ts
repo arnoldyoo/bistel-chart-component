@@ -3,6 +3,7 @@ import { Series } from './series/Series';
 import { Axis } from './axis/axis';
 import { IDisplay } from './i-display.interface';
 import { InstanceLoader } from './instance-loader';
+import { ChartException } from '../common/error/chart-exception';
 
 export class ChartBase implements IDisplay {
 
@@ -25,8 +26,8 @@ export class ChartBase implements IDisplay {
 
     _instance_loader: InstanceLoader;
     _isStacked = false;
-    data: Array<any> = [];
 
+    data: Array<any> = [];
     min: number;
     max: number;
 
@@ -44,8 +45,15 @@ export class ChartBase implements IDisplay {
             this._clear();
             this.margin = this.configuration.chart.margin;
             this._setSize(this.configuration.chart.size.width, this.configuration.chart.size.height);
-            this._createSvgElement();
-            this._createComponent();
+            try {
+                this._createSvgElement();
+                this._addEvent();
+                this._createComponent();
+            } catch (e) {
+                console.log(e instanceof ChartException);
+                console.log('Error Code : ', e.status);
+                console.log('Error Message : ', e.errorContent.message);
+            }
         }
     }
 
@@ -126,38 +134,17 @@ export class ChartBase implements IDisplay {
         this._backgroundGroup.select('.background-rect')
                              .attr('width', width - this.margin.left - this.margin.right)
                              .attr('height', height - this.margin.bottom - this.margin.top);
-        this._axisUpdate();
-        this._seriesUpdate();
-    };
-
-    _itemClick(event: any) {
-        if (this._configuration.chart && this._configuration.chart.event) {
-            if (this._configuration.chart.event.itemClick) {
-                this._configuration.chart.event.itemClick(event);
-            }
+        try {
+            this._axisUpdate();
+            this._seriesUpdate();
+        } catch(e) {
+            console.log('Error Code : ', e.status);
+            console.log('Error Message : ', e.errorContent.message);
         }
     }
 
     _createSvgElement() {
-        this.target = this._createSvg(this.configuration.chart)
-                          .on('click', d => {
-                              if (d3.event.target) {
-                                  const currentEvent = {
-                                      event: d3.event,
-                                      data: d3.select(d3.event.target)[0][0].__data__
-                                  };
-                                  this._itemClick(currentEvent);
-                              }
-                          })
-                          .on('mousemove', d => {
-                              const cX = (d3.event.offsetX - this.margin.left);
-                              const cY = (d3.event.offsetY - this.margin.top);
-                              // console.log('background mousemove ==> x :', cX, ' , y : ', cY);
-                              // console.log('background click ==> event :', d3.event);
-                          })
-                          .on('remove', d => {
-                              console.log('this element removing');
-                          });
+        this.target = this._createSvg(this.configuration.chart);
         // create background element
         this._backgroundGroup = this.target.append('g')
                                     .attr('class', 'background')
@@ -276,7 +263,6 @@ export class ChartBase implements IDisplay {
                 series.color = this.colors[j];
                 if (type === 'group' || type === 'stacked') { // column set series
                     series.series = this._createSeries(seriesConfig.series);
-                } else {
                 }
                 // series.yAxe = _.find(this._axis, 'field', seriesConfig.yField);
                 for ( let i = 0 ; i < this._axis.length; i++ ) {
@@ -331,7 +317,47 @@ export class ChartBase implements IDisplay {
         }
     }
 
-    _addEvent() {};
+    // tslint:disable-next-line:no-empty
+    _addEvent() {
+        this.target.on('click', d => {
+                        if (d3.event.target) {
+                            const currentEvent = {
+                                event: d3.event,
+                                data: d3.select(d3.event.target)[0][0].__data__
+                            };
+                            this._itemClick(currentEvent);
+                        }
+                    })
+                    .on('mousemove', d => {
+                        const cX = (d3.event.offsetX - this.margin.left);
+                        const cY = (d3.event.offsetY - this.margin.top);
+                        // console.log('background mousemove ==> x :', cX, ' , y : ', cY);
+                        // console.log('background click ==> event :', d3.event);
+                    })
+                    .on('remove', d => {
+                        console.log('this element removing');
+                    });
+    }
+
+    _itemClick(event: any) {
+        if (this._configuration.chart && this._configuration.chart.event) {
+            if (this._configuration.chart.event.itemClick) {
+                this._configuration.chart.event.itemClick(event);
+            }
+        }
+    }
+
+    _itemOver(event: any) {
+
+    }
+
+    _itemOut(event: any) {
+
+    }
+
+    _mouseMove(event: any) {
+
+    }
 
     _setDefaultData() {
         for (let i = 0; i < 5; i++) {
@@ -343,4 +369,4 @@ export class ChartBase implements IDisplay {
                            profit: Math.round( Math.random() * 100  ) } );
         }
     }
-};
+}
