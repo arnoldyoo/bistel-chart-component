@@ -94,7 +94,7 @@ export class ChartBase implements IDisplay {
     }
 
     set axis( value: any[] ) {
-        this._axis = value;
+        this._axis = this._createAxis(value);
     }
 
     get axis(): any[] {
@@ -102,7 +102,7 @@ export class ChartBase implements IDisplay {
     }
 
     set series( value: any[] ) {
-        this._series = value;
+        this._series = this._createSeries(value);
     }
 
     get series(): any[] {
@@ -169,12 +169,6 @@ export class ChartBase implements IDisplay {
                                 .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
     }
 
-    // _drawGridLine() {
-    //     if (this._target) {
-    //         const gridGroup = this.target.select(`.grid-line-group`);
-    //     }
-    // }
-
     // generate svg element using configuration
     _createComponent() {
         // stacked check
@@ -186,9 +180,9 @@ export class ChartBase implements IDisplay {
                 }
             } );
         }
-        this._axis = this._createAxis(this.configuration.axis);
-        this._series = this._createSeries(this.configuration.series);
-    }
+        this.axis = this.configuration.axis;
+        this.series = this.configuration.series;
+    };
 
     _setSize(width: number, height: number)  {
         this.width = width - (this.margin.left + this.margin.right);
@@ -200,6 +194,8 @@ export class ChartBase implements IDisplay {
     }
 
     _createAxis(axisList: Array<any>) {
+        console.log(axisList);
+
         const tempList = [];
         // tslint:disable-next-line:curly
         if (!axisList) return tempList;
@@ -208,7 +204,7 @@ export class ChartBase implements IDisplay {
             let axis: Axis;
             const axis_params: AxisConfiguration = {
                 conditions: axisConfig,
-                target: this._axisGroup,
+                // target: this._axisGroup,
                 width: this.width,
                 height: this.height,
                 margin: this.margin,
@@ -220,7 +216,13 @@ export class ChartBase implements IDisplay {
             // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
 
             // case 1 : configuration
-            axis = this._instance_loader.axisFactory(axisConfig.axisClass, axis_params);
+            // axis = this._instance_loader.axisFactory(axisConfig.axisClass, axis_params);
+
+            // case 2 : properties
+            axis = this._instance_loader.axisFactory(axisConfig.axisClass, null);
+            axis.configuration = axis_params;
+            axis.target = this._axisGroup;
+
             axis.updateDisplay( this.width, this.height );
 
             if (axis.numeric_max && axis.numeric_min) {
@@ -228,13 +230,9 @@ export class ChartBase implements IDisplay {
                 this.max = axis.numeric_max;
             }
 
-            // case 2 : properties
-            // axis = this._instance_loader.axisFactory(axisConfig.axisClass, null);
-            // axis.configuration = axis_params;
-            // axis.target = this._axisGroup;
-
             tempList.push(axis);
         });
+
         return tempList;
     }
 
@@ -250,10 +248,18 @@ export class ChartBase implements IDisplay {
                 const series_configuration: SeriesConfiguration = {
                     condition: seriesConfig,
                     margin: this.margin,
-                    target: this._seriesGroup,
+                    // target: this._seriesGroup,
                     type: type
                 };
-                series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, series_configuration);
+
+                // case1 : configuration
+                // series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, series_configuration);
+
+                // case2 : property
+                series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, null);
+                series.configuration = series_configuration;
+                series.target = this._seriesGroup;
+
                 series.color = this.colors[j];
                 if (type === 'group' || type === 'stacked') { // column set series
                     series.series = this._createSeries(seriesConfig.series);
@@ -274,11 +280,6 @@ export class ChartBase implements IDisplay {
                         break;
                     }
                 }
-
-                // case2 : property
-                // series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, null);
-                // series.configuration = series_configuration;
-                // series.target = this._seriesGroup;
 
                 tempList.push(series);
             });
