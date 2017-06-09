@@ -18,7 +18,6 @@ export class PieSeries extends Series {
         this._pie = d3.layout.pie();
         this._index = 0;
         this.seriesIndex = 0;
-
     }
 
     set seriesCnt( value: number ) {
@@ -79,8 +78,7 @@ export class PieSeries extends Series {
         }
         this._createArc();
         this.target.attr('height', this.height)
-                    .attr('transform', `translate(${this.width / 2}, ${this.height / 2})`);
-
+                   .attr('transform', `translate(${this.width / 2}, ${this.height / 2})`);
     }
 
     updateDisplay() {
@@ -112,10 +110,10 @@ export class PieSeries extends Series {
                 const arc: any = this._createArc();
 
                 pieTarget.append('text')
-                         .attr('text-anchor', 'end')
+                         .attr('text-anchor', 'middle')
                          .attr('transform', (d) => {
                              const pos: any = outsideLabel.centroid(d);
-                             pos[0] = this.radius * 1.7 * (this._midAngle(d) < Math.PI ? 1 : -1);
+                             pos[0] = this.radius * 1.7 * (this._midAngle(d) < Math.PI ? 0.97 : -0.97);
                              return `translate(${pos})`;
                          })
                          .text((d) => {
@@ -140,7 +138,6 @@ export class PieSeries extends Series {
     createItem() { }
 
     _createArc() {
-
         this.innerRadius = this.radius * this.seriesIndex;
         this.outerRadius = this.innerRadius + this.radius;
         this._arc = d3.svg.arc()
@@ -156,8 +153,9 @@ export class PieSeries extends Series {
     }
 
     _createOutsideLabel() {
-        return d3.svg.arc().innerRadius(this.radius * 1.5)
-                       .outerRadius(this.radius * 1.5);
+        return d3.svg.arc()
+                     .innerRadius(this.radius * 1.5)
+                     .outerRadius(this.radius * 1.5);
     }
 
     _midAngle(data: any) {
