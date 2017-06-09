@@ -1,5 +1,6 @@
 import { Series } from './../../series/Series';
 import { SeriesConfiguration } from './../../../model/chart-param.interface';
+import { ChartException } from '../../../common/error/chart-exception';
 
 export class ColumnSeries extends Series {
 
@@ -79,18 +80,22 @@ export class ColumnSeries extends Series {
 
     generatePosition() {
         super.generatePosition();
-        // tslint:disable-next-line:comment-format
-        // setup x, y, width, height
-        switch (this.type) {
-            case 'stacked' :
-                this._stacked();
-            break;
-            case 'group' :
-                this._group();
-            break;
-            default :
-                this._normal();
-            break;
+        try {
+            // tslint:disable-next-line:comment-format
+            // setup x, y, width, height
+            switch (this.type) {
+                case 'stacked' :
+                    this._stacked();
+                break;
+                case 'group' :
+                    this._group();
+                break;
+                default :
+                    this._normal();
+                break;
+            }
+        } catch(e) {
+             throw new ChartException(500, {message: 'column series generatePosition Error'});
         }
     }
 
@@ -213,5 +218,5 @@ export class ColumnSeries extends Series {
             }
         }
     }
+}
 
-};

@@ -1,6 +1,7 @@
 import { DateTimeAxis, CategoryAxis, NumericAxis } from './component/axis/index';
 import { ColumnSeries, LineSeries, ColumnSet, BarSeries, BarSet, PieSeries, PieSet } from './component/series/index';
 import { AxisConfiguration, SeriesConfiguration } from './../model/chart-param.interface';
+import { ChartException } from './error/chart-exception';
 
 export class InstanceLoader {
     ctors: any;
@@ -35,14 +36,22 @@ export class InstanceLoader {
     // name: string ,config: any, target: any, width: number, height: number, margin: Array<any>, domain: any
     axisFactory(name: string, axisparams: AxisConfiguration): any {
         const ctor: any = this._getCtor(name);
-        const classInstance: any = new ctor(axisparams);
+        let classInstance: any;
+        if (!ctor) {
+            throw new ChartException(404, {message: `not found axis component ${name}`});
+        }
+        classInstance = new ctor(axisparams);
         return classInstance;
     }
 
     // name: string, config: any, target: any, margin: any
     seriesFactory(name: string, seriesparams: SeriesConfiguration): any {
         const ctor: any = this._getCtor(name);
-        const classInstance: any = new ctor(seriesparams);
+        if (!ctor) {
+            throw new ChartException(404, {message: `not found series component ${name}`});
+        }
+        let classInstance: any;
+        classInstance = new ctor(seriesparams);
         return classInstance;
     }
 };
