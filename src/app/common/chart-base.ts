@@ -190,7 +190,7 @@ export class ChartBase implements IDisplay {
     }
 
     _createSvg(chartConfig: any): any {
-        return d3.select(chartConfig.selector).append('svg');
+        return d3.select(chartConfig.selector).append('svg').attr('id', this.configuration.chart.uid);
     }
 
     _createAxis(axisList: Array<any>) {
@@ -360,9 +360,9 @@ export class ChartBase implements IDisplay {
     }
 
     _setDefaultData() {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 31; i++) {
             this.data.push( {  category: 'A' + i,
-                          //  date: new Date(2017, 0, i).getTime(),
+                           date: new Date(2017, 0, i).getTime(),
                            rate: Math.round( Math.random() * 10 ),
                            ratio: Math.round( Math.random() * 110  ),
                            revenue: Math.round( Math.random() * 120  ),

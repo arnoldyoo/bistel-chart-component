@@ -23,7 +23,6 @@ export class ChartComponent implements OnInit {
     @Input() axis: any;
     baseChart: ChartBase;
     chartConfig: any;
-    currentData: any;
 
     constructor() { }
 
