@@ -16,9 +16,9 @@ export abstract class Legend {
     }
 
     set series_config(value: any) {
-        this._series_config = value;
-        if (value.series !== undefined) {
-            this._series_config = value.series;
+        this._series_config = value[0];
+        if (value[0].series.length !== 0) {
+            this._series_config = value[0].series;
         }
     }
 
@@ -66,8 +66,6 @@ export abstract class Legend {
         this.container = this.target.append('g');
     }
 
-    protected updateDisplay() {
-
-    }
+    updateDisplay() { }
 
 }

@@ -17,8 +17,8 @@ export class SvgLegend extends Legend {
         const items: Array<any> = [];
         const compareWidth: number = d3.select(this.container[0][0].parentElement).node().getBBox().width - 50;
         const orient: string = this.orient;
-        const currentX = 0;
-        const currentY = 0;
+        let currentX = 0;
+        const currentY = 10;
         const rowCnt = 0;
         const rowX = 0;
         const row: any = this.container.append('g')
@@ -36,12 +36,12 @@ export class SvgLegend extends Legend {
                 .attr('legendName', d.displayName)
                 .attr('transform', `translate(${currentX}, ${currentY})`);
 
-            const backgroud = item.append('rect')
-                .attr('width', this.rectWidth * 3)
-                .attr('height', this.rectHeight)
-                .style('stroke', 'none')
-                .style('fill', '#fff');
-                // why? mouseover out이 rect 와 text 나뉘어서 발생하는 것을 막기위함.
+            // const backgroud = item.append('rect')
+            //     .attr('width', this.rectWidth * 3)
+            //     .attr('height', this.rectHeight)
+            //     .style('stroke', 'none')
+            //     .style('fill', '#fff');
+            // why? mouseover out이 rect 와 text 나뉘어서 발생하는 것을 막기위함.
 
             const rect = item.append('rect')
                 .attr('width', this.rectWidth)
@@ -53,6 +53,8 @@ export class SvgLegend extends Legend {
                 .attr('x', 12)
                 .style('font-size', '12px')
                 .text( d.displayName );
+
+            currentX += 100;
         });
 
 

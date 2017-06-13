@@ -19,6 +19,7 @@ export class LegendComponent implements OnInit {
     }
     ngOnInit() {
         this.legend = new SvgLegend(this.legendinfo);
+        this.legend.updateDisplay();
     }
 
 }
