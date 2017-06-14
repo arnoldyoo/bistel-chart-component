@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {LegendConfiguration} from "./model/legend.interface";
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,7 @@ export class AppComponent implements OnInit{
     chartinfo: any;
     axis: any;
     series: any;
+    legendinfo: LegendConfiguration;
 
     consturctor() {
 
@@ -17,6 +19,7 @@ export class AppComponent implements OnInit{
     ngOnInit() {
         this.chartinfo = {
             selector: '#div_01',
+            uid: 'chart01_uid',
             size: {
                 width: 800,
                 height: 400
@@ -109,17 +112,17 @@ export class AppComponent implements OnInit{
             //         }
             //     ]
             // },
-            {
-                seriesClass: 'PieSeries',
-                xField: 'profit',
-                yField: 'profit',
-                visible: true,
-                displayName: 'Profit',
-                label: {
-                  visible: true,
-                  side: 'out'
-                }
-            },
+            // {
+            //     seriesClass: 'PieSeries',
+            //     xField: 'profit',
+            //     yField: 'profit',
+            //     visible: true,
+            //     displayName: 'Profit',
+            //     label: {
+            //       visible: true,
+            //       side: 'out'
+            //     }
+            // },
 
             // {
             //     seriesClass: 'ColumnSeries',
@@ -135,34 +138,34 @@ export class AppComponent implements OnInit{
             //     visible: true,
             //     displayName: 'Profit'
             // }
-            // {
-            //     seriesClass: 'ColumnSet',
-            //     visible: true,
-            //     type: 'group', // stacked
-            //     series: [
-            //         {
-            //             seriesClass: 'ColumnSeries',
-            //             xField: 'category',
-            //             yField: 'profit',
-            //             visible: true,
-            //             displayName: 'Profit'
-            //         },
-            //         {
-            //             seriesClass: 'ColumnSeries',
-            //             xField: 'category',
-            //             yField: 'revenue',
-            //             visible: true,
-            //             displayName: 'Revenue'
-            //         },
-            //         {
-            //             seriesClass: 'ColumnSeries',
-            //             xField: 'category',
-            //             yField: 'ratio',
-            //             visible: true,
-            //             displayName: 'Ratio'
-            //         }
-            //     ]
-            // },
+            {
+                seriesClass: 'ColumnSet',
+                visible: true,
+                type: 'group', // stacked
+                series: [
+                    {
+                        seriesClass: 'ColumnSeries',
+                        xField: 'category',
+                        yField: 'profit',
+                        visible: true,
+                        displayName: 'Profit'
+                    },
+                    {
+                        seriesClass: 'ColumnSeries',
+                        xField: 'category',
+                        yField: 'revenue',
+                        visible: true,
+                        displayName: 'Revenue'
+                    },
+                    {
+                        seriesClass: 'ColumnSeries',
+                        xField: 'category',
+                        yField: 'ratio',
+                        visible: true,
+                        displayName: 'Ratio'
+                    }
+                ]
+            },
             // {
             //     seriesClass: 'LineSeries',
             //     xField: 'category',
@@ -206,6 +209,11 @@ export class AppComponent implements OnInit{
             //     ]
             // }
 
-        ]
+        ];
+        this.legendinfo = {
+            selector: '#div_01',
+            orient: 'bottom',
+            series: this.series
+        };
     }
 }

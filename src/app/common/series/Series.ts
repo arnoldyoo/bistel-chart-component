@@ -226,7 +226,7 @@ export abstract class Series implements IDisplay {
             this.displayName = this._xField;
         }
 
-        if (conditions.label.visible) {
+        if (conditions.label) {
           this.label = conditions.label;
         }
     }

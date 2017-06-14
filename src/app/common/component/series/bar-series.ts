@@ -96,6 +96,9 @@ export class BarSeries extends Series {
 
     updateDisplay() {
         super.updateDisplay();
+        this.target.attr('data-legend', () => {
+            return this.displayName;
+        });
         const rectElement: any = this.target.select(`.${this.displayName + this._index}`);
         if (!rectElement[0][0]) {
             this.createItem();
@@ -106,14 +109,14 @@ export class BarSeries extends Series {
                    .attr('y', this.y)
                    .attr('width', this.width)
                    .attr('height', this.height);
+        this.target.style('fill', this.color);
     }
 
     createItem() {
         this.target.datum(this.data)
                             .append('rect')
                             .attr('class', this.displayName + this._index)
-                            .attr('value', this._data[this._xField])
-                            .style('fill', this.color);
+                            .attr('value', this._data[this._xField]);
     }
 
     _normal() {

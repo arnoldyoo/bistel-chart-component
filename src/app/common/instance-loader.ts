@@ -24,6 +24,7 @@ export class InstanceLoader {
             PieSet: PieSet
         };
     }
+
     _getCtor( name: string ): any {
         const ctor: any = this.ctors[name];
         if (!ctor) {
