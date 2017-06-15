@@ -211,7 +211,7 @@ export class AppComponent implements OnInit{
 
         ];
         this.legendinfo = {
-            selector: '#div_01',
+            selector: '#div_02',
             orient: 'bottom',
             series: this.series
         };
