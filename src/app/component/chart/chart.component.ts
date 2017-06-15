@@ -1,5 +1,5 @@
 import { ChartBase } from './../../common/chart-base';
-import { Component, HostListener, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, Input, Output, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
 
 @Component({
     selector: 'app-chart',
@@ -21,6 +21,11 @@ export class ChartComponent implements OnInit {
     @Input() chartinfo: any;
     @Input() series: any;
     @Input() axis: any;
+
+    @Output() itemclick = new EventEmitter();
+    @Output() mouseover = new EventEmitter();
+    @Output() mouseout = new EventEmitter();
+
     baseChart: ChartBase;
     chartConfig: any;
 
@@ -29,6 +34,9 @@ export class ChartComponent implements OnInit {
     ngOnInit() {
         this._setChartJson();
         this.baseChart = new ChartBase(this.chartConfig);
+        this.baseChart.addEventListener(ChartBase.ITEM_CLICK, this._itemClick);
+        this.baseChart.addEventListener(ChartBase.MOUSE_OUT, this._mouseOut);
+        this.baseChart.addEventListener(ChartBase.MOUSE_OVER, this._mouseOver);
         this.baseChart.updateDisplay(this.chartConfig.chart.size.width, this.chartConfig.chart.size.height);
         window.dispatchEvent(new Event('resize'));
     }
@@ -39,15 +47,25 @@ export class ChartComponent implements OnInit {
         this.baseChart.updateDisplay(elem.offsetWidth, elem.offsetHeight);
     }
 
-    // chartItemClick(event: any) {
-    //     this.currentData = event.data;
-    //     console.log('chartItemClick : ', this.currentData);
-    // }
-
     _setChartJson() {
         this.chartConfig = {};
         this.chartConfig.chart = this.chartinfo;
         this.chartConfig.axis = this.axis;
         this.chartConfig.series = this.series;
+    }
+
+    _itemClick(event: any) {
+        console.log('itemClick : ', event);
+        this.itemclick.emit(event);
+    }
+
+    _mouseOver(event: any) {
+        console.log('_mouseOver : ', event);
+        this.mouseover.emit(event);
+    }
+
+    _mouseOut(event: any) {
+        console.log('_mouseOut : ', event);
+        this.mouseout.emit(event);
     }
 }
