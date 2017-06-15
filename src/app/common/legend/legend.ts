@@ -1,11 +1,15 @@
 import { LegendConfiguration } from '../../model/legend.interface';
-export abstract class Legend {
+import { IDisplay } from './../i-display.interface';
+
+export abstract class Legend implements IDisplay {
     colors = ['#00ff00', '#00ffff', '#0000ff'];
     _orient: string;
     _series_config: Array<any>;
     _target: any;
     _configuration: LegendConfiguration;
     _container: any;
+    _width: number;
+    _height: number;
 
     constructor(legendConfig: LegendConfiguration) {
         this.configuration = legendConfig;
@@ -16,6 +20,7 @@ export abstract class Legend {
     }
 
     set series_config(value: any) {
+        console.log('series_config : ', value);
         this._series_config = value[0];
         if (value[0].series.length !== 0) {
             this._series_config = value[0].series;
@@ -44,6 +49,7 @@ export abstract class Legend {
 
     set configuration(value: any) {
         this._configuration = value;
+        console.log('configuration : ', this._configuration);
     }
 
     get configuration() {
@@ -58,6 +64,22 @@ export abstract class Legend {
         return this._container;
     }
 
+    set width( value: number ) {
+        this._width = value;
+    }
+
+    get width(): number {
+        return this._width;
+    }
+
+    set height( value: number ) {
+        this._height = value;
+    }
+
+    get height() {
+        return this._height;
+    }
+
     _createSvg() {
         this.target = d3.select(this.configuration.selector).append('svg');
     }
@@ -66,6 +88,13 @@ export abstract class Legend {
         this.container = this.target.append('g');
     }
 
-    updateDisplay() { }
+    updateDisplay(width: number, height: number) {
+        console.log(`legend class => updateDisplay(${width}, ${height})`);
+        this.width = width;
+        this.height = height;
+        this.target
+            .attr('width', width)
+            .attr('height', height);
+    }
 
 }
