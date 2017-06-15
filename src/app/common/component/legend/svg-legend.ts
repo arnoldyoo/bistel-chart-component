@@ -55,9 +55,8 @@ export class SvgLegend extends Legend {
             item.append('rect')
                 .attr('width', item.node().getBBox().width)
                 .attr('height', item.node().getBBox().height)
-                .style('fill', 'gray')
-                .style('opacity', 0.3);
-
+                .style('fill', '#fff')
+                .style('opacity', 0);
 
             if ( compareWidth - this.padding < currentX + text.node().getBBox().width + ( this.rectWidth + this.padding ) ) {
                 currentX = 0;
@@ -70,15 +69,12 @@ export class SvgLegend extends Legend {
                 row.append( () => {
                     return item.node();
                 });
-
             }
 
             item.attr('transform', `translate( ${currentX}, ${currentY} )` );
             currentX += item.node().getBBox().width + this.padding;
             this._addEvent(item);
-
         });
-
 
         const group_width: number = this.container.node().getBBox().width;
         const repositionX: number = (this.width / 2) - (group_width / 2);
@@ -92,22 +88,16 @@ export class SvgLegend extends Legend {
                     return `translate( ${xRowPosition}, 0 )`;
                 });
         }
-
     }
 
     _addEvent(item: any) {
-
         if (!this.chart_selector) {
             return;
         }
-
         const chart = d3.select(this.chart_selector);
-        console.log(chart);
         item.on('mouseover', () => {
             const that: any = d3.select(d3.event.target.parentElement);
-
             that.style('opacity', 1);
-
             const other: any = this.container.selectAll('.legend-item').filter( function() {
                 const lgname: any = d3.select(this).attr('legend-name');
                 return lgname !== that.attr('legend-name');
@@ -124,7 +114,6 @@ export class SvgLegend extends Legend {
             otherbar.style('opacity', 0.4);
             selfbar.style('opacity', 1);
             selfbar.style('stroke', 'black');
-
         }).on('mouseout', () => {
             const selfbar = chart.selectAll('[data-legend]').filter( function() {
                 return true;

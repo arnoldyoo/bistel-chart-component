@@ -7,10 +7,18 @@ import { ChartException } from '../common/error/chart-exception';
 
 export class ChartBase implements IDisplay {
 
+    static ITEM_CLICK = 'itemclick';
+    static MOUSE_OVER = 'mouseover';
+    static MOUSE_OUT = 'mouseout';
+
+    // tslint:disable-next-line:max-line-length
     colors = ['#3366cc', '#dc3912', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#329262', '#5574a6', '#3b3eac'];
 
-    _configuration: any;
+    data: Array<any> = [];
+    min: number;
+    max: number;
 
+    _configuration: any;
     _target: any; // target svg element
     _width: number;
     _height: number;
@@ -27,9 +35,7 @@ export class ChartBase implements IDisplay {
     _instance_loader: InstanceLoader;
     _isStacked = false;
 
-    data: Array<any> = [];
-    min: number;
-    max: number;
+    _event_map: any;
 
     constructor( config?: any ) {
         this._instance_loader = new InstanceLoader();
@@ -124,6 +130,13 @@ export class ChartBase implements IDisplay {
 
     get domain() {
         return this._domain;
+    }
+
+    addEventListener(type: string, method: any) {
+        if ( !this._event_map ) {
+            this._event_map = {};
+        }
+        this._event_map[type] = method;
     }
 
     updateDisplay(width: number, height: number)  {
@@ -326,7 +339,34 @@ export class ChartBase implements IDisplay {
                                 event: d3.event,
                                 data: d3.select(d3.event.target)[0][0].__data__
                             };
-                            this._itemClick(currentEvent);
+                            if (this._event_map[ChartBase.ITEM_CLICK]) {
+                                this._event_map[ChartBase.ITEM_CLICK](currentEvent);
+                            }
+                            // this._itemClick(currentEvent);
+                        }
+                    })
+                    .on('mouseover', d => {
+                        if (d3.event.target) {
+                            const currentEvent = {
+                                event: d3.event,
+                                data: d3.select(d3.event.target)[0][0].__data__
+                            };
+                            if (this._event_map[ChartBase.MOUSE_OVER]) {
+                                this._event_map[ChartBase.MOUSE_OVER](currentEvent);
+                            }
+                            // this._itemClick(currentEvent);
+                        }
+                    })
+                    .on('mouseout', d => {
+                        if (d3.event.target) {
+                            const currentEvent = {
+                                event: d3.event,
+                                data: d3.select(d3.event.target)[0][0].__data__
+                            };
+                            if (this._event_map[ChartBase.MOUSE_OUT]) {
+                                this._event_map[ChartBase.MOUSE_OUT](currentEvent);
+                            }
+                            // this._itemClick(currentEvent);
                         }
                     })
                     .on('mousemove', d => {
@@ -338,26 +378,6 @@ export class ChartBase implements IDisplay {
                     .on('remove', d => {
                         console.log('this element removing');
                     });
-    }
-
-    _itemClick(event: any) {
-        if (this._configuration.chart && this._configuration.chart.event) {
-            if (this._configuration.chart.event.itemClick) {
-                this._configuration.chart.event.itemClick(event);
-            }
-        }
-    }
-
-    _itemOver(event: any) {
-
-    }
-
-    _itemOut(event: any) {
-
-    }
-
-    _mouseMove(event: any) {
-
     }
 
     _setDefaultData() {
