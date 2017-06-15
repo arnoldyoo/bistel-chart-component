@@ -2,7 +2,8 @@ import { LegendConfiguration } from '../../model/legend.interface';
 import { IDisplay } from './../i-display.interface';
 
 export abstract class Legend implements IDisplay {
-    colors = ['#00ff00', '#00ffff', '#0000ff'];
+
+    colors = ['#3366cc', '#dc3912', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#329262', '#5574a6', '#3b3eac'];
     _orient: string;
     _series_config: Array<any>;
     _target: any;
@@ -20,9 +21,8 @@ export abstract class Legend implements IDisplay {
     }
 
     set series_config(value: any) {
-        console.log('series_config : ', value);
-        this._series_config = value[0];
-        if (value[0].series.length !== 0) {
+        this._series_config = value;
+        if (value[0].series !== undefined) {
             this._series_config = value[0].series;
         }
     }
