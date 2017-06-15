@@ -7,8 +7,8 @@ export class SvgLegend extends Legend {
     rectHeight = 10;
     padding = 10;
 
-    constructor(legendConfig: LegendConfiguration) {
-        super(legendConfig);
+    constructor(legendConfig: LegendConfiguration, chartSelector: string) {
+        super(legendConfig, chartSelector);
     }
 
     updateDisplay(width: number, height: number) {
@@ -37,8 +37,8 @@ export class SvgLegend extends Legend {
             };
 
             const item = row.append('g')
-                .attr('class', 'legendItem')
-                .attr('legendName', d.displayName)
+                .attr('class', 'legend-item')
+                .attr('legend-name', d.displayName)
                 .attr('transform', `translate(${currentX}, ${currentY})`);
 
             const rect = item.append('rect')
@@ -75,7 +75,10 @@ export class SvgLegend extends Legend {
 
             item.attr('transform', `translate( ${currentX}, ${currentY} )` );
             currentX += item.node().getBBox().width + this.padding;
+            this._addEvent(item);
+
         });
+
 
         const group_width: number = this.container.node().getBBox().width;
         const repositionX: number = (this.width / 2) - (group_width / 2);
@@ -90,6 +93,61 @@ export class SvgLegend extends Legend {
                 });
         }
 
+    }
+
+    _addEvent(item: any) {
+
+        if (!this.chart_selector) {
+            return;
+        }
+
+        const chart = d3.select(this.chart_selector);
+        console.log(chart);
+        item.on('mouseover', () => {
+            const that: any = d3.select(d3.event.target.parentElement);
+
+            that.style('opacity', 1);
+
+            const other: any = this.container.selectAll('.legend-item').filter( function() {
+                const lgname: any = d3.select(this).attr('legend-name');
+                return lgname !== that.attr('legend-name');
+            });
+            other.style('opacity', 0.4);
+            const selflg = that.attr('legend-name');
+            const otherbar = chart.selectAll('[data-legend]').filter( function() {
+                return d3.select(this).attr('data-legend') !== selflg;
+            });
+            const selfbar = chart.selectAll('[data-legend]').filter( function() {
+                return d3.select(this).attr('data-legend') === selflg;
+            });
+            otherbar.style('stroke', 'none');
+            otherbar.style('opacity', 0.4);
+            selfbar.style('opacity', 1);
+            selfbar.style('stroke', 'black');
+
+        }).on('mouseout', () => {
+            const selfbar = chart.selectAll('[data-legend]').filter( function() {
+                return true;
+            });
+            selfbar.style('opacity', 1);
+            selfbar.style('stroke', 'none');
+            const other = this.container.selectAll('.legend-item').filter( function() {
+                return true;
+            });
+            other.style('opacity', 1);
+        }).on('click', (  ) => {
+            const selflg = d3.select(d3.event.target.parentElement).attr('legend-name');
+            const otherbar = chart.selectAll('[data-legend]').filter( function() {
+                return d3.select(this).attr('data-legend') !== selflg;
+            });
+            const selfbar = chart.selectAll('[data-legend]').filter( function() {
+                return d3.select(this).attr('data-legend') === selflg;
+            });
+            otherbar.style('stroke', 'none');
+            otherbar.style('opacity', 0.4);
+            selfbar.style('opacity', 1);
+            selfbar.style('stroke', 'black');
+        });
     }
 
 }

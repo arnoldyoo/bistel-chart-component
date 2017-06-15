@@ -11,11 +11,13 @@ export abstract class Legend implements IDisplay {
     _container: any;
     _width: number;
     _height: number;
+    _chart_selector: string;
 
-    constructor(legendConfig: LegendConfiguration) {
+    constructor(legendConfig: LegendConfiguration, chartSelector: string) {
         this.configuration = legendConfig;
         this.series_config = this.configuration.series;
         this.orient = this.configuration.orient;
+        this.chart_selector = chartSelector;
         this._createSvg();
         this._createContainer();
     }
@@ -25,6 +27,14 @@ export abstract class Legend implements IDisplay {
         if (value[0].series !== undefined) {
             this._series_config = value[0].series;
         }
+    }
+
+    set chart_selector(value: string) {
+        this._chart_selector = value;
+    }
+
+    get chart_selector() {
+        return this._chart_selector;
     }
 
     get series_config() {

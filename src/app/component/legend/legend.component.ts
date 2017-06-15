@@ -13,14 +13,14 @@ import { Legend } from '../../common/legend/legend';
 
 export class LegendComponent implements OnInit {
     @Input() legendinfo: LegendConfiguration;
-    @Input() series: any;
+    @Input() chartSelector: string;
     legend: Legend;
     width = 50;
     height = 50;
     constructor() {
     }
     ngOnInit() {
-        this.legend = new SvgLegend(this.legendinfo);
+        this.legend = new SvgLegend(this.legendinfo, this.chartSelector);
         console.log('ngOnInit : ', this.width, this.height);
         this.legend.updateDisplay(this.width, this.height);
     }
