@@ -1,5 +1,4 @@
-import { AxisConfiguration, SeriesConditions, SeriesConfiguration } from './../model/chart-param.interface';
-import { Series } from './series/Series';
+import { AxisConfiguration, SeriesConfiguration } from './../model/chart-param.interface';
 import { Axis } from './axis/axis';
 import { IDisplay } from './i-display.interface';
 import { InstanceLoader } from './instance-loader';
@@ -351,18 +350,20 @@ export class ChartBase implements IDisplay {
                     event: d3.event,
                     data: d3.select(d3.event.target)[0][0].__data__
                 };
+
                 if (currentEvent.data === undefined) {
                     this.series.map((s) => {
-                        if (s.series !== undefined) {
-                            s.series.map((sr: any) => {
-                                sr.unselectAll();
-                            });
-                        } else {
-                            s.unselectAll();
-                        }
+                        s.unselectAll();
                     });
                 }
+<<<<<<< HEAD
+
+                if (this._event_map[ChartBase.ITEM_CLICK]) {
+                    this._event_map[ChartBase.ITEM_CLICK](currentEvent);
+                }
+=======
                 this.dispatchEvent(ChartBase.ITEM_CLICK, currentEvent);
+>>>>>>> kenneth
             }
         })
         .on('mouseover', d => {
@@ -392,9 +393,7 @@ export class ChartBase implements IDisplay {
         .on('remove', d => {
             console.log('this element removing');
             // this._itemClick(currentEvent);
-
         });
-
     };
 
     _setDefaultData() {
