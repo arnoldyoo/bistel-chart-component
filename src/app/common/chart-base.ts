@@ -356,14 +356,7 @@ export class ChartBase implements IDisplay {
                         s.unselectAll();
                     });
                 }
-<<<<<<< HEAD
-
-                if (this._event_map[ChartBase.ITEM_CLICK]) {
-                    this._event_map[ChartBase.ITEM_CLICK](currentEvent);
-                }
-=======
-                this.dispatchEvent(ChartBase.ITEM_CLICK, currentEvent);
->>>>>>> kenneth
+                
             }
         })
         .on('mouseover', d => {
