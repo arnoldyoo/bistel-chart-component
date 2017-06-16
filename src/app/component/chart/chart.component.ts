@@ -13,6 +13,14 @@ import { Component, HostListener, Input, Output, OnInit, EventEmitter, ViewEncap
             stroke: #ccc;
             shape-rendering: crispEdges;
         }
+        
+        .unactive {
+            fill-opacity: 0.3;
+        }
+        
+        .active {
+            fill-opacity: 1;
+        }
     `],
     encapsulation: ViewEncapsulation.None
 })
@@ -61,6 +69,19 @@ export class ChartComponent implements OnInit {
 
     _itemClick(event: any) {
         console.log('itemClick : ', event);
+
+
+        const targetEl = d3.select(event.event.target);
+        if (event.data !== undefined) {
+            if (typeof(event.data) === 'object') {
+
+
+
+            } else {
+                console.log('axis');
+            }
+        }
+
         this.itemclick.emit(event);
     }
 
