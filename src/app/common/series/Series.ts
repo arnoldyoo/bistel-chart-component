@@ -192,6 +192,15 @@ export abstract class Series implements IDisplay {
     protected createItem() { }
 
     /*
+    * title : addEvent
+    * description : add eventlistener of created svg element
+    */
+    addEvent(element: any) { }
+
+    unselectAll() {}
+
+    /*
+
     * title : _createContainer
     * description : first time, create group element in series class
     */
@@ -219,24 +228,6 @@ export abstract class Series implements IDisplay {
         if (this.data) {
             this.generatePosition();
         }
-    }
-
-    /*
-    * title : addEvent
-    * description : add eventlistener of created svg element
-    */
-    addEvent(element: any) {
-        element
-        .on('click', d => {
-            const cX = (d3.event.offsetX);
-            const cY = (d3.event.offsetY);
-            console.log('element click ==> :', d3.event);
-        })
-        .on('mousemove', d => {
-            const cX = (d3.event.offsetX);
-            const cY = (d3.event.offsetY);
-            // console.log('element click ==> x :', cX, ' , y : ', cY);
-        });
     }
 
 }
