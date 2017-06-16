@@ -223,9 +223,14 @@ export class BarSeries extends Series {
                 const targetEl = d3.select(d3.event.target);
                 const parentEl = targetEl[0][0].parentElement;
                 const seriesEl = d3.select(parentEl.parentElement);
-                seriesEl.selectAll('.selected').style('fill-opacity', 0.3).classed('selected', false);
+                seriesEl.selectAll('.selected')
+                        .style('fill-opacity', 0.3)
+                        // .style('stroke', 'none')
+                        .classed('selected', false);
                 seriesEl.style('fill-opacity', 0.3);
+                // seriesEl.style('stroke', 'none');
                 targetEl.style('fill-opacity', 1);
+                // targetEl.style('stroke', 'black');
                 targetEl.classed('selected', true);
             })
             .on('mousemove', d => {
@@ -240,6 +245,7 @@ export class BarSeries extends Series {
         this.target.selectAll('rect').style('fill-opacity', null).classed('selected', false);
         const seriesEl = d3.select(this.target[0][0].parentElement);
         seriesEl.style('fill-opacity', 1);
+        // seriesEl.style('stroke', 'none');
     }
 
 };
