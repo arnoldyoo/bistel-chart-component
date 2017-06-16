@@ -130,4 +130,10 @@ export class ColumnSet implements IDisplay {
             this.series[i].dataProvider = this._dataProvider;
         }
     }
+
+    unselectAll() {
+        for ( let i = 0; i < this.series.length; i++ ) {
+            this.series[i].unselectAll();
+        }
+    }
 }

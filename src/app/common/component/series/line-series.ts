@@ -1,4 +1,4 @@
-import { Series } from './../../series/Series';
+import { Series } from '../../series/series';
 import { SeriesConfiguration } from './../../../model/chart-param.interface';
 
 export class LineSeries extends Series {
