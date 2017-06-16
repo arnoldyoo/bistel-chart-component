@@ -144,6 +144,12 @@ export class ChartBase implements IDisplay {
         this._event_map[type] = method;
     }
 
+    dispatchEvent(type: string, event: any) {
+        if (this._event_map[type]) {
+            this._event_map[type](event);
+        }
+    }
+
     updateDisplay(width?: number, height?: number)  {
         console.log(`chart-base.updateDisplay(${width}, ${height})`);
         if ( width && height ) {
@@ -356,9 +362,7 @@ export class ChartBase implements IDisplay {
                         }
                     });
                 }
-                if (this._event_map[ChartBase.ITEM_CLICK]) {
-                    this._event_map[ChartBase.ITEM_CLICK](currentEvent);
-                }
+                this.dispatchEvent(ChartBase.ITEM_CLICK, currentEvent);
             }
         })
         .on('mouseover', d => {
@@ -367,9 +371,7 @@ export class ChartBase implements IDisplay {
                     event: d3.event,
                     data: d3.select(d3.event.target)[0][0].__data__
                 };
-                if (this._event_map[ChartBase.MOUSE_OVER]) {
-                    this._event_map[ChartBase.MOUSE_OVER](currentEvent);
-                }
+                this.dispatchEvent(ChartBase.MOUSE_OVER, currentEvent);
             }
         })
         .on('mouseout', d => {
@@ -378,9 +380,7 @@ export class ChartBase implements IDisplay {
                     event: d3.event,
                     data: d3.select(d3.event.target)[0][0].__data__
                 };
-                if (this._event_map[ChartBase.MOUSE_OUT]) {
-                    this._event_map[ChartBase.MOUSE_OUT](currentEvent);
-                }
+                this.dispatchEvent(ChartBase.MOUSE_OUT, currentEvent);
             }
         })
         .on('mousemove', d => {

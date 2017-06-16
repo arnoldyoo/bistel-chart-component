@@ -87,11 +87,15 @@ export class ChartComponent implements OnInit {
 
     _mouseOver(event: any) {
         console.log('_mouseOver : ', event);
-        this.mouseover.emit(event);
+        if (this.mouseover.emit) {
+            this.mouseover.emit(event);
+        }
     }
 
     _mouseOut(event: any) {
         console.log('_mouseOut : ', event);
-        this.mouseout.emit(event);
+        if (this.mouseout.emit) {
+            this.mouseout.emit(event);
+        }
     }
 }
