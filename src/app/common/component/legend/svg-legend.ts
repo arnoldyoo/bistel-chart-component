@@ -96,46 +96,43 @@ export class SvgLegend extends Legend {
         }
         const chart = d3.select(this.chart_selector);
         item.on('mouseover', () => {
-            const that: any = d3.select(d3.event.target.parentElement);
-            that.style('opacity', 1);
-            const other: any = this.container.selectAll('.legend-item').filter( function() {
+            const that: any = d3.select(d3.event.target.parentElement).style('opacity', 1);
+            this.container.selectAll('.legend-item').filter( function() {
                 const lgname: any = d3.select(this).attr('legend-name');
                 return lgname !== that.attr('legend-name');
-            });
-            other.style('opacity', 0.4);
+            }).style('opacity', 0.4);
             const selflg = that.attr('legend-name');
-            const otherbar = chart.selectAll('[data-legend]').filter( function() {
+            chart.selectAll('[data-legend]').filter( function() {
                 return d3.select(this).attr('data-legend') !== selflg;
-            });
-            const selfbar = chart.selectAll('[data-legend]').filter( function() {
+            })
+            .style('stroke', 'none')
+            .style('opacity', 0.4);
+            chart.selectAll('[data-legend]').filter( function() {
                 return d3.select(this).attr('data-legend') === selflg;
-            });
-            otherbar.style('stroke', 'none');
-            otherbar.style('opacity', 0.4);
-            selfbar.style('opacity', 1);
-            selfbar.style('stroke', 'black');
+            })
+            .style('opacity', 1)
+            .style('stroke', 'black');
         }).on('mouseout', () => {
-            const selfbar = chart.selectAll('[data-legend]').filter( function() {
+            chart.selectAll('[data-legend]').filter( function() {
                 return true;
-            });
-            selfbar.style('opacity', 1);
-            selfbar.style('stroke', 'none');
-            const other = this.container.selectAll('.legend-item').filter( function() {
+            })
+            .style('opacity', 1)
+            .style('stroke', 'none');
+            this.container.selectAll('.legend-item').filter( function() {
                 return true;
-            });
-            other.style('opacity', 1);
-        }).on('click', (  ) => {
+            }).style('opacity', 1);
+        }).on('click', () => {
             const selflg = d3.select(d3.event.target.parentElement).attr('legend-name');
-            const otherbar = chart.selectAll('[data-legend]').filter( function() {
+            chart.selectAll('[data-legend]').filter( function() {
                 return d3.select(this).attr('data-legend') !== selflg;
-            });
-            const selfbar = chart.selectAll('[data-legend]').filter( function() {
+            })
+            .style('stroke', 'none')
+            .style('opacity', 0.4);
+            chart.selectAll('[data-legend]').filter( function() {
                 return d3.select(this).attr('data-legend') === selflg;
-            });
-            otherbar.style('stroke', 'none');
-            otherbar.style('opacity', 0.4);
-            selfbar.style('opacity', 1);
-            selfbar.style('stroke', 'black');
+            })
+            .style('opacity', 1)
+            .style('stroke', 'black');
         });
     }
 
