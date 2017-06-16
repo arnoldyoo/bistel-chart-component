@@ -39,7 +39,6 @@ export class ChartBase implements IDisplay {
 
     constructor( config?: any ) {
         this._instance_loader = new InstanceLoader();
-        this._setDefaultData();
         if (config) {
             this.configuration = config;
         }
@@ -49,6 +48,11 @@ export class ChartBase implements IDisplay {
     set configuration( value: any ) {
         this._configuration = value;
         if (this._configuration) {
+            if (!this._configuration.chart.data) {
+                this._setDefaultData();
+            } else {
+                this.data = this._configuration.chart.data;
+            }
             this._clear();
             this.margin = this.configuration.chart.margin;
             this._setSize(this.configuration.chart.size.width, this.configuration.chart.size.height);
@@ -94,6 +98,7 @@ export class ChartBase implements IDisplay {
 
     set dataProvider( data: any[] ) {
         this._dataProvider = data;
+        this.updateDisplay();
     }
 
     get dataProvider() {
@@ -139,19 +144,21 @@ export class ChartBase implements IDisplay {
         this._event_map[type] = method;
     }
 
-    updateDisplay(width: number, height: number)  {
+    updateDisplay(width?: number, height?: number)  {
         console.log(`chart-base.updateDisplay(${width}, ${height})`);
-        this._setSize(width, height);
-        this.target
-            .attr('width', width)
-            .attr('height', height);
-        this._backgroundGroup.select('.background-rect')
-                             .attr('width', width - this.margin.left - this.margin.right)
-                             .attr('height', height - this.margin.bottom - this.margin.top);
+        if ( width && height ) {
+            this._setSize(width, height);
+            this.target
+                .attr('width', width)
+                .attr('height', height);
+            this._backgroundGroup.select('.background-rect')
+                                .attr('width', width - this.margin.left - this.margin.right)
+                                .attr('height', height - this.margin.bottom - this.margin.top);
+        }
         try {
             this._axisUpdate();
             this._seriesUpdate();
-        } catch(e) {
+        } catch (e) {
             console.log('Error Code : ', e.status);
             console.log('Error Message : ', e.errorContent.message);
         }
@@ -342,7 +349,6 @@ export class ChartBase implements IDisplay {
                             if (this._event_map[ChartBase.ITEM_CLICK]) {
                                 this._event_map[ChartBase.ITEM_CLICK](currentEvent);
                             }
-                            // this._itemClick(currentEvent);
                         }
                     })
                     .on('mouseover', d => {
@@ -354,7 +360,6 @@ export class ChartBase implements IDisplay {
                             if (this._event_map[ChartBase.MOUSE_OVER]) {
                                 this._event_map[ChartBase.MOUSE_OVER](currentEvent);
                             }
-                            // this._itemClick(currentEvent);
                         }
                     })
                     .on('mouseout', d => {
@@ -366,7 +371,6 @@ export class ChartBase implements IDisplay {
                             if (this._event_map[ChartBase.MOUSE_OUT]) {
                                 this._event_map[ChartBase.MOUSE_OUT](currentEvent);
                             }
-                            // this._itemClick(currentEvent);
                         }
                     })
                     .on('mousemove', d => {
@@ -381,7 +385,7 @@ export class ChartBase implements IDisplay {
     }
 
     _setDefaultData() {
-        for (let i = 0; i < 31; i++) {
+        for (let i = 0; i < 20; i++) {
             this.data.push( {  category: 'A' + i,
                            date: new Date(2017, 0, i).getTime(),
                            rate: Math.round( Math.random() * 10 ),

@@ -75,12 +75,12 @@ export class ColumnSeries extends Series {
             // 있으면 비교 로직을 태워서 updateDisplay
             this.data = this.dataProvider[j];
             this.index = j;
-            const rectElement: any = this.target.select(`.${this.displayName + this._index}`);
-            if (!rectElement[0][0]) {
-                console.log('없음 없음 ');
-            } else {
-                console.log('있음 있음');
-            }
+            // const rectElement: any = this.target.select(`.${this.displayName + this._index}`);
+            // if (!rectElement[0][0]) {
+            //     console.log('없음 없음 ');
+            // } else {
+            //     console.log('있음 있음');
+            // }
             this.updateDisplay();
         }
     }
@@ -101,8 +101,8 @@ export class ColumnSeries extends Series {
                     this._normal();
                 break;
             }
-        } catch(e) {
-             throw new ChartException(500, {message: 'column series generatePosition Error'});
+        } catch (e) {
+             throw new ChartException(500, {message: 'column series generatePosition and Data parsing Error'});
         }
     }
 

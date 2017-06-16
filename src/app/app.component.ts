@@ -1,22 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import {LegendConfiguration} from "./model/legend.interface";
+import { LegendConfiguration } from './model/legend.interface';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
     title = 'app works!';
     chartinfo: any;
     axis: any;
     series: any;
     legendinfo: LegendConfiguration;
+    data: Array<any>;
 
     consturctor() {
-
     }
+
     ngOnInit() {
+        this._setDefaultData();
         this.chartinfo = {
             selector: '#div_01',
             uid: 'chart01_uid',
@@ -29,7 +31,8 @@ export class AppComponent implements OnInit{
                 right: 50,
                 top: 50,
                 bottom: 50
-            }
+            },
+            data: this.data
         };
         this.axis = [
             {
@@ -112,17 +115,18 @@ export class AppComponent implements OnInit{
             //         }
             //     ]
             // },
-            // {
-            //     seriesClass: 'PieSeries',
-            //     xField: 'profit',
-            //     yField: 'profit',
-            //     visible: true,
-            //     displayName: 'Profit',
-            //     label: {
-            //       visible: true,
-            //       side: 'out'
-            //     }
-            // },
+            {
+                seriesClass: 'PieSeries',
+                xField: 'profit',
+                yField: 'profit',
+                visible: true,
+                displayName: 'Profit',
+                displayKey: 'category',
+                label: {
+                  visible: true,
+                  side: 'out'
+                }
+            }
 
             // {
             //     seriesClass: 'ColumnSeries',
@@ -138,34 +142,34 @@ export class AppComponent implements OnInit{
             //     visible: true,
             //     displayName: 'Profit'
             // }
-            {
-                seriesClass: 'ColumnSet',
-                visible: true,
-                type: 'group', // stacked
-                series: [
-                    {
-                        seriesClass: 'ColumnSeries',
-                        xField: 'category',
-                        yField: 'profit',
-                        visible: true,
-                        displayName: 'Profit'
-                    },
-                    {
-                        seriesClass: 'ColumnSeries',
-                        xField: 'category',
-                        yField: 'revenue',
-                        visible: true,
-                        displayName: 'Revenue'
-                    },
-                    {
-                        seriesClass: 'ColumnSeries',
-                        xField: 'category',
-                        yField: 'ratio',
-                        visible: true,
-                        displayName: 'Ratio'
-                    }
-                ]
-            },
+            // {
+            //     seriesClass: 'ColumnSet',
+            //     visible: true,
+            //     type: 'group', // stacked
+            //     series: [
+            //         {
+            //             seriesClass: 'ColumnSeries',
+            //             xField: 'category',
+            //             yField: 'profit',
+            //             visible: true,
+            //             displayName: 'Profit'
+            //         },
+            //         {
+            //             seriesClass: 'ColumnSeries',
+            //             xField: 'category',
+            //             yField: 'revenue',
+            //             visible: true,
+            //             displayName: 'Revenue'
+            //         },
+            //         {
+            //             seriesClass: 'ColumnSeries',
+            //             xField: 'category',
+            //             yField: 'ratio',
+            //             visible: true,
+            //             displayName: 'Ratio'
+            //         }
+            //     ]
+            // },
             // {
             //     seriesClass: 'LineSeries',
             //     xField: 'category',
@@ -215,5 +219,17 @@ export class AppComponent implements OnInit{
             orient: 'bottom',
             series: this.series
         };
+    }
+
+    _setDefaultData() {
+        this.data = [];
+        for (let i = 0; i < 20; i++) {
+            this.data.push( {  category: 'B' + i,
+                           date: new Date(2017, 0, i).getTime(),
+                           rate: Math.round( Math.random() * 10 ),
+                           ratio: Math.round( Math.random() * 110  ),
+                           revenue: Math.round( Math.random() * 120  ),
+                           profit: Math.round( Math.random() * 100  ) } );
+        }
     }
 }

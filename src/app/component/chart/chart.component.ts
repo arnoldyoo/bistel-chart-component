@@ -21,6 +21,11 @@ export class ChartComponent implements OnInit {
     @Input() chartinfo: any;
     @Input() series: any;
     @Input() axis: any;
+    @Input() set data(value: Array<any>) {
+        if (this.baseChart) {
+            this.baseChart.dataProvider = value;
+        }
+    }
 
     @Output() itemclick = new EventEmitter();
     @Output() mouseover = new EventEmitter();

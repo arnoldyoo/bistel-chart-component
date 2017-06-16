@@ -31,6 +31,7 @@ export interface SeriesConditions {
     xField: string;
     yField: string;
     displayName: string;
+    displayKey?: string;
     visible: boolean;
     label?: {
       visible: boolean,
