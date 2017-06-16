@@ -131,7 +131,7 @@ export class ColumnSeries extends Series {
                                         .attr('class', this.displayName + this._index)
                                         .attr('value', this._data[this._yField])
 
-        super.addEvent(thatElement);
+        this.addEvent(thatElement);
     }
 
     _normal() {
@@ -229,6 +229,32 @@ export class ColumnSeries extends Series {
                 this.height = this.yAxe.scale.range()[0] - this.y;
             }
         }
+    }
+
+    addEvent(element: any) {
+        super.addEvent(element);
+        element
+            .on('click', (d) => {
+                const targetEl = d3.select(d3.event.target);
+                const parentEl = targetEl[0][0].parentElement;
+                const seriesEl = d3.select(parentEl.parentElement);
+                seriesEl.selectAll('.selected').style('fill-opacity', 0.3).classed('selected', false);
+                seriesEl.style('fill-opacity', 0.3);
+                targetEl.style('fill-opacity', 1);
+                targetEl.classed('selected', true);
+            })
+            .on('mousemove', d => {
+                // const cX = (d3.event.offsetX);
+                // const cY = (d3.event.offsetY);
+                // console.log('element click ==> x :', cX, ' , y : ', cY);
+            });
+    }
+
+    unselectAll() {
+        super.unselectAll();
+        this.target.selectAll('rect').style('fill-opacity', null).classed('selected', false);
+        const seriesEl = d3.select(this.target[0][0].parentElement);
+        seriesEl.style('fill-opacity', 1);
     }
 }
 

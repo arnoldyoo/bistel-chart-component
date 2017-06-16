@@ -194,18 +194,10 @@ export abstract class Series implements IDisplay {
     * description : add eventlistener of created svg element
     */
     addEvent(element: any) {
-        element
-        .on('click', d => {
-            const cX = (d3.event.offsetX);
-            const cY = (d3.event.offsetY);
-            console.log('element click ==> :', d3.event);
-        })
-        .on('mousemove', d => {
-            const cX = (d3.event.offsetX);
-            const cY = (d3.event.offsetY);
-            // console.log('element click ==> x :', cX, ' , y : ', cY);
-        });
+
     }
+
+    unselectAll() {}
 
     /*
     * title : _createContainer
