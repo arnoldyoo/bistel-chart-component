@@ -1,5 +1,6 @@
 import { Series } from './../../series/Series';
 import { SeriesConfiguration } from './../../../model/chart-param.interface';
+import { ChartException } from '../../error/chart-exception';
 
 export class PieSeries extends Series {
 
@@ -12,6 +13,7 @@ export class PieSeries extends Series {
     _arc: any;
     _pieData: Array<any>;
     _piecolor: any;
+    _displayKey: string;
 
     constructor( seriesParam: SeriesConfiguration ) {
         super( seriesParam );
@@ -83,6 +85,10 @@ export class PieSeries extends Series {
 
     updateDisplay() {
         this.generatePosition();
+        this._displayKey = this.configuration.condition.displayKey;
+        if (!this._displayKey) {
+            throw new ChartException(404, {message: 'do not displayKey of pieseries configuration'});
+        }
         this._piecolor = d3.scale.category20();
         const pieTarget = this.target.selectAll('path')
             .data(this._pie(this._pieData))
@@ -91,7 +97,9 @@ export class PieSeries extends Series {
             .style('fill', (d, i) => {
                 return this._piecolor(i);
             })
-            .attr('class', this.displayName + this._index)
+            .attr('class', (d, i) => {
+                return this.dataProvider[i][this._displayKey];
+            })
             .attr('d', this._arc);
 
         if ( this.label.visible ) {
@@ -102,8 +110,8 @@ export class PieSeries extends Series {
                               return `translate(${label.centroid(d)})`;
                           })
                           .attr('dy', '0.35em')
-                          .text((d) => {
-                              return d.value;
+                          .text((d, i) => {
+                              return this.dataProvider[i][this._displayKey] + ' : ' + d.value;
                           });
             } else {
                 const outsideLabel: any = this._createOutsideLabel();
@@ -113,11 +121,11 @@ export class PieSeries extends Series {
                          .attr('text-anchor', 'middle')
                          .attr('transform', (d) => {
                              const pos: any = outsideLabel.centroid(d);
-                             pos[0] = this.radius * 1.7 * (this._midAngle(d) < Math.PI ? 0.97 : -0.97);
+                             pos[0] = this.radius * 1.7 * (this._midAngle(d) < Math.PI ? 1.03 : -1.03);
                              return `translate(${pos})`;
                          })
-                         .text((d) => {
-                             return d.value;
+                         .text((d, i) => {
+                             return this.dataProvider[i][this._displayKey] + ' : ' + d.value;
                          });
 
                 pieTarget.append('g')
