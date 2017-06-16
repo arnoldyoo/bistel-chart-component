@@ -348,8 +348,8 @@ export class ChartBase implements IDisplay {
                 if (currentEvent.data === undefined) {
                     this.series.map((s) => {
                         if (s.series !== undefined) {
-                            s.series.map((s) => {
-                                s.unselectAll();
+                            s.series.map((sr: any) => {
+                                sr.unselectAll();
                             });
                         } else {
                             s.unselectAll();
