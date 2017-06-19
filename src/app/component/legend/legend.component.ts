@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, Input, OnChanges, OnInit, ViewEncapsulation } from '@angular/core';
 import { LegendConfiguration } from '../../model/legend.interface';
 import { SvgLegend } from '../../common/component/legend/svg-legend';
 import { Legend } from '../../common/legend/legend';
@@ -11,7 +11,7 @@ import { Legend } from '../../common/legend/legend';
     encapsulation: ViewEncapsulation.None
 })
 
-export class LegendComponent implements OnInit {
+export class LegendComponent implements OnInit, OnChanges {
     @Input() legendinfo: LegendConfiguration;
     @Input() chartSelector: string;
     legend: Legend;
@@ -23,6 +23,15 @@ export class LegendComponent implements OnInit {
         this.legend = new SvgLegend(this.legendinfo, this.chartSelector);
         console.log('ngOnInit : ', this.width, this.height);
         this.legend.updateDisplay(this.width, this.height);
+    }
+
+    ngOnChanges(value: any) {
+        console.log(value);
+        if (this.legend) {
+            this.legend.target.remove();
+            this.legend = new SvgLegend(value.legendinfo.currentValue, this.chartSelector);
+            this.legend.updateDisplay(this.width, this.height);
+        }
     }
 
     @HostListener('window:resize', ['$event'])

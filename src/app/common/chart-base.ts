@@ -146,7 +146,7 @@ export class ChartBase implements IDisplay {
     }
 
     updateDisplay(width?: number, height?: number)  {
-        console.log(`chart-base.updateDisplay(${width}, ${height})`);
+
         if ( width && height ) {
             this._setSize(width, height);
             this.target
@@ -371,7 +371,6 @@ export class ChartBase implements IDisplay {
             // console.log('background click ==> event :', d3.event);
         })
         .on('remove', d => {
-            console.log('this element removing');
             // this._itemClick(currentEvent);
         });
     };

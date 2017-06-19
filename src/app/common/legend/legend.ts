@@ -98,6 +98,13 @@ export abstract class Legend implements IDisplay {
         this.container = this.target.append('g');
     }
 
+    _clear() {
+        if (this.target) {
+            this.target.remove();
+            this.target = null;
+        }
+    }
+
     updateDisplay(width: number, height: number) {
         console.log(`legend class => updateDisplay(${width}, ${height})`);
         this.width = width;

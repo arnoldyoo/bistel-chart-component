@@ -1,10 +1,14 @@
 <button (click)="chartTypeClick$.next('column')">column</button>
-<button (click)="chartTypeClick$.next('column-set')">columnset</button>
-<button (click)="chartTypeClick$.next('bar-set')">bar</button>
+<button (click)="chartTypeClick$.next('column-set')">column-set</button>
+<button (click)="chartTypeClick$.next('bar')">bar</button>
+<button (click)="chartTypeClick$.next('bar-set')">bar-set</button>
 <button (click)="chartTypeClick$.next('pie')">pie</button>
-<button (click)="chartTypeClick$.next('pie-set')">pieset</button>
-
-
+<button (click)="chartTypeClick$.next('pie-set')">pie-set</button>
+<button (click)="chartTypeClick$.next('line')">line</button>
+<br>
+<br>
+<textarea [(ngModel)]="currentConfigurationString"></textarea>
+<h2>{{currentType}} Chart</h2>
 <div style="width:100%;height:100%;">
     <div style="width:100%;height:calc(100% - 50px);">
         <app-chart [chartinfo]="chartinfo" [series]="series" [axis]="axis" ></app-chart>
