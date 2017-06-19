@@ -4,7 +4,7 @@ import { ChartEvent } from '../../common/event/chart-event';
 
 
 @Component({
-    selector: 'app-chart',
+    selector: 'mi-chart',
     templateUrl: 'chart.component.html',
     styles: [`
         #div_01 {
