@@ -3,12 +3,10 @@ import { Axis } from './axis/axis';
 import { IDisplay } from './i-display.interface';
 import { InstanceLoader } from './instance-loader';
 import { ChartException } from '../common/error/chart-exception';
+import { IChartEvent } from './event/chart-event.interface';
+import { ChartEvent } from './event/chart-event';
 
 export class ChartBase implements IDisplay {
-
-    static ITEM_CLICK = 'itemclick';
-    static MOUSE_OVER = 'mouseover';
-    static MOUSE_OUT = 'mouseout';
 
     colors = ['#3366cc', '#dc3912', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00',
         '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#329262', '#5574a6', '#3b3eac'];
@@ -148,7 +146,7 @@ export class ChartBase implements IDisplay {
     }
 
     updateDisplay(width?: number, height?: number)  {
-        console.log(`chart-base.updateDisplay(${width}, ${height})`);
+
         if ( width && height ) {
             this._setSize(width, height);
             this.target
@@ -338,34 +336,32 @@ export class ChartBase implements IDisplay {
     _addEvent() {
         this.target.on('click', d => {
             if (d3.event.target) {
-                const currentEvent = {
-                    event: d3.event,
-                    data: d3.select(d3.event.target)[0][0].__data__
-                };
+                const currentEvent: ChartEvent = new ChartEvent(
+                    d3.event,
+                    d3.select(d3.event.target)[0][0].__data__);
 
                 if (currentEvent.data === undefined) {
                     this.series.map((s) => {
                         s.unselectAll();
                     });
                 }
+                this.dispatchEvent(ChartEvent.ITEM_CLICK, currentEvent);
             }
         })
         .on('mouseover', d => {
             if (d3.event.target) {
-                const currentEvent = {
-                    event: d3.event,
-                    data: d3.select(d3.event.target)[0][0].__data__
-                };
-                this.dispatchEvent(ChartBase.MOUSE_OVER, currentEvent);
+                const currentEvent: ChartEvent = new ChartEvent(
+                    d3.event,
+                    d3.select(d3.event.target)[0][0].__data__);
+                this.dispatchEvent(ChartEvent.MOUSE_OVER, currentEvent);
             }
         })
         .on('mouseout', d => {
             if (d3.event.target) {
-                const currentEvent = {
-                    event: d3.event,
-                    data: d3.select(d3.event.target)[0][0].__data__
-                };
-                this.dispatchEvent(ChartBase.MOUSE_OUT, currentEvent);
+                const currentEvent: ChartEvent = new ChartEvent(
+                    d3.event,
+                    d3.select(d3.event.target)[0][0].__data__);
+                this.dispatchEvent(ChartEvent.MOUSE_OUT, currentEvent);
             }
         })
         .on('mousemove', d => {
@@ -375,7 +371,6 @@ export class ChartBase implements IDisplay {
             // console.log('background click ==> event :', d3.event);
         })
         .on('remove', d => {
-            console.log('this element removing');
             // this._itemClick(currentEvent);
         });
     };

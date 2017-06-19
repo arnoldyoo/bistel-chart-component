@@ -1,6 +1,8 @@
 import { ChartBase } from './../../common/chart-base';
-import { Component, HostListener, Input, Output, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, Input, Output, OnInit, EventEmitter, ViewEncapsulation, OnChanges } from '@angular/core';
+import { ChartEvent } from '../../common/event/chart-event';
 import { ChartConfigurationService } from './chart.configuration.service';
+
 
 @Component({
     selector: 'app-chart',
@@ -26,7 +28,7 @@ import { ChartConfigurationService } from './chart.configuration.service';
     encapsulation: ViewEncapsulation.None
 })
 
-export class ChartComponent implements OnInit {
+export class ChartComponent implements OnInit, OnChanges {
     @Input() chartinfo: any;
     @Input() series: any;
     @Input() axis: any;
@@ -51,26 +53,29 @@ export class ChartComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.configurationService.getConfiguration('/src/app/component/chart/configurations/column-group.json')
-            .subscribe(
-                (res) => {
-                    this.currentConfiguration = res;
-                    console.log('success : ', this.currentConfiguration);
-                },
-                (error) => {
-                    console.log('Error : ', error);
-                },
-                () => {
-                    console.log('Error');
-                }
-            );
-        this._setChartJson();
-        this.baseChart = new ChartBase(this.chartConfig);
-        this.baseChart.addEventListener(ChartBase.ITEM_CLICK, this._itemClick);
-        this.baseChart.addEventListener(ChartBase.MOUSE_OUT, this._mouseOut);
-        this.baseChart.addEventListener(ChartBase.MOUSE_OVER, this._mouseOver);
-        this.baseChart.updateDisplay(this.chartConfig.chart.size.width, this.chartConfig.chart.size.height);
+        this._setChartJson(this.chartinfo, this.axis, this.series);
+        this._drawChart();
         window.dispatchEvent(new Event('resize'));
+    }
+
+    ngOnChanges(value) {
+        if (this.baseChart) {
+            this.baseChart._clear();
+            this.chartinfo = value.chartinfo.currentValue;
+            this.axis = value.axis.currentValue;
+            this.series = value.series.currentValue;
+            this._setChartJson(this.chartinfo, this.axis, this.series);
+            this._drawChart();
+            window.dispatchEvent(new Event('resize'));
+        }
+    }
+
+    _drawChart() {
+        this.baseChart = new ChartBase(this.chartConfig);
+        this.baseChart.addEventListener(ChartEvent.ITEM_CLICK, this._itemClick);
+        this.baseChart.addEventListener(ChartEvent.MOUSE_OUT, this._mouseOut);
+        this.baseChart.addEventListener(ChartEvent.MOUSE_OVER, this._mouseOver);
+        this.baseChart.updateDisplay(this.chartConfig.chart.size.width, this.chartConfig.chart.size.height);
     }
 
     @HostListener('window:resize', ['$event'])
@@ -79,40 +84,27 @@ export class ChartComponent implements OnInit {
         this.baseChart.updateDisplay(elem.offsetWidth, elem.offsetHeight);
     }
 
-    _setChartJson() {
+    _setChartJson(chartinfo: any, axis: any, series: any) {
         this.chartConfig = {};
-        this.chartConfig.chart = this.chartinfo;
-        this.chartConfig.axis = this.axis;
-        this.chartConfig.series = this.series;
+        this.chartConfig.chart = chartinfo;
+        this.chartConfig.axis = axis;
+        this.chartConfig.series = series;
     }
 
     _itemClick(event: any) {
-        console.log('itemClick : ', event);
-
-
-        const targetEl = d3.select(event.event.target);
-        if (event.data !== undefined) {
-            if (typeof(event.data) === 'object') {
-
-
-
-            } else {
-                console.log('axis');
-            }
-        }
 
         this.itemclick.emit(event);
     }
 
     _mouseOver(event: any) {
-        console.log('_mouseOver : ', event);
+
         if (this.mouseover.emit) {
             this.mouseover.emit(event);
         }
     }
 
     _mouseOut(event: any) {
-        console.log('_mouseOut : ', event);
+
         if (this.mouseout.emit) {
             this.mouseout.emit(event);
         }
