@@ -1,5 +1,6 @@
 import { ChartBase } from './../../common/chart-base';
 import { Component, HostListener, Input, Output, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { ChartEvent } from '../../common/event/chart-event';
 
 @Component({
     selector: 'app-chart',
@@ -47,9 +48,9 @@ export class ChartComponent implements OnInit {
     ngOnInit() {
         this._setChartJson();
         this.baseChart = new ChartBase(this.chartConfig);
-        this.baseChart.addEventListener(ChartBase.ITEM_CLICK, this._itemClick);
-        this.baseChart.addEventListener(ChartBase.MOUSE_OUT, this._mouseOut);
-        this.baseChart.addEventListener(ChartBase.MOUSE_OVER, this._mouseOver);
+        this.baseChart.addEventListener(ChartEvent.ITEM_CLICK, this._itemClick);
+        this.baseChart.addEventListener(ChartEvent.MOUSE_OUT, this._mouseOut);
+        this.baseChart.addEventListener(ChartEvent.MOUSE_OVER, this._mouseOver);
         this.baseChart.updateDisplay(this.chartConfig.chart.size.width, this.chartConfig.chart.size.height);
         window.dispatchEvent(new Event('resize'));
     }
@@ -69,19 +70,6 @@ export class ChartComponent implements OnInit {
 
     _itemClick(event: any) {
         console.log('itemClick : ', event);
-
-
-        const targetEl = d3.select(event.event.target);
-        if (event.data !== undefined) {
-            if (typeof(event.data) === 'object') {
-
-
-
-            } else {
-                console.log('axis');
-            }
-        }
-
         this.itemclick.emit(event);
     }
 

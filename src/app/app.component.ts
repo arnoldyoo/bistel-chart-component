@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LegendConfiguration } from './model/legend.interface';
+import { Subject } from 'rxjs/Subject';
+
+
 
 @Component({
   selector: 'app-root',
@@ -13,8 +16,12 @@ export class AppComponent implements OnInit {
     series: any;
     legendinfo: LegendConfiguration;
     data: Array<any>;
+    chartTypeClick$: Subject<string> = new Subject();
 
-    consturctor() {
+    constructor() {
+        this.chartTypeClick$.subscribe((type: string) => {
+            console.log(type);
+        });
     }
 
     ngOnInit() {
