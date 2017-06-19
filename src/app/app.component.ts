@@ -4,8 +4,6 @@ import { Subject } from 'rxjs/Subject';
 import { ChartService } from './app.service';
 import { Observable } from 'rxjs/observable';
 
-
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -27,8 +25,6 @@ export class AppComponent implements OnInit {
     constructor(
         private chartS: ChartService
     ) {
-        this.currentType = 'column';
-
         this.responseStream = this.chartTypeClick$.flatMap(type => {
             this.currentType = type;
             return this.chartS.getChartConfiguration(type);
@@ -58,34 +54,10 @@ export class AppComponent implements OnInit {
             }
         );
 
-        // this.chartTypeClick$.subscribe((type: string) => {
-        //     this.currentType = type;
-        //     this.chartS.getChartConfiguration(type).subscribe((res) => {
-        //             this.currentConfiguration = res;
-        //             this._setDefaultData();
-        //             this.currentConfigurationString = JSON.stringify(res);
-        //
-        //             this.chartinfo = this.currentConfiguration.chart;
-        //             this.series = this.currentConfiguration.series;
-        //             this.axis = this.currentConfiguration.axis;
-        //
-        //             this.legendinfo = {
-        //                 selector: '#div_02',
-        //                 orient: 'bottom',
-        //                 series: this.series
-        //             };
-        //         },
-        //         (error) => {
-        //             console.log('Error : ', error);
-        //         },
-        //         () => {
-        //             console.log('complete');
-        //         });
-        // });
     }
 
     ngOnInit() {
-
+        this.currentType = 'column';
         this.chartinfo = {
             selector: '#div_01',
             uid: 'chart01_uid',

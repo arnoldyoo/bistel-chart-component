@@ -1,7 +1,6 @@
 import { ChartBase } from './../../common/chart-base';
 import { Component, HostListener, Input, Output, OnInit, EventEmitter, ViewEncapsulation, OnChanges } from '@angular/core';
 import { ChartEvent } from '../../common/event/chart-event';
-import { ChartConfigurationService } from './chart.configuration.service';
 
 
 @Component({
@@ -45,12 +44,7 @@ export class ChartComponent implements OnInit, OnChanges {
     baseChart: ChartBase;
     chartConfig: any;
 
-    configurationService: ChartConfigurationService;
-    currentConfiguration: any;
-
-    constructor(private _chartConfigService: ChartConfigurationService) {
-        this.configurationService = _chartConfigService;
-    }
+    constructor() { }
 
     ngOnInit() {
         this._setChartJson(this.chartinfo, this.axis, this.series);
