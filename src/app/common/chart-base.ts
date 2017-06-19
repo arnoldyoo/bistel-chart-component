@@ -256,7 +256,7 @@ export class ChartBase implements IDisplay {
 
     _createSeries(seriesList: Array<any>) {
         const tempList = [];
-        // tslint:disable-next-line:curly
+
         if (!seriesList) return tempList;
 
         if (seriesList.length) {
@@ -348,7 +348,6 @@ export class ChartBase implements IDisplay {
                         s.unselectAll();
                     });
                 }
-
             }
         })
         .on('mouseover', d => {
