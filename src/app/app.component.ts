@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { LegendConfiguration } from './model/legend.interface';
-import { Subject } from 'rxjs/Subject';
 import { ChartService } from './app.service';
 import { Observable } from 'rxjs/observable';
+import { Subject } from 'rxjs/';
+
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,7 @@ export class AppComponent implements OnInit {
     constructor(
         private chartS: ChartService
     ) {
-        this.responseStream = this.chartTypeClick$.flatMap(type => {
+        this.responseStream = this.chartTypeClick$.flatMap((type: string) => {
             this.currentType = type;
             return this.chartS.getChartConfiguration(type);
         });
@@ -58,6 +59,9 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.currentType = 'column';
+
+        // default chart configuration setting
+
         this.chartinfo = {
             selector: '#div_01',
             uid: 'chart01_uid',
