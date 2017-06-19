@@ -26,7 +26,6 @@ export class ChartBase implements IDisplay {
     _axisGroup: any; // axis group element
     _seriesGroup: any; // series group element
     _backgroundGroup: any; // background element
-    _gridLineGroup: any; // grid line group element
     _margin: any;
     _domain: any;
     _dataProvider: Array<any>;
@@ -41,7 +40,6 @@ export class ChartBase implements IDisplay {
         if (config) {
             this.configuration = config;
         }
-        console.log(this.colors.length);
     }
 
     set configuration( value: any ) {
@@ -181,10 +179,6 @@ export class ChartBase implements IDisplay {
                              .style('pointer-events', 'all')
                              .style('opacity', 0)
                              ;
-        // create grid line group
-        // this._gridLineGroup = this.target.append('g')
-        //                                  .attr('class', 'grid-line-group')
-        //                                  .attr('transform', 'translate( 0, 0)');
         // generate axis component using this.target
         this._axisGroup = this.target.append('g')
                               .attr('class', 'axis')
@@ -220,8 +214,6 @@ export class ChartBase implements IDisplay {
     }
 
     _createAxis(axisList: Array<any>) {
-        console.log(axisList);
-
         const tempList = [];
         // tslint:disable-next-line:curly
         if (!axisList) return tempList;
@@ -356,7 +348,7 @@ export class ChartBase implements IDisplay {
                         s.unselectAll();
                     });
                 }
-                
+
             }
         })
         .on('mouseover', d => {

@@ -71,7 +71,6 @@ export class ColumnSet implements IDisplay {
 
     set type(value: string) {
         this._type = value;
-        console.log('set type : ', this._type);
     }
 
     get type(): string {

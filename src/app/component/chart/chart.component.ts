@@ -1,5 +1,6 @@
 import { ChartBase } from './../../common/chart-base';
 import { Component, HostListener, Input, Output, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { ChartConfigurationService } from './chart.configuration.service';
 
 @Component({
     selector: 'app-chart',
@@ -42,9 +43,27 @@ export class ChartComponent implements OnInit {
     baseChart: ChartBase;
     chartConfig: any;
 
-    constructor() { }
+    configurationService: ChartConfigurationService;
+    currentConfiguration: any;
+
+    constructor(private _chartConfigService: ChartConfigurationService) {
+        this.configurationService = _chartConfigService;
+    }
 
     ngOnInit() {
+        this.configurationService.getConfiguration('/src/app/component/chart/configurations/column-group.json')
+            .subscribe(
+                (res) => {
+                    this.currentConfiguration = res;
+                    console.log('success : ', this.currentConfiguration);
+                },
+                (error) => {
+                    console.log('Error : ', error);
+                },
+                () => {
+                    console.log('Error');
+                }
+            );
         this._setChartJson();
         this.baseChart = new ChartBase(this.chartConfig);
         this.baseChart.addEventListener(ChartBase.ITEM_CLICK, this._itemClick);
