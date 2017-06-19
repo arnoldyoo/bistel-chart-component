@@ -256,7 +256,6 @@ export abstract class Axis implements IDisplay {
             const rootSvg: any = d3.select(this.target[0][0].nearestViewportElement);
             const gridGroup = rootSvg.select(`.grid-line-${this.type}-${this.orient}`);
             if (!gridGroup[0][0]) {
-                console.log('create grid group ');
                 rootSvg.insert('g', '.background')
                         .attr('class', `grid-line-${this.type}-${this.orient}`)
                         .style('stroke', '#CCC');

@@ -5,7 +5,8 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { ChartComponent } from './component/chart/chart.component';
-import {LegendComponent} from "./component/legend/legend.component";
+import { LegendComponent } from './component/legend/legend.component';
+import { ChartConfigurationService } from './component/chart/chart.configuration.service';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,7 @@ import {LegendComponent} from "./component/legend/legend.component";
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [ChartConfigurationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
