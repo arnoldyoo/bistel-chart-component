@@ -5,7 +5,7 @@ import { ChartConfigurationService } from './chart.configuration.service';
 
 
 @Component({
-    selector: 'app-chart',
+    selector: 'mi-chart',
     templateUrl: 'chart.component.html',
     styles: [`
         #div_01 {
