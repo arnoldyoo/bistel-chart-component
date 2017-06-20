@@ -35,8 +35,10 @@ export class AppComponent implements OnInit {
             (res) => {
                 this.currentConfiguration = res;
                 this._setDefaultData();
-                this.currentConfigurationString = JSON.stringify(res);
-
+                const re = /(:{)/g;
+                const comma = /(,)/g;
+                this.currentConfigurationString = JSON.stringify(res).replace(re, ':\n\t{' ).replace(comma, ',\n');
+                console.log('json file : ', this.currentConfigurationString);
                 this.chartinfo = this.currentConfiguration.chart;
                 this.series = this.currentConfiguration.series;
                 this.axis = this.currentConfiguration.axis;
