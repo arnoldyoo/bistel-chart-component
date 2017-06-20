@@ -5,7 +5,7 @@ import { ChartEvent } from '../../common/event/chart-event';
 
 @Component({
     selector: 'mi-chart',
-    templateUrl: 'chart.component.html',
+    templateUrl: 'mi-chart.component.html',
     styles: [`
         #div_01 {
             border: 1px solid black;

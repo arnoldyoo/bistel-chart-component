@@ -10,7 +10,8 @@
 <div style="width:100%;">
     <h2>{{currentType}} Chart</h2>
     <div style="width:18%;float:left;">
-        <textarea style="width:100%;height:600px;" [(ngModel)]="currentConfigurationString"></textarea>
+        <textarea style="width:100%;height:550px;" [(ngModel)]="currentConfigurationString"></textarea>
+        <button style="width:100%;height:40px;" (click)="rerun()" >Run</button>
     </div>
     <div style="width:80%;float:right;">
         <div style="width:100%;height:100%;">

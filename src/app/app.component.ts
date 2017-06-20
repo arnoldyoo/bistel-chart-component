@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LegendConfiguration } from './model/legend.interface';
-import { ChartService } from './app.service';
+import { AppService } from './app.service';
 import { Observable } from 'rxjs/observable';
 import { Subject } from 'rxjs/';
 
@@ -24,30 +24,21 @@ export class AppComponent implements OnInit {
     responseStream: Observable<any>;
 
     constructor(
-        private chartS: ChartService
+        private appS: AppService
     ) {
         this.responseStream = this.chartTypeClick$.flatMap((type: string) => {
             this.currentType = type;
-            return this.chartS.getChartConfiguration(type);
+            return this.appS.getChartConfiguration(type);
         });
 
         this.responseStream.subscribe(
             (res) => {
-                this.currentConfiguration = res;
-                this._setDefaultData();
-                const re = /(:{)/g;
-                const comma = /(,)/g;
-                this.currentConfigurationString = JSON.stringify(res).replace(re, ':\n\t{' ).replace(comma, ',\n');
-                console.log('json file : ', this.currentConfigurationString);
-                this.chartinfo = this.currentConfiguration.chart;
-                this.series = this.currentConfiguration.series;
-                this.axis = this.currentConfiguration.axis;
 
-                this.legendinfo = {
-                    selector: '#div_02',
-                    orient: 'bottom',
-                    series: this.series
-                };
+                this._setDefaultData();
+                // const re = /(:{)/g;
+                // const comma = /(,)/g;
+                // this.currentConfigurationString = JSON.stringify(res).replace(re, ':\n\t{' ).replace(comma, ',\n');
+                this._chartDrawSetting(res);
             },
             (err) => {
                 console.log('Error : ', err);
@@ -152,6 +143,10 @@ export class AppComponent implements OnInit {
         };
     }
 
+    rerun() {
+        this._chartDrawSetting(JSON.parse(this.currentConfigurationString));
+    }
+
     _setDefaultData() {
         this.data = [];
         for (let i = 0; i < 20; i++) {
@@ -162,5 +157,20 @@ export class AppComponent implements OnInit {
                            revenue: Math.round( Math.random() * 120  ),
                            profit: Math.round( Math.random() * 100  ) } );
         }
+    }
+
+    _chartDrawSetting(data: any) {
+
+        this.currentConfiguration = data;
+        this.currentConfigurationString = JSON.stringify(data, undefined, 4);
+        this.chartinfo = this.currentConfiguration.chart;
+        this.series = this.currentConfiguration.series;
+        this.axis = this.currentConfiguration.axis;
+
+        this.legendinfo = {
+            selector: '#div_02',
+            orient: 'bottom',
+            series: this.series
+        };
     }
 }
