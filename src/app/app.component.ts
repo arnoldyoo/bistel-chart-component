@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LegendConfiguration } from './model/legend.interface';
-import { ChartService } from './app.service';
+import { AppService } from './app.service';
 import { Observable } from 'rxjs/observable';
 import { Subject } from 'rxjs/';
 
@@ -24,11 +24,11 @@ export class AppComponent implements OnInit {
     responseStream: Observable<any>;
 
     constructor(
-        private chartS: ChartService
+        private appS: AppService
     ) {
         this.responseStream = this.chartTypeClick$.flatMap((type: string) => {
             this.currentType = type;
-            return this.chartS.getChartConfiguration(type);
+            return this.appS.getChartConfiguration(type);
         });
 
         this.responseStream.subscribe(

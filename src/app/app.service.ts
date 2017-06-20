@@ -6,7 +6,7 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/observable';
 
 @Injectable()
-export class ChartService {
+export class AppService {
 
     constructor(
         private http: Http
