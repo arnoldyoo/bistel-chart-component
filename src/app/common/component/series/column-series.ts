@@ -237,12 +237,10 @@ export class ColumnSeries extends Series {
             .on('click', (d) => {
                 // manual 분기
                 const targetEl = d3.select(d3.event.target);
-
                 const parentEl = targetEl[0][0].parentElement;
                 const seriesEl = d3.select(parentEl.parentElement);
-
-                this._selectedItem(targetEl);
                 this._unselectedItem(seriesEl);
+                this._selectedItem(targetEl);
             })
             .on('mousemove', d => {
                 // const cX = (d3.event.offsetX);
@@ -257,7 +255,9 @@ export class ColumnSeries extends Series {
     }
 
     _unselectedItem(target: any) {
-        target.selectAll('.selected').style('fill-opacity', 0.3).classed('selected', false);
+        if (this.manual !== 'multiselection') {
+            target.selectAll('.selected').style('fill-opacity', 0.3).classed('selected', false);
+        }
         target.style('fill-opacity', 0.3);
     }
 

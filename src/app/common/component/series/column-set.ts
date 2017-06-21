@@ -19,6 +19,7 @@ export class ColumnSet implements IDisplay {
     _yAxe: Axe;
     _x: any;
     _y: any;
+    _manual: string;
 
     _seriesCnt: number;
 
@@ -116,6 +117,17 @@ export class ColumnSet implements IDisplay {
 
     get dataProvider() {
         return this._dataProvider;
+    }
+
+    set manual(value: string) {
+        this._manual = value;
+        this.series.map(s => {
+            s.manual = this.manual;
+        });
+    }
+
+    get manual() {
+        return this._manual;
     }
 
     updateDisplay(width?: number, height?: number) {

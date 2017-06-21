@@ -5,6 +5,7 @@ import { InstanceLoader } from './instance-loader';
 import { ChartException } from '../common/error/chart-exception';
 import { ChartEvent } from './event/chart-event';
 import { Observable } from 'rxjs/Observable';
+import { Series } from './series/series';
 import { DragBase } from './plugin/dragable/drag-base';
 import { Dragable } from './plugin/dragable/model/drag-model';
 
@@ -15,6 +16,7 @@ export class ChartBase implements IDisplay {
 
     min: number;
     max: number;
+    selectedItem: Array<ChartEvent> = [];
 
     secondMin: number;
     secondMax: number;
@@ -32,13 +34,14 @@ export class ChartBase implements IDisplay {
     private _margin: any;
     private _domain: any;
     private _dataProvider: Array<any> = [];
-
     private _instanceLoader: InstanceLoader;
     private _isStacked = false; // special series ( data parse )
     private _eventMap: any; // chart event list
     private _manuals = ['normal', 'zoom', 'multiselection'];
     private _current_manual = this._manuals[0];
     private OSName = 'none';
+    private _isCtrlKey: boolean;
+
 
     private _dragEvent: DragBase;
 
@@ -53,6 +56,7 @@ export class ChartBase implements IDisplay {
     set configuration( value: any ) {
         this._configuration = value;
         if (this._configuration) {
+            this.manual = 'normal';
             if (!this._configuration.chart.data) {
                 this._setDefaultData();
             } else {
@@ -80,7 +84,12 @@ export class ChartBase implements IDisplay {
     set manual(value: string) {
         const manualid = this._manuals.indexOf(value);
         if (manualid > -1) {
+
             this._current_manual = this._manuals[manualid];
+            console.log(this._current_manual);
+            this.series.map((s: Series) => {
+                s.manual = this._current_manual;
+            });
         } else {
             throw new ChartException(500, {message: `not found manual type ${value}! Please select from ${this._manuals.toString()}`});
         }
@@ -151,6 +160,7 @@ export class ChartBase implements IDisplay {
         return this._domain;
     }
 
+
     addEventListener(type: string, method: any) {
         if ( !this._eventMap ) {
             this._eventMap = {};
@@ -198,24 +208,25 @@ export class ChartBase implements IDisplay {
         if (navigator.appVersion.indexOf('X11') !== -1) { this.OSName = 'UNIX'; }
         if (navigator.appVersion.indexOf('Linux') !== -1) { this.OSName = 'Linux'; }
 
-        this.target
-            .on('keydown', () => {
-                if ( this._current_manual === 'multiselection' ) {
-                    return;
-                }
-                if ( this.OSName === 'Win' && d3.event.ctrlKey ) {
-                    this._current_manual = this._manuals[2];
-                } else if ( this.OSName === 'Mac' && d3.event.keyCode === 91 ) {
-                    this._current_manual = this._manuals[2];
-                } else {
-                    this._current_manual = this._manuals[0];
-                }
-                console.log('keydown : ', d3.event.keyCode, this._current_manual);
-            })
-            .on('keyup', () => {
-                this._current_manual = this._manuals[0];
-                console.log('keyup : ', d3.event.keyCode, this._current_manual);
-            });
+        const svgrect = this.target;
+        svgrect.on('focus', () => {
+            svgrect
+                .on('keydown', () => {
+                    this.manual = 'multiselection';
+                    if ( this.OSName === 'Win' && d3.event.ctrlKey ) {
+                        this._isCtrlKey = true;
+                    } else if ( this.OSName === 'Mac' && d3.event.keyCode === 91 ) {
+                        this._isCtrlKey = true;
+                    } else {
+                        this._isCtrlKey = false;
+                    }
+                })
+                .on('keyup', () => {
+                    this.manual = 'normal';
+                });
+        }, svgrect);
+
+
     }
 
     _createSvgElement() {
@@ -386,10 +397,16 @@ export class ChartBase implements IDisplay {
                 const currentEvent: ChartEvent = new ChartEvent(
                     d3.event,
                     d3.select(d3.event.target)[0][0].__data__);
+
                 if (currentEvent.data === undefined) {
+                    this.selectedItem = [];
                     this.series.map((s) => {
                         s.unselectAll();
                     });
+                } else {
+                    if (this._current_manual === 'multiselection') {
+                        this.selectedItem.push(currentEvent);
+                    }
                 }
                 this.dispatchEvent(ChartEvent.ITEM_CLICK, currentEvent);
             }
