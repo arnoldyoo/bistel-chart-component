@@ -16,6 +16,7 @@ export class PieSet implements IDisplay {
     _dataProvider: Array<any>;
     _seriesCnt: number;
     _radius: number;
+    _manual: string;
 
     constructor(configuration?: SeriesConfiguration) {
         if (configuration) {
@@ -77,6 +78,17 @@ export class PieSet implements IDisplay {
 
     get dataProvider() {
         return this._dataProvider;
+    }
+
+    set manual(value: string) {
+        this._manual = value;
+        this.series.map(s => {
+            s.manual = this.manual;
+        });
+    }
+
+    get manual() {
+        return this._manual;
     }
 
     updateDisplay(width?: number, height?: number) {

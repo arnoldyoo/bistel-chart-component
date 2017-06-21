@@ -52,6 +52,7 @@ export class ChartBase implements IDisplay {
     set configuration( value: any ) {
         this._configuration = value;
         if (this._configuration) {
+            this.manual = 'normal';
             if (!this._configuration.chart.data) {
                 this._setDefaultData();
             } else {
@@ -79,7 +80,9 @@ export class ChartBase implements IDisplay {
     set manual(value: string) {
         const manualid = this._manuals.indexOf(value);
         if (manualid > -1) {
+
             this._current_manual = this._manuals[manualid];
+            console.log(this._current_manual);
             this.series.map((s: Series) => {
                 s.manual = this._current_manual;
             });
