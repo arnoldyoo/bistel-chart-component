@@ -6,8 +6,8 @@ import { Legend } from '../../common/legend/legend';
 
 @Component({
     selector: 'mi-legend',
-    templateUrl: 'legend.component.html',
-    styles: ['legend.component.css'],
+    templateUrl: 'mi-legend.component.html',
+    styles: ['mi-legend.component.css'],
     encapsulation: ViewEncapsulation.None
 })
 
