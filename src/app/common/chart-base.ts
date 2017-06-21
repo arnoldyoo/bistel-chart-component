@@ -31,13 +31,15 @@ export class ChartBase implements IDisplay {
     private _instance_loader: InstanceLoader;
     private _isStacked = false; // special series ( data parse )
     private _event_map: any; // chart event list
-    private _manuals = ['normal', 'zoom', 'multiselection'];
-    private _current_manual = this._manuals[0];
+    private _manuals: Array<string> = ['normal', 'zoom', 'multiselection'];
+    private _current_manual: string = this._manuals[0];
+    private OSName = 'none';
 
     constructor( config?: any ) {
         this._instance_loader = new InstanceLoader();
         if (config) {
             this.configuration = config;
+            this._keyBind();
         }
     }
 
@@ -183,6 +185,32 @@ export class ChartBase implements IDisplay {
         }
     }
 
+    _keyBind() {
+        if (navigator.appVersion.indexOf('Win') !== -1) { this.OSName = 'Win'; }
+        if (navigator.appVersion.indexOf('Mac') !== -1) { this.OSName = 'Mac'; }
+        if (navigator.appVersion.indexOf('X11') !== -1) { this.OSName = 'UNIX'; }
+        if (navigator.appVersion.indexOf('Linux') !== -1) { this.OSName = 'Linux'; }
+
+        this.target
+            .on('keydown', () => {
+                if ( this._current_manual === 'multiselection' ) {
+                    return;
+                }
+                if ( this.OSName === 'Win' && d3.event.ctrlKey ) {
+                    this._current_manual = this._manuals[2];
+                } else if ( this.OSName === 'Mac' && d3.event.keyCode === 91 ) {
+                    this._current_manual = this._manuals[2];
+                } else {
+                    this._current_manual = this._manuals[0];
+                }
+                console.log('keydown : ', d3.event.keyCode, this._current_manual);
+            })
+            .on('keyup', () => {
+                this._current_manual = this._manuals[0];
+                console.log('keyup : ', d3.event.keyCode, this._current_manual);
+            });
+    }
+
     _createSvgElement() {
         this.target = this._createSvg(this.configuration.chart);
         // create background element
@@ -276,7 +304,7 @@ export class ChartBase implements IDisplay {
     _createSeries(seriesList: Array<any>) {
         const tempList = [];
 
-        if (!seriesList) return tempList;
+        if (!seriesList) { return tempList; }
 
         if (seriesList.length) {
             seriesList.map( (seriesConfig, j) => {
@@ -352,7 +380,6 @@ export class ChartBase implements IDisplay {
                 const currentEvent: ChartEvent = new ChartEvent(
                     d3.event,
                     d3.select(d3.event.target)[0][0].__data__);
-
                 if (currentEvent.data === undefined) {
                     this.series.map((s) => {
                         s.unselectAll();
