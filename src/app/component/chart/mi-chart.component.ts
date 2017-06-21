@@ -23,6 +23,10 @@ import { ChartEvent } from '../../common/event/chart-event';
         .active {
             fill-opacity: 1;
         }
+
+        svg:focus {
+            outline: none;
+        }
     `],
     encapsulation: ViewEncapsulation.None
 })
