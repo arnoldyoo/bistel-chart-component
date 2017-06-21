@@ -5,6 +5,8 @@ import { InstanceLoader } from './instance-loader';
 import { ChartException } from '../common/error/chart-exception';
 import { ChartEvent } from './event/chart-event';
 import { Observable } from 'rxjs/Observable';
+import { DragBase } from './plugin/dragable/drag-base';
+import { Dragable } from './plugin/dragable/model/drag-model';
 
 export class ChartBase implements IDisplay {
 
@@ -37,6 +39,8 @@ export class ChartBase implements IDisplay {
     private _manuals = ['normal', 'zoom', 'multiselection'];
     private _current_manual = this._manuals[0];
     private OSName = 'none';
+
+    private _dragEvent: DragBase;
 
     constructor( config?: any ) {
         this._instanceLoader = new InstanceLoader();
@@ -377,7 +381,6 @@ export class ChartBase implements IDisplay {
     }
 
     _addEvent() {
-        console.log('_addEvent : ', this.target);
         this.target.on('click', d => {
             if (d3.event.target) {
                 const currentEvent: ChartEvent = new ChartEvent(
@@ -417,44 +420,13 @@ export class ChartBase implements IDisplay {
             // this._itemClick(currentEvent);
         });
 
-        const mouseDowns = Observable.fromEvent(this.target[0][0], 'mousedown');
-        const mouseUps = Observable.fromEvent(this.target[0][0], 'mouseup');
-        const mouseMoves = Observable.fromEvent(this.target[0][0], 'mousemove');
-
-        const keybind = Observable.fromEvent(d3.select('body')[0][0], 'keydown');
-        keybind.subscribe( (e: any) => {
-            console.log(e.keyCode);
-        });
-
-        let offsetX = 0; // start x
-        let offsetY = 0; // start y
-        let moveX = 0;
-        let moveY = 0;
-
-        mouseDowns.map(function () {
-            return mouseMoves.takeUntil(mouseUps);
-        })
-        .concatAll()
-        .subscribe( (e: any) => {
-            const leftp = e.x - offsetX + 'px';
-            const topp = e.y - offsetY + 'px';
-            // console.log( 'left: ', leftp, 'top:', topp );
-        });
-
-        mouseDowns.subscribe( (e: any) => {
-            offsetX = e.offsetX - this.margin.top + 1;
-            offsetY = e.offsetY - this.margin.left + 1;
-            console.log( 'mouseDowns x: ', offsetX, 'y:', offsetY );
-        });
-
-        mouseUps.subscribe( (e: any) => {
-            moveX = e.offsetX - this.margin.top - 1;
-            moveY = e.offsetY - this.margin.left - 1;
-            this._afterEvent();
-            console.log( 'mouseUps x: ', moveX, 'y:', moveY );
-        });
-
+        this._dragEvent = new DragBase(this.target);
+        this._dragEvent.addEventListner(DragBase.DRAG_END, this._dragEnd);
     };
+
+    _dragEnd(event: Dragable) {
+        console.log('_dragEnd', event.startX, event.startY, event.endX, event.endY);
+    }
 
     _afterEvent() {
         switch (this._current_manual) {
