@@ -235,19 +235,30 @@ export class ColumnSeries extends Series {
         super.addEvent(element);
         element
             .on('click', (d) => {
+                // manual 분기
                 const targetEl = d3.select(d3.event.target);
+
                 const parentEl = targetEl[0][0].parentElement;
                 const seriesEl = d3.select(parentEl.parentElement);
-                seriesEl.selectAll('.selected').style('fill-opacity', 0.3).classed('selected', false);
-                seriesEl.style('fill-opacity', 0.3);
-                targetEl.style('fill-opacity', 1);
-                targetEl.classed('selected', true);
+
+                this._selectedItem(targetEl);
+                this._unselectedItem(seriesEl);
             })
             .on('mousemove', d => {
                 // const cX = (d3.event.offsetX);
                 // const cY = (d3.event.offsetY);
                 // console.log('element click ==> x :', cX, ' , y : ', cY);
             });
+    }
+
+    _selectedItem(target: any) {
+        target.style('fill-opacity', 1);
+        target.classed('selected', true);
+    }
+
+    _unselectedItem(target: any) {
+        target.selectAll('.selected').style('fill-opacity', 0.3).classed('selected', false);
+        target.style('fill-opacity', 0.3);
     }
 
     unselectAll() {
