@@ -14,6 +14,9 @@ export class ChartBase implements IDisplay {
     min: number;
     max: number;
 
+    secondMin: number;
+    secondMax: number;
+
     private _configuration: any;
     private _target: any; // target svg element
     private _width: number;
@@ -28,14 +31,14 @@ export class ChartBase implements IDisplay {
     private _domain: any;
     private _dataProvider: Array<any> = [];
 
-    private _instance_loader: InstanceLoader;
+    private _instanceLoader: InstanceLoader;
     private _isStacked = false; // special series ( data parse )
-    private _event_map: any; // chart event list
+    private _eventMap: any; // chart event list
     private _manuals = ['normal', 'zoom', 'multiselection'];
     private _current_manual = this._manuals[0];
 
     constructor( config?: any ) {
-        this._instance_loader = new InstanceLoader();
+        this._instanceLoader = new InstanceLoader();
         if (config) {
             this.configuration = config;
         }
@@ -69,11 +72,11 @@ export class ChartBase implements IDisplay {
     }
 
     set manual(value: string) {
-        const manualid = this._manuals.indexOf(value)
+        const manualid = this._manuals.indexOf(value);
         if (manualid > -1) {
             this._current_manual = this._manuals[manualid];
         } else {
-            throw new ChartException(404, {message: `not found manual type ${value}! Please select from ${this._manuals.toString()}`});
+            throw new ChartException(500, {message: `not found manual type ${value}! Please select from ${this._manuals.toString()}`});
         }
     }
 
@@ -143,20 +146,19 @@ export class ChartBase implements IDisplay {
     }
 
     addEventListener(type: string, method: any) {
-        if ( !this._event_map ) {
-            this._event_map = {};
+        if ( !this._eventMap ) {
+            this._eventMap = {};
         }
-        this._event_map[type] = method;
+        this._eventMap[type] = method;
     }
 
     dispatchEvent(type: string, event: any) {
-        if (this._event_map[type]) {
-            this._event_map[type](event);
+        if (this._eventMap[type]) {
+            this._eventMap[type](event);
         }
     }
 
-    updateDisplay(width?: number, height?: number)  {
-
+    updateDisplay(width?: number, height?: number) {
         if ( width && height ) {
             this._setSize(width, height);
             this.target
@@ -174,6 +176,7 @@ export class ChartBase implements IDisplay {
             console.log('Error Message : ', e.errorContent.message);
         }
     }
+
     clear() {
         if (this.target) {
             this.target.remove();
@@ -253,10 +256,10 @@ export class ChartBase implements IDisplay {
             // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
 
             // case 1 : configuration
-            // axis = this._instance_loader.axisFactory(axisConfig.axisClass, axis_params);
+            // axis = this.__instanceLoader.axisFactory(axisConfig.axisClass, axis_params);
 
             // case 2 : properties
-            axis = this._instance_loader.axisFactory(axisConfig.axisClass, null);
+            axis = this._instanceLoader.axisFactory(axisConfig.axisClass, null);
             axis.configuration = axis_params;
             axis.target = this._axisGroup;
 
@@ -290,10 +293,10 @@ export class ChartBase implements IDisplay {
                 };
 
                 // case1 : configuration
-                // series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, series_configuration);
+                // series = this.__instanceLoader.seriesFactory(seriesConfig.seriesClass, series_configuration);
 
                 // case2 : property
-                series = this._instance_loader.seriesFactory(seriesConfig.seriesClass, null);
+                series = this._instanceLoader.seriesFactory(seriesConfig.seriesClass, null);
                 series.configuration = series_configuration;
                 series.target = this._seriesGroup;
 
@@ -390,6 +393,11 @@ export class ChartBase implements IDisplay {
         const mouseDowns = Observable.fromEvent(this.target[0][0], 'mousedown');
         const mouseUps = Observable.fromEvent(this.target[0][0], 'mouseup');
         const mouseMoves = Observable.fromEvent(this.target[0][0], 'mousemove');
+
+        const keybind = Observable.fromEvent(d3.select('body')[0][0], 'keydown');
+        keybind.subscribe( (e: any) => {
+            console.log(e.keyCode);
+        });
 
         let offsetX = 0; // start x
         let offsetY = 0; // start y
