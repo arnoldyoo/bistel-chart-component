@@ -30,6 +30,7 @@ export abstract class Series implements IDisplay {
     _y: any;
     _configuration: any;
     _label: any;
+    _manual: string;
 
     constructor(seriesConfig?: SeriesConfiguration) {
         if (seriesConfig) {
@@ -173,6 +174,14 @@ export abstract class Series implements IDisplay {
 
     get dataProvider() {
         return this._dataProvider;
+    }
+
+    set manual(value: string) {
+        this._manual = value;
+    }
+
+    get manual() {
+        return this._manual;
     }
 
     /*
