@@ -52,12 +52,12 @@ export class ChartComponent implements OnInit, OnChanges {
     ngOnInit() {
         this._setChartJson(this.chartinfo, this.axis, this.series);
         this._drawChart();
-        window.dispatchEvent(new Event('resize'));
+        dispatchEvent(new Event('resize'));
     }
 
     ngOnChanges(value) {
         if (this.baseChart) {
-            this.baseChart._clear();
+            this.baseChart.clear();
             this.chartinfo = value.chartinfo.currentValue;
             this.axis = value.axis.currentValue;
             this.series = value.series.currentValue;
@@ -78,7 +78,8 @@ export class ChartComponent implements OnInit, OnChanges {
 
     @HostListener('window:resize', ['$event'])
     onResize(event) {
-        const elem = window.document.getElementById('div_01');
+        // const elem = window.document.getElementById('div_01');
+        const elem = event.target.document.getElementById('div_01');
         this.baseChart.updateDisplay(elem.offsetWidth, elem.offsetHeight);
     }
 
@@ -90,12 +91,12 @@ export class ChartComponent implements OnInit, OnChanges {
     }
 
     _itemClick(event: any) {
-
-        this.itemclick.emit(event);
+        if (this.itemclick.emit) {
+            this.itemclick.emit(event);
+        }
     }
 
     _mouseOver(event: any) {
-
         if (this.mouseover.emit) {
             this.mouseover.emit(event);
         }

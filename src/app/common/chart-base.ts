@@ -3,35 +3,36 @@ import { Axis } from './axis/axis';
 import { IDisplay } from './i-display.interface';
 import { InstanceLoader } from './instance-loader';
 import { ChartException } from '../common/error/chart-exception';
-import { IChartEvent } from './event/chart-event.interface';
 import { ChartEvent } from './event/chart-event';
+import { Observable } from 'rxjs/Observable';
 
 export class ChartBase implements IDisplay {
 
     colors = ['#3366cc', '#dc3912', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00',
         '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#329262', '#5574a6', '#3b3eac'];
 
-    data: Array<any> = [];
     min: number;
     max: number;
 
-    _configuration: any;
-    _target: any; // target svg element
-    _width: number;
-    _height: number;
-    _axis: any[] = [];
-    _series: any[] = [];
-    _axisGroup: any; // axis group element
-    _seriesGroup: any; // series group element
-    _backgroundGroup: any; // background element
-    _margin: any;
-    _domain: any;
-    _dataProvider: Array<any>;
+    private _configuration: any;
+    private _target: any; // target svg element
+    private _width: number;
+    private _height: number;
+    private _axis: any[] = [];
+    private _series: any[] = [];
+    private _axisGroup: any; // axis group element
+    private _seriesGroup: any; // series group element
+    private _backgroundGroup: any; // background element
+    private _dragGroup: any; // drag area element
+    private _margin: any;
+    private _domain: any;
+    private _dataProvider: Array<any> = [];
 
-    _instance_loader: InstanceLoader;
-    _isStacked = false;
-
-    _event_map: any;
+    private _instance_loader: InstanceLoader;
+    private _isStacked = false; // special series ( data parse )
+    private _event_map: any; // chart event list
+    private _manuals = ['normal', 'zoom', 'multiselection'];
+    private _current_manual = this._manuals[0];
 
     constructor( config?: any ) {
         this._instance_loader = new InstanceLoader();
@@ -46,25 +47,34 @@ export class ChartBase implements IDisplay {
             if (!this._configuration.chart.data) {
                 this._setDefaultData();
             } else {
-                this.data = this._configuration.chart.data;
+                this.dataProvider = this._configuration.chart.data;
             }
-            this._clear();
+            this.clear();
             this.margin = this.configuration.chart.margin;
             this._setSize(this.configuration.chart.size.width, this.configuration.chart.size.height);
             try {
                 this._createSvgElement();
-                this._addEvent();
                 this._createComponent();
             } catch (e) {
                 console.log(e instanceof ChartException);
                 console.log('Error Code : ', e.status);
                 console.log('Error Message : ', e.errorContent.message);
             }
+            this._addEvent();
         }
     }
 
     get configuration() {
         return this._configuration;
+    }
+
+    set manual(value: string) {
+        const manualid = this._manuals.indexOf(value)
+        if (manualid > -1) {
+            this._current_manual = this._manuals[manualid];
+        } else {
+            throw new ChartException(404, {message: `not found manual type ${value}! Please select from ${this._manuals.toString()}`});
+        }
     }
 
     set target( value: any ) {
@@ -164,6 +174,14 @@ export class ChartBase implements IDisplay {
             console.log('Error Message : ', e.errorContent.message);
         }
     }
+    clear() {
+        if (this.target) {
+            this.target.remove();
+            this.target = null;
+            this._axis = null;
+            this._series = null;
+        }
+    }
 
     _createSvgElement() {
         this.target = this._createSvg(this.configuration.chart);
@@ -185,6 +203,9 @@ export class ChartBase implements IDisplay {
         this._seriesGroup = this.target.append('g')
                                 .attr('class', 'series')
                                 .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+        this._dragGroup = this.target.append('g')
+                              .attr('class', 'draging')
+                              .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
     }
 
     // generate svg element using configuration
@@ -224,7 +245,7 @@ export class ChartBase implements IDisplay {
                 width: this.width,
                 height: this.height,
                 margin: this.margin,
-                data: this.data,
+                data: this.dataProvider,
                 domain: this.domain,
                 isStacked: this._isStacked
             };
@@ -307,7 +328,7 @@ export class ChartBase implements IDisplay {
         // tslint:disable-next-line:curly
         if (!this._axis) return;
         for (let i = 0 ; i < this._axis.length; i++) {
-            this._axis[i].dataProvider = this.data;
+            this._axis[i].dataProvider = this.dataProvider;
             this._axis[i].numeric_min = this.min;
             this._axis[i].numeric_max = this.max;
             this._axis[i].updateDisplay(this.width, this.height);
@@ -320,20 +341,12 @@ export class ChartBase implements IDisplay {
         for (let i = 0; i < this._series.length; i++) {
             this._series[i].width = this.width;
             this._series[i].height = this.height;
-            this._series[i].dataProvider = this.data;
-        }
-    }
-
-    _clear() {
-        if (this.target) {
-            this.target.remove();
-            this.target = null;
-            this._axis = null;
-            this._series = null;
+            this._series[i].dataProvider = this.dataProvider;
         }
     }
 
     _addEvent() {
+        console.log('_addEvent : ', this.target);
         this.target.on('click', d => {
             if (d3.event.target) {
                 const currentEvent: ChartEvent = new ChartEvent(
@@ -373,16 +386,77 @@ export class ChartBase implements IDisplay {
         .on('remove', d => {
             // this._itemClick(currentEvent);
         });
+
+        const mouseDowns = Observable.fromEvent(this.target[0][0], 'mousedown');
+        const mouseUps = Observable.fromEvent(this.target[0][0], 'mouseup');
+        const mouseMoves = Observable.fromEvent(this.target[0][0], 'mousemove');
+
+        let offsetX = 0; // start x
+        let offsetY = 0; // start y
+        let moveX = 0;
+        let moveY = 0;
+
+        mouseDowns.map(function () {
+            return mouseMoves.takeUntil(mouseUps);
+        })
+        .concatAll()
+        .subscribe( (e: any) => {
+            const leftp = e.x - offsetX + 'px';
+            const topp = e.y - offsetY + 'px';
+            // console.log( 'left: ', leftp, 'top:', topp );
+        });
+
+        mouseDowns.subscribe( (e: any) => {
+            offsetX = e.offsetX - this.margin.top + 1;
+            offsetY = e.offsetY - this.margin.left + 1;
+            console.log( 'mouseDowns x: ', offsetX, 'y:', offsetY );
+        });
+
+        mouseUps.subscribe( (e: any) => {
+            moveX = e.offsetX - this.margin.top - 1;
+            moveY = e.offsetY - this.margin.left - 1;
+            this._afterEvent();
+            console.log( 'mouseUps x: ', moveX, 'y:', moveY );
+        });
+
     };
 
+    _afterEvent() {
+        switch (this._current_manual) {
+            case 'selection' :
+                this._dragSelection();
+                break;
+            case 'zoom' :
+                this._zoomSelection();
+                break;
+            default :
+                this._move();
+                break;
+        }
+    }
+
+    _dragSelection() {
+
+    }
+
+    _zoomSelection() {
+
+    }
+
+    _move() {
+
+    }
+
     _setDefaultData() {
+        const testdata = [];
         for (let i = 0; i < 20; i++) {
-            this.data.push( {  category: 'A' + i,
+            testdata.push( {  category: 'A' + i,
                            date: new Date(2017, 0, i).getTime(),
                            rate: Math.round( Math.random() * 10 ),
                            ratio: Math.round( Math.random() * 110  ),
                            revenue: Math.round( Math.random() * 120  ),
                            profit: Math.round( Math.random() * 100  ) } );
         }
+        this.dataProvider = testdata;
     }
 }
