@@ -2,9 +2,9 @@
  * Created by airnold on 2017. 6. 19..
  */
 
-import { IChartEvent } from './chart-event.interface';
+import { IChartEvent, ChartEventData } from './chart-event.interface';
 
-export class ChartEvent implements IChartEvent {
+export class ChartEvent extends Event implements IChartEvent {
     static ITEM_CLICK = 'itemclick';
     static MOUSE_OVER = 'mouseover';
     static MOUSE_OUT = 'mouseout';
@@ -12,18 +12,27 @@ export class ChartEvent implements IChartEvent {
     static MOUSE_DROP = 'mousedrop';
     static MOUSE_MOVE = 'mousemove';
 
-    private _event: any;
-    private _data: any;
+    private _type: string; // event type name
+    // private _event: any; // event object
+    private _data: ChartEventData; // send data
 
-    set event(value: any) {
-        this._event = value;
+    set type(value: string) {
+        this._type = value;
     }
 
-    get event() {
-        return this._event;
+    get type() {
+        return this._type;
     }
 
-    set data(value: any) {
+    // set event(value: any) {
+    //     this._event = value;
+    // }
+    //
+    // get event() {
+    //     return this._event;
+    // }
+
+    set data(value: ChartEventData) {
         this._data = value;
     }
 
@@ -31,8 +40,10 @@ export class ChartEvent implements IChartEvent {
         return this._data;
     }
 
-    constructor(event: any, data: any) {
-        this.event = event;
+    constructor(type: string, data: ChartEventData) {
+        super(type);
+        this.type = type;
+        // this.event = event;
         this.data = data;
     }
 

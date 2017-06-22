@@ -4,6 +4,7 @@ import { IDisplay } from './i-display.interface';
 import { InstanceLoader } from './instance-loader';
 import { ChartException } from '../common/error/chart-exception';
 import { ChartEvent } from './event/chart-event';
+import { ChartEventData } from './event/chart-event.interface';
 import { Observable } from 'rxjs/Observable';
 import { Series } from './series/series';
 import { DragBase } from './plugin/dragable/drag-base';
@@ -16,7 +17,7 @@ export class ChartBase implements IDisplay {
 
     min: number;
     max: number;
-    selectedItem: Array<ChartEvent> = [];
+    selectedItem: Array<ChartEventData> = [];
 
     secondMin: number;
     secondMax: number;
@@ -162,13 +163,14 @@ export class ChartBase implements IDisplay {
 
 
     addEventListener(type: string, method: any) {
-        if ( !this._eventMap ) {
-            this._eventMap = {};
-        }
-        this._eventMap[type] = method;
+        // if ( !this._eventMap ) {
+        //     this._eventMap = {};
+        // }
+        // this._eventMap[type] = method;
+        addEventListener(type, method);
     }
 
-    dispatchEvent(type: string, event: any) {
+    _dispatchEvent(type: string, event: any) {
         if (this._eventMap[type]) {
             this._eventMap[type](event);
         }
@@ -370,6 +372,10 @@ export class ChartBase implements IDisplay {
         return tempList;
     }
 
+    _createPlugin() {
+
+    }
+
     _axisUpdate() {
         // tslint:disable-next-line:curly
         if (!this._axis) return;
@@ -394,7 +400,7 @@ export class ChartBase implements IDisplay {
     _addEvent() {
         this.target.on('click', d => {
             if (d3.event.target) {
-                const currentEvent: ChartEvent = new ChartEvent(
+                const currentEvent: ChartEventData = new ChartEventData(
                     d3.event,
                     d3.select(d3.event.target)[0][0].__data__);
 
@@ -408,23 +414,26 @@ export class ChartBase implements IDisplay {
                         this.selectedItem.push(currentEvent);
                     }
                 }
-                this.dispatchEvent(ChartEvent.ITEM_CLICK, currentEvent);
+                // this._dispatchEvent(ChartEvent.ITEM_CLICK, currentEvent);
+                dispatchEvent( new ChartEvent(ChartEvent.ITEM_CLICK, currentEvent));
             }
         })
         .on('mouseover', d => {
             if (d3.event.target) {
-                const currentEvent: ChartEvent = new ChartEvent(
+                const currentEvent: ChartEventData = new ChartEventData(
                     d3.event,
                     d3.select(d3.event.target)[0][0].__data__);
-                this.dispatchEvent(ChartEvent.MOUSE_OVER, currentEvent);
+                // this._dispatchEvent(ChartEvent.MOUSE_OVER, currentEvent);
+                dispatchEvent( new ChartEvent(ChartEvent.MOUSE_OVER, currentEvent));
             }
         })
         .on('mouseout', d => {
             if (d3.event.target) {
-                const currentEvent: ChartEvent = new ChartEvent(
+                const currentEvent: ChartEventData = new ChartEventData(
                     d3.event,
                     d3.select(d3.event.target)[0][0].__data__);
-                this.dispatchEvent(ChartEvent.MOUSE_OUT, currentEvent);
+                // this._dispatchEvent(ChartEvent.MOUSE_OUT, currentEvent);
+                dispatchEvent( new ChartEvent(ChartEvent.MOUSE_OUT, currentEvent));
             }
         })
         .on('mousemove', d => {
@@ -439,6 +448,9 @@ export class ChartBase implements IDisplay {
 
         this._dragEvent = new DragBase(this.target);
         this._dragEvent.addEventListner(DragBase.DRAG_END, this._dragEnd);
+        // addEventListener('data_change', (event: any) => {
+        //     console.log('chart base addEventListener : ', event);
+        // });
     };
 
     _dragEnd(event: Dragable) {
