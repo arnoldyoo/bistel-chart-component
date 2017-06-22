@@ -1,6 +1,6 @@
-import { ChartBase } from './../../common/chart-base';
-import { Component, HostListener, Input, Output, OnInit, EventEmitter, ViewEncapsulation, OnChanges, ElementRef, Renderer } from '@angular/core';
-import { ChartEvent } from '../../common/event/chart-event';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { ChartBase } from './../../common/index';
+import { ChartEvent } from '../../common/event/index';
 
 
 @Component({
@@ -9,6 +9,11 @@ import { ChartEvent } from '../../common/event/chart-event';
     styles: [`
         #div_01 {
             border: 1px solid black;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            user-select: none;
         }
         path, line {
             fill: none;
@@ -48,10 +53,7 @@ export class ChartComponent implements OnInit, OnChanges {
     baseChart: ChartBase;
     chartConfig: any;
 
-    constructor(
-        private el: ElementRef,
-        private renderer: Renderer
-    ) { }
+    constructor() { }
 
     ngOnInit() {
         this._setChartJson(this.chartinfo, this.axis, this.series);
@@ -95,19 +97,21 @@ export class ChartComponent implements OnInit, OnChanges {
     }
 
     _itemClick(event: any) {
+        console.log('_itemClick', event);
         if (this.itemclick.emit) {
             this.itemclick.emit(event);
         }
     }
 
     _mouseOver(event: any) {
+        console.log('_mouseOver', event);
         if (this.mouseover.emit) {
             this.mouseover.emit(event);
         }
     }
 
     _mouseOut(event: any) {
-
+        console.log('_mouseOut', event);
         if (this.mouseout.emit) {
             this.mouseout.emit(event);
         }

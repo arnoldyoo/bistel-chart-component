@@ -1,5 +1,5 @@
-import { Series } from '../../series/series';
-import { SeriesConfiguration } from './../../../model/chart-param.interface';
+import { Series } from '../../series/index';
+import { SeriesConfiguration } from './../../../model/index';
 
 export class LineSeries extends Series {
 

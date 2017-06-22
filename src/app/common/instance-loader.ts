@@ -1,7 +1,7 @@
 import { DateTimeAxis, CategoryAxis, NumericAxis } from './component/axis/index';
 import { ColumnSeries, LineSeries, ColumnSet, BarSeries, BarSet, PieSeries, PieSet } from './component/series/index';
-import { AxisConfiguration, SeriesConfiguration } from './../model/chart-param.interface';
-import { ChartException } from './error/chart-exception';
+import { AxisConfiguration, SeriesConfiguration } from './../model/index';
+import { ChartException } from './error/index';
 
 export class InstanceLoader {
     ctors: any;

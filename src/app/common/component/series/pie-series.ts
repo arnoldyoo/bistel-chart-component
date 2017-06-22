@@ -1,6 +1,6 @@
-import { Series } from '../../series/series';
-import { SeriesConfiguration } from './../../../model/chart-param.interface';
-import { ChartException } from '../../error/chart-exception';
+import { Series } from '../../series/index';
+import { SeriesConfiguration } from './../../../model/index';
+import { ChartException } from '../../error/index';
 
 export class PieSeries extends Series {
 

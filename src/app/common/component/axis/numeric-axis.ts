@@ -1,6 +1,5 @@
-import { Axe } from './../../axis/axe';
-import { AxisConfiguration } from './../../../model/chart-param.interface';
-import { Axis } from '../../axis/axis';
+import { Axe, Axis  } from './../../axis/index';
+import { AxisConfiguration } from './../../../model/index';
 
 export class NumericAxis extends Axis {
 

@@ -1,4 +1,4 @@
-import { LegendConfiguration } from '../../model/legend.interface';
+import { LegendConfiguration } from '../../model/index';
 import { IDisplay } from './../i-display.interface';
 
 export abstract class Legend implements IDisplay {
@@ -59,7 +59,6 @@ export abstract class Legend implements IDisplay {
 
     set configuration(value: any) {
         this._configuration = value;
-        console.log('configuration : ', this._configuration);
     }
 
     get configuration() {
@@ -106,7 +105,6 @@ export abstract class Legend implements IDisplay {
     }
 
     updateDisplay(width: number, height: number) {
-        console.log(`legend class => updateDisplay(${width}, ${height})`);
         this.width = width;
         this.height = height;
         this.target
