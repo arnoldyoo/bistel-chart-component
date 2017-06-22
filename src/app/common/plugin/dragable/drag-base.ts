@@ -1,13 +1,17 @@
 import { Observable } from 'rxjs/Observable';
 import { Dragable } from './model/drag-model';
 
+interface EventMap { // indexable interface
+    [type: string]: any;
+}
+
 export class DragBase {
     static DRAG_START = 'drag_start';
     static DRAG_MOVE = 'drag_move';
     static DRAG_END = 'drag_end';
 
     private _target: any;
-    private _eventMap: any = {};
+    private _eventMap: EventMap = {};
 
     offsetX = 0; // start x
     offsetY = 0; // start y

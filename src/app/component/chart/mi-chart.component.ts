@@ -97,19 +97,21 @@ export class ChartComponent implements OnInit, OnChanges {
     }
 
     _itemClick(event: any) {
+        console.log('_itemClick', event);
         if (this.itemclick.emit) {
             this.itemclick.emit(event);
         }
     }
 
     _mouseOver(event: any) {
+        console.log('_mouseOver', event);
         if (this.mouseover.emit) {
             this.mouseover.emit(event);
         }
     }
 
     _mouseOut(event: any) {
-
+        console.log('_mouseOut', event);
         if (this.mouseout.emit) {
             this.mouseout.emit(event);
         }

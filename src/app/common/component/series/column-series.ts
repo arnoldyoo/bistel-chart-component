@@ -247,6 +247,7 @@ export class ColumnSeries extends Series {
                 // const cY = (d3.event.offsetY);
                 // console.log('element click ==> x :', cX, ' , y : ', cY);
             });
+        // dispatchEvent(new Event('data_change'));
     }
 
     _selectedItem(target: any) {
