@@ -9,6 +9,11 @@ import { ChartEvent } from '../../common/event/chart-event';
     styles: [`
         #div_01 {
             border: 1px solid black;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            user-select: none;
         }
         path, line {
             fill: none;

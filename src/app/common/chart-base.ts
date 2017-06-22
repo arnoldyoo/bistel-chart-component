@@ -404,9 +404,10 @@ export class ChartBase implements IDisplay {
                         s.unselectAll();
                     });
                 } else {
-                    if (this._current_manual === 'multiselection') {
-                        this.selectedItem.push(currentEvent);
+                    if (this._current_manual !== 'multiselection') {
+                        this.selectedItem = [];
                     }
+                    this.selectedItem.push(currentEvent);
                 }
                 this.dispatchEvent(ChartEvent.ITEM_CLICK, currentEvent);
             }

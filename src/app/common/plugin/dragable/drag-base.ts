@@ -45,25 +45,28 @@ export class DragBase {
         })
         .concatAll()
         .subscribe( (e: any) => {
-            const leftp = e.x - this.offsetX + 'px';
-            const topp = e.y - this.offsetY + 'px';
+            this.moveX = e.x - this.offsetX;
+            this.moveY = e.y - this.offsetY;
+            this._dispatchEvent(DragBase.DRAG_MOVE);
             // console.log( 'left: ', leftp, 'top:', topp );
         });
 
         mouseDowns.subscribe( (e: any) => {
             this.offsetX = e.offsetX + 1;
             this.offsetY = e.offsetY + 1;
+            this._dispatchEvent(DragBase.DRAG_START);
             console.log( 'mouseDowns x: ', this.offsetX, 'y:', this.offsetY );
         });
 
         mouseUps.subscribe( (e: any) => {
             this.moveX = e.offsetX - 1;
             this.moveY = e.offsetY - 1;
+            this._dispatchEvent(DragBase.DRAG_END);
             console.log( 'mouseUps x: ', this.moveX, 'y:', this.moveY );
         });
     }
 
-    private _dispatchEvent(type: string, data: any) {
+    private _dispatchEvent(type: string) {
         if (this._eventMap[type]) {
             const dragable: Dragable = new Dragable(this.offsetX, this.offsetY, this.moveX, this.moveY);
             this._eventMap[type](dragable);
