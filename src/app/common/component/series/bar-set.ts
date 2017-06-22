@@ -1,8 +1,7 @@
 import { BarSeries } from './bar-series';
 import { IDisplay } from './../../i-display.interface';
-import { Axe } from './../../axis/axe';
-import { InstanceLoader } from './../../instance-loader';
-import { SeriesConfiguration } from './../../../model/chart-param.interface';
+import { Axe } from './../../axis/index';
+import { SeriesConfiguration } from './../../../model/index';
 
 export class BarSet implements IDisplay {
 

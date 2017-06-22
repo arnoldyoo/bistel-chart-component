@@ -1,6 +1,6 @@
-import { ChartBase } from './../../common/chart-base';
-import { Component, HostListener, Input, Output, OnInit, EventEmitter, ViewEncapsulation, OnChanges, ElementRef, Renderer } from '@angular/core';
-import { ChartEvent } from '../../common/event/chart-event';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { ChartBase } from './../../common/index';
+import { ChartEvent } from '../../common/event/index';
 
 
 @Component({
@@ -53,10 +53,7 @@ export class ChartComponent implements OnInit, OnChanges {
     baseChart: ChartBase;
     chartConfig: any;
 
-    constructor(
-        private el: ElementRef,
-        private renderer: Renderer
-    ) { }
+    constructor() { }
 
     ngOnInit() {
         this._setChartJson(this.chartinfo, this.axis, this.series);

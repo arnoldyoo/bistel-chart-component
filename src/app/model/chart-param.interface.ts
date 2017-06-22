@@ -5,6 +5,18 @@ export interface SeriesConfiguration {
     type: any;
 };
 
+export interface SeriesConditions {
+    xField: string;
+    yField: string;
+    displayName: string;
+    displayKey?: string;
+    visible: boolean;
+    label?: {
+        visible: boolean,
+        side: string
+    };
+}
+
 export interface AxisConfiguration {
     conditions: AxisConditions;
     target?: any;
@@ -25,16 +37,4 @@ export interface AxisConditions {
     type: string;
     orient: string;
     tickInfo?: any;
-}
-
-export interface SeriesConditions {
-    xField: string;
-    yField: string;
-    displayName: string;
-    displayKey?: string;
-    visible: boolean;
-    label?: {
-      visible: boolean,
-      side: string
-    };
 }

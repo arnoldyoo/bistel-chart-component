@@ -1,7 +1,7 @@
-import { SeriesConditions } from './../../model/chart-param.interface';
+import { SeriesConditions } from './../../model/index';
 import { IDisplay } from './../i-display.interface';
-import { SeriesConfiguration } from '../../model/chart-param.interface';
-import { Axe } from '../../common/axis/axe';
+import { SeriesConfiguration } from '../../model/index';
+import { Axe } from '../../common/axis/index';
 
 export abstract class Series implements IDisplay {
 
@@ -9,10 +9,7 @@ export abstract class Series implements IDisplay {
     _height: number;
     // get group element from chart-base
     _target: any;
-
     _color: any;
-
-    // api private
     // _displayName will be used in class name.
     _displayName: string;
     _xField: string;

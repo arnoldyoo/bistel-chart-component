@@ -1,13 +1,11 @@
-import { AxisConfiguration, SeriesConfiguration } from './../model/chart-param.interface';
-import { Axis } from './axis/axis';
+import { AxisConfiguration, SeriesConfiguration } from './../model/index';
+import { Axis } from './axis/index';
 import { IDisplay } from './i-display.interface';
 import { InstanceLoader } from './instance-loader';
-import { ChartException } from '../common/error/chart-exception';
-import { ChartEvent } from './event/chart-event';
-import { Observable } from 'rxjs/Observable';
-import { Series } from './series/series';
-import { DragBase } from './plugin/dragable/drag-base';
-import { Dragable } from './plugin/dragable/model/drag-model';
+import { ChartException } from '../common/error/index';
+import { ChartEvent } from './event/index';
+import { Series } from './series/index';
+import { Dragable, DragBase } from './plugin/index';
 
 export class ChartBase implements IDisplay {
 
@@ -17,9 +15,6 @@ export class ChartBase implements IDisplay {
     min: number;
     max: number;
     selectedItem: Array<ChartEvent> = [];
-
-    secondMin: number;
-    secondMax: number;
 
     private _configuration: any;
     private _target: any; // target svg element
@@ -86,7 +81,6 @@ export class ChartBase implements IDisplay {
         if (manualid > -1) {
 
             this._current_manual = this._manuals[manualid];
-            console.log(this._current_manual);
             this.series.map((s: Series) => {
                 s.manual = this._current_manual;
             });
@@ -287,7 +281,7 @@ export class ChartBase implements IDisplay {
             let axis: Axis;
             const axis_params: AxisConfiguration = {
                 conditions: axisConfig,
-                // target: this._axisGroup,
+                target: this._axisGroup,
                 width: this.width,
                 height: this.height,
                 margin: this.margin,
@@ -299,12 +293,12 @@ export class ChartBase implements IDisplay {
             // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
 
             // case 1 : configuration
-            // axis = this.__instanceLoader.axisFactory(axisConfig.axisClass, axis_params);
+            axis = this._instanceLoader.axisFactory(axisConfig.axisClass, axis_params);
 
             // case 2 : properties
-            axis = this._instanceLoader.axisFactory(axisConfig.axisClass, null);
-            axis.configuration = axis_params;
-            axis.target = this._axisGroup;
+            // axis = this._instanceLoader.axisFactory(axisConfig.axisClass, null);
+            // axis.configuration = axis_params;
+            // axis.target = this._axisGroup;
 
             axis.updateDisplay( this.width, this.height );
 
@@ -331,17 +325,17 @@ export class ChartBase implements IDisplay {
                 const series_configuration: SeriesConfiguration = {
                     condition: seriesConfig,
                     margin: this.margin,
-                    // target: this._seriesGroup,
+                    target: this._seriesGroup,
                     type: type
                 };
 
                 // case1 : configuration
-                // series = this.__instanceLoader.seriesFactory(seriesConfig.seriesClass, series_configuration);
+                series = this._instanceLoader.seriesFactory(seriesConfig.seriesClass, series_configuration);
 
                 // case2 : property
-                series = this._instanceLoader.seriesFactory(seriesConfig.seriesClass, null);
-                series.configuration = series_configuration;
-                series.target = this._seriesGroup;
+                // series = this._instanceLoader.seriesFactory(seriesConfig.seriesClass, null);
+                // series.configuration = series_configuration;
+                // series.target = this._seriesGroup;
 
                 series.color = this.colors[j];
                 if (type === 'group' || type === 'stacked') { // column set series
@@ -392,7 +386,7 @@ export class ChartBase implements IDisplay {
     }
 
     _addEvent() {
-        this.target.on('click', d => {
+        this.target.on('click', () => {
             if (d3.event.target) {
                 const currentEvent: ChartEvent = new ChartEvent(
                     d3.event,
@@ -412,7 +406,7 @@ export class ChartBase implements IDisplay {
                 this.dispatchEvent(ChartEvent.ITEM_CLICK, currentEvent);
             }
         })
-        .on('mouseover', d => {
+        .on('mouseover', () => {
             if (d3.event.target) {
                 const currentEvent: ChartEvent = new ChartEvent(
                     d3.event,
@@ -420,7 +414,7 @@ export class ChartBase implements IDisplay {
                 this.dispatchEvent(ChartEvent.MOUSE_OVER, currentEvent);
             }
         })
-        .on('mouseout', d => {
+        .on('mouseout', () => {
             if (d3.event.target) {
                 const currentEvent: ChartEvent = new ChartEvent(
                     d3.event,
@@ -428,13 +422,11 @@ export class ChartBase implements IDisplay {
                 this.dispatchEvent(ChartEvent.MOUSE_OUT, currentEvent);
             }
         })
-        .on('mousemove', d => {
-            const cX = (d3.event.offsetX - this.margin.left);
-            const cY = (d3.event.offsetY - this.margin.top);
-            // console.log('background mousemove ==> x :', cX, ' , y : ', cY);
-            // console.log('background click ==> event :', d3.event);
+        .on('mousemove', () => {
+            const cX: number = (d3.event.offsetX - this.margin.left);
+            const cY: number = (d3.event.offsetY - this.margin.top);
         })
-        .on('remove', d => {
+        .on('remove', () => {
             // this._itemClick(currentEvent);
         });
 
@@ -473,15 +465,15 @@ export class ChartBase implements IDisplay {
     }
 
     _setDefaultData() {
-        const testdata = [];
+        const testData: Array<any> = [];
         for (let i = 0; i < 20; i++) {
-            testdata.push( {  category: 'A' + i,
+            testData.push( {  category: 'A' + i,
                            date: new Date(2017, 0, i).getTime(),
                            rate: Math.round( Math.random() * 10 ),
                            ratio: Math.round( Math.random() * 110  ),
                            revenue: Math.round( Math.random() * 120  ),
                            profit: Math.round( Math.random() * 100  ) } );
         }
-        this.dataProvider = testdata;
+        this.dataProvider = testData;
     }
 }

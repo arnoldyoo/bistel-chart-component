@@ -1,4 +1,4 @@
-import { AxisConfiguration, AxisConditions } from './../../model/chart-param.interface';
+import { AxisConfiguration, AxisConditions } from './../../model/index';
 import { Axe } from './axe';
 import { IDisplay } from './../i-display.interface';
 

@@ -15,9 +15,13 @@ import { AppService } from './app.service';
       LegendComponent
   ],
   imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule
+      BrowserModule,
+      FormsModule,
+      HttpModule
+  ],
+  exports: [
+      ChartComponent,
+      LegendComponent
   ],
   providers: [ AppService ],
   bootstrap: [ AppComponent ]

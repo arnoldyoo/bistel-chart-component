@@ -1,5 +1,5 @@
-import { Legend } from '../../legend/legend';
-import { LegendConfiguration } from '../../../model/legend.interface';
+import { Legend } from '../../legend/index';
+import { LegendConfiguration } from '../../../model/index';
 
 export class SvgLegend extends Legend {
 

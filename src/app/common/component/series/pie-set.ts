@@ -1,8 +1,6 @@
 import { PieSeries } from './pie-series';
 import { IDisplay } from './../../i-display.interface';
-import { Axe } from './../../axis/axe';
-import { InstanceLoader } from './../../instance-loader';
-import { SeriesConfiguration } from './../../../model/chart-param.interface';
+import { SeriesConfiguration } from './../../../model/index';
 
 export class PieSet implements IDisplay {
 
