@@ -156,11 +156,11 @@ export class ChartBase implements IDisplay {
 
 
     addEventListener(type: string, method: any) {
-        // if ( !this._eventMap ) {
-        //     this._eventMap = {};
-        // }
-        // this._eventMap[type] = method;
-        addEventListener(type, method);
+        if ( !this._eventMap ) {
+            this._eventMap = {};
+        }
+        this._eventMap[type] = method;
+        // addEventListener(type, method);
     }
 
     _dispatchEvent(type: string, event: any) {
@@ -408,8 +408,8 @@ export class ChartBase implements IDisplay {
                     }
                     this.selectedItem.push(currentEvent);
                 }
-                // this._dispatchEvent(ChartEvent.ITEM_CLICK, currentEvent);
-                dispatchEvent( new ChartEvent(ChartEvent.ITEM_CLICK, currentEvent));
+                this._dispatchEvent(ChartEvent.ITEM_CLICK, currentEvent);
+                // dispatchEvent( new ChartEvent(ChartEvent.ITEM_CLICK, currentEvent));
             }
         })
         .on('mouseover', () => {
@@ -417,8 +417,8 @@ export class ChartBase implements IDisplay {
                 const currentEvent: ChartEventData = new ChartEventData(
                     d3.event,
                     d3.select(d3.event.target)[0][0].__data__);
-                // this._dispatchEvent(ChartEvent.MOUSE_OVER, currentEvent);
-                dispatchEvent( new ChartEvent(ChartEvent.MOUSE_OVER, currentEvent));
+                this._dispatchEvent(ChartEvent.MOUSE_OVER, currentEvent);
+                // dispatchEvent( new ChartEvent(ChartEvent.MOUSE_OVER, currentEvent));
             }
         })
         .on('mouseout', () => {
@@ -426,8 +426,8 @@ export class ChartBase implements IDisplay {
                 const currentEvent: ChartEventData = new ChartEventData(
                     d3.event,
                     d3.select(d3.event.target)[0][0].__data__);
-                // this._dispatchEvent(ChartEvent.MOUSE_OUT, currentEvent);
-                dispatchEvent( new ChartEvent(ChartEvent.MOUSE_OUT, currentEvent));
+                this._dispatchEvent(ChartEvent.MOUSE_OUT, currentEvent);
+                // dispatchEvent( new ChartEvent(ChartEvent.MOUSE_OUT, currentEvent));
             }
         })
         .on('mousemove', () => {
