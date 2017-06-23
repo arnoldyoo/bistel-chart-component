@@ -63,6 +63,7 @@ export class ChartBase implements IDisplay {
             try {
                 this._createSvgElement();
                 this._createComponent();
+                this._createPlugin();
             } catch (e) {
                 console.log(e instanceof ChartException);
                 console.log('Error Code : ', e.status);
@@ -366,7 +367,7 @@ export class ChartBase implements IDisplay {
     }
 
     _createPlugin() {
-
+        this._dragEvent = new DragBase(this.target);
     }
 
     _axisUpdate() {
@@ -438,14 +439,13 @@ export class ChartBase implements IDisplay {
             // this._itemClick(currentEvent);
         });
 
-        this._dragEvent = new DragBase(this.target);
-        this._dragEvent.addEventListner(DragBase.DRAG_END, this._dragEnd);
+        addEventListener(DragBase.DRAG_END, this._dragEnd);
         // addEventListener('data_change', (event: any) => {
         //     console.log('chart base addEventListener : ', event);
         // });
     };
 
-    _dragEnd(event: Dragable) {
+    _dragEnd(event: any) {
         console.log('_dragEnd', event.startX, event.startY, event.endX, event.endY);
     }
 
