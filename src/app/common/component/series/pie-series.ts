@@ -90,6 +90,9 @@ export class PieSeries extends Series {
             throw new ChartException(404, {message: 'do not displayKey of pieseries configuration'});
         }
         this._piecolor = d3.scale.category20();
+        this.target.attr('data-legend', () => {
+            return this.displayName;
+        });
         const pieTarget = this.target.selectAll('path')
             .data(this._pie(this._pieData))
             .enter();
@@ -111,7 +114,8 @@ export class PieSeries extends Series {
                           })
                           .attr('dy', '0.35em')
                           .text((d, i) => {
-                              return this.dataProvider[i][this._displayKey] + ' : ' + d.value;
+                              // return this.dataProvider[i][this._displayKey] + ' : ' + d.value;
+                              return d.value;
                           });
             } else {
                 const outsideLabel: any = this._createOutsideLabel();
@@ -125,7 +129,8 @@ export class PieSeries extends Series {
                              return `translate(${pos})`;
                          })
                          .text((d, i) => {
-                             return this.dataProvider[i][this._displayKey] + ' : ' + d.value;
+                             // return this.dataProvider[i][this._displayKey] + ' : ' + d.value;
+                             return d.value;
                          });
 
                 pieTarget.append('g')
