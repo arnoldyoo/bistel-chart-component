@@ -5,7 +5,7 @@ import { InstanceLoader } from './instance-loader';
 import { ChartException } from '../common/error/index';
 import { ChartEvent, ChartEventData } from './event/index';
 import { Series } from './series/index';
-import { Dragable, DragBase } from './plugin/index';
+import { DragBase } from './plugin/index';
 
 export class ChartBase implements IDisplay {
 
@@ -157,17 +157,7 @@ export class ChartBase implements IDisplay {
 
 
     addEventListener(type: string, method: any) {
-        // if ( !this._eventMap ) {
-        //     this._eventMap = {};
-        // }
-        // this._eventMap[type] = method;
         addEventListener(type, method);
-    }
-
-    _dispatchEvent(type: string, event: any) {
-        if (this._eventMap[type]) {
-            this._eventMap[type](event);
-        }
     }
 
     updateDisplay(width?: number, height?: number) {
@@ -409,7 +399,6 @@ export class ChartBase implements IDisplay {
                     }
                     this.selectedItem.push(currentEvent);
                 }
-                // this._dispatchEvent(ChartEvent.ITEM_CLICK, currentEvent);
                 dispatchEvent( new CustomEvent(ChartEvent.ITEM_CLICK, { detail: currentEvent }));
             }
         })
@@ -418,7 +407,6 @@ export class ChartBase implements IDisplay {
                 const currentEvent: ChartEventData = new ChartEventData(
                     d3.event,
                     d3.select(d3.event.target)[0][0].__data__);
-                // this._dispatchEvent(ChartEvent.MOUSE_OVER, currentEvent);
                 dispatchEvent( new CustomEvent(ChartEvent.MOUSE_OVER, { detail: currentEvent }));
             }
         })
@@ -427,7 +415,6 @@ export class ChartBase implements IDisplay {
                 const currentEvent: ChartEventData = new ChartEventData(
                     d3.event,
                     d3.select(d3.event.target)[0][0].__data__);
-                // this._dispatchEvent(ChartEvent.MOUSE_OUT, currentEvent);
                 dispatchEvent( new CustomEvent(ChartEvent.MOUSE_OUT, { detail: currentEvent }));
             }
         })
@@ -440,13 +427,11 @@ export class ChartBase implements IDisplay {
         });
 
         addEventListener(DragBase.DRAG_END, this._dragEnd);
-        // addEventListener('data_change', (event: any) => {
-        //     console.log('chart base addEventListener : ', event);
-        // });
     };
 
     _dragEnd(event: any) {
-        console.log('_dragEnd', event.startX, event.startY, event.endX, event.endY);
+        const position: any = event.detail;
+        console.log('_dragEnd', position.startX, position.startY, position.endX, position.endY);
     }
 
     _afterEvent() {

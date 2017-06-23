@@ -1,9 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { Dragable } from './model/drag-model';
 
-interface EventMap { // indexable interface
-    [type: string]: any;
-}
 
 export class DragBase {
     static DRAG_START = 'drag_start';
@@ -11,7 +8,6 @@ export class DragBase {
     static DRAG_END = 'drag_end';
 
     private _target: any;
-    private _eventMap: EventMap = {};
 
     offsetX = 0; // start x
     offsetY = 0; // start y
@@ -35,45 +31,37 @@ export class DragBase {
         }
     }
 
-    addEventListner(type: string, method: any) {
-        this._eventMap[type] = method;
-    }
-
     private _addEvent(target) {
         const mouseDowns = Observable.fromEvent(target[0][0], 'mousedown');
         const mouseUps = Observable.fromEvent(target[0][0], 'mouseup');
         const mouseMoves = Observable.fromEvent(target[0][0], 'mousemove');
+        let dragStart: Observable<any>;
 
-        mouseDowns.map(function () {
+        dragStart = mouseDowns.debounceTime(2000);
+        dragStart.subscribe( (e: any) => {
+            this.offsetX = e.offsetX + 1;
+            this.offsetY = e.offsetY + 1;
+            console.log( 'dragstart x: ', this.offsetX, 'y:', this.offsetY );
+        });
+
+        dragStart.map(function () {
             return mouseMoves.takeUntil(mouseUps);
         })
         .concatAll()
         .subscribe( (e: any) => {
             this.moveX = e.x - this.offsetX;
             this.moveY = e.y - this.offsetY;
-            this._dispatchEvent(DragBase.DRAG_MOVE);
-            // console.log( 'left: ', leftp, 'top:', topp );
-        });
-
-        mouseDowns.subscribe( (e: any) => {
-            this.offsetX = e.offsetX + 1;
-            this.offsetY = e.offsetY + 1;
-            this._dispatchEvent(DragBase.DRAG_START);
-            console.log( 'mouseDowns x: ', this.offsetX, 'y:', this.offsetY );
+            // move가 되는 동안에 d3 rect를 그려준다.
         });
 
         mouseUps.subscribe( (e: any) => {
             this.moveX = e.offsetX - 1;
             this.moveY = e.offsetY - 1;
-            this._dispatchEvent(DragBase.DRAG_END);
+            const dragable: Dragable = new Dragable(this.offsetX, this.offsetY, this.moveX, this.moveY);
+            dispatchEvent(new CustomEvent(DragBase.DRAG_END, {
+                detail: dragable
+            }));
             console.log( 'mouseUps x: ', this.moveX, 'y:', this.moveY );
         });
-    }
-
-    private _dispatchEvent(type: string) {
-        if (this._eventMap[type]) {
-            const dragable: Dragable = new Dragable(this.offsetX, this.offsetY, this.moveX, this.moveY);
-            this._eventMap[type](dragable);
-        }
     }
 }

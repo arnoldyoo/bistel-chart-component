@@ -1,3 +1,3 @@
-export { DragBase } from './dragable/drag-base';
-export { Dragable } from './dragable/model/drag-model';
+export { DragBase } from './drag-selector/drag-base';
+export { Dragable } from './drag-selector/model/drag-model';
 
