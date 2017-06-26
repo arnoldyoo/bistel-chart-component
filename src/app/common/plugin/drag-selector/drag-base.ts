@@ -42,11 +42,11 @@ export class DragBase {
         });
 
         dragStart = mouseDowns.flatMap(() =>
-            mouseMoves
-                .filter(x => x.movementX !== 0 || x.movementY !== 0)
-                .takeUntil(mouseUps)
-                .take(1)
-        );
+                                        mouseMoves
+                                            .filter(x => { console.log('movemonent', x.movementX); return  x.movementX !== 0 || x.movementY !== 0})
+                                            .takeUntil(mouseUps)
+                                            .take(1)
+                                    );
         dragStart.subscribe( (e: any) => {
             this.offsetX = e.offsetX + 1;
             this.offsetY = e.offsetY + 1;
@@ -67,7 +67,6 @@ export class DragBase {
         .subscribe( (e: any) => {
             this.moveX = e.offsetX - this.offsetX;
             this.moveY = e.offsetY - this.offsetY;
-
             // move가 되는 동안에 d3 rect를 그려준다.
             const s_box: any = target.select('.selection_box');
             if ( !s_box.empty()) {
@@ -81,9 +80,12 @@ export class DragBase {
             this.moveX = e.offsetX - 1;
             this.moveY = e.offsetY - 1;
             const dragable: Dragable = new Dragable(this.offsetX, this.offsetY, this.moveX, this.moveY);
-            dispatchEvent(new CustomEvent(DragBase.DRAG_END, {
-                detail: dragable
-            }));
+            const s_box: any = target.select('.selection_box');
+            if (s_box[0][0]) {
+                dispatchEvent(new CustomEvent(DragBase.DRAG_END, {
+                    detail: dragable
+                }));
+            }
         });
     }
 }
