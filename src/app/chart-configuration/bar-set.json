@@ -99,4 +99,10 @@
              ]
          }
     ]
+    "plugin": [
+        {
+            "pluginClass": "DragBase",
+            "direction": "vertical"
+        }
+    ]
 }

@@ -77,5 +77,11 @@
             "visible": true,
             "displayName": "Profit"
         }
+    ],
+    "plugin": [
+        {
+            "pluginClass": "DragBase",
+            "direction": "horizontal"
+        }
     ]
 }
