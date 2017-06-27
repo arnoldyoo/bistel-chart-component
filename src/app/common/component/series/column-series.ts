@@ -1,6 +1,8 @@
 import { Series } from '../../series/index';
 import { SeriesConfiguration } from './../../../model/index';
 import { ChartException } from '../../../common/error/index';
+import { DragBase } from '../../plugin/index';
+import { Dragable } from '../../plugin/drag-selector/model/drag-model';
 
 export class ColumnSeries extends Series {
 
@@ -129,7 +131,7 @@ export class ColumnSeries extends Series {
         const thatElement = this.target.datum(this.data)
                                         .append('rect')
                                         .attr('class', this.displayName + this._index)
-                                        .attr('value', this._data[this._yField])
+                                        .attr('value', this._data[this._yField]);
 
         this.addEvent(thatElement);
     }
@@ -267,6 +269,13 @@ export class ColumnSeries extends Series {
         this.target.selectAll('rect').style('fill-opacity', null).classed('selected', false);
         const seriesEl = d3.select(this.target[0][0].parentElement);
         seriesEl.style('fill-opacity', 1);
+    }
+
+    selectAll(event: Dragable) {
+        const targetElments = this.target.selectAll('rect');
+        const thatPointx = targetElments.attr('x');
+        const thatPointy = targetElments.attr('y');
+        console.log('column series selectAll ==> ', targetElments, thatPointx, thatPointy, event );
     }
 }
 

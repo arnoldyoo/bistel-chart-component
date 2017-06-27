@@ -98,5 +98,11 @@
                 }
             ]
         }
+    ],
+    "plugin": [
+        {
+            "pluginClass": "DragBase",
+            "direction": "horizontal"
+        }
     ]
 }

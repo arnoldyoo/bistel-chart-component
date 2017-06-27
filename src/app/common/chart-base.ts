@@ -3,7 +3,7 @@ import { Axis } from './axis/index';
 import { IDisplay } from './i-display.interface';
 import { InstanceLoader } from './instance-loader';
 import { ChartException } from '../common/error/index';
-import { ChartEvent, ChartEventData } from './event/index';
+import { ChartEvent, ChartEventData, EventMap } from './event/index';
 import { Series } from './series/index';
 import { DragBase } from './plugin/index';
 
@@ -22,6 +22,7 @@ export class ChartBase implements IDisplay {
     private _height: number;
     private _axis: any[] = [];
     private _series: any[] = [];
+    private _plugins: any[] = [];
     private _axisGroup: any; // axis group element
     private _seriesGroup: any; // series group element
     private _backgroundGroup: any; // background element
@@ -31,7 +32,7 @@ export class ChartBase implements IDisplay {
     private _dataProvider: Array<any> = [];
     private _instanceLoader: InstanceLoader;
     private _isStacked = false; // special series ( data parse )
-    private _eventMap: any; // chart event list
+    private _eventMap: EventMap = {}; // chart event list
     private _manuals = ['normal', 'zoom', 'multiselection'];
     private _current_manual = this._manuals[0];
     private OSName = 'none';
@@ -63,7 +64,6 @@ export class ChartBase implements IDisplay {
             try {
                 this._createSvgElement();
                 this._createComponent();
-                this._createPlugin();
             } catch (e) {
                 console.log(e instanceof ChartException);
                 console.log('Error Code : ', e.status);
@@ -139,6 +139,14 @@ export class ChartBase implements IDisplay {
         return this._series;
     }
 
+    set plugin( value: any[] ) {
+        this._plugins = this._createPlugin(value);
+    }
+
+    get plugin() {
+        return this._plugins;
+    }
+
     set margin( value: any ) {
         this._margin = value;
     }
@@ -157,7 +165,14 @@ export class ChartBase implements IDisplay {
 
 
     addEventListener(type: string, method: any) {
-        addEventListener(type, method);
+        // addEventListener(type, method);
+        this._eventMap[type] = method;
+    }
+
+    dispatchEvent(type: string, event: ChartEventData) {
+        if (this._eventMap[type]) {
+            this._eventMap[type](event);
+        }
     }
 
     updateDisplay(width?: number, height?: number) {
@@ -185,6 +200,7 @@ export class ChartBase implements IDisplay {
             this.target = null;
             this._axis = null;
             this._series = null;
+            this._plugins = null;
         }
     }
 
@@ -253,6 +269,7 @@ export class ChartBase implements IDisplay {
         }
         this.axis = this.configuration.axis;
         this.series = this.configuration.series;
+        this.plugin = this.configuration.plugin;
     };
 
     _setSize(width: number, height: number)  {
@@ -265,7 +282,7 @@ export class ChartBase implements IDisplay {
     }
 
     _createAxis(axisList: Array<any>) {
-        const tempList = [];
+        const tempList = <any>[];
         // tslint:disable-next-line:curly
         if (!axisList) return tempList;
 
@@ -306,7 +323,7 @@ export class ChartBase implements IDisplay {
     }
 
     _createSeries(seriesList: Array<any>) {
-        const tempList = [];
+        const tempList = <any>[];
 
         if (!seriesList) { return tempList; }
 
@@ -356,8 +373,16 @@ export class ChartBase implements IDisplay {
         return tempList;
     }
 
-    _createPlugin() {
-        this._dragEvent = new DragBase(this.target);
+    _createPlugin(pluginList: Array<any>) {
+        const tempList = <any>[];
+        if (pluginList && pluginList.length) {
+            pluginList.map((plugin, i) => {
+                const pluginObj = new DragBase(this.target, plugin);
+                pluginObj.addEventListener(ChartEvent.PLUGIN_EVENT, this._pluginEvent);
+                tempList.push(pluginObj);
+            });
+        }
+        return tempList;
     }
 
     _axisUpdate() {
@@ -399,7 +424,8 @@ export class ChartBase implements IDisplay {
                     }
                     this.selectedItem.push(currentEvent);
                 }
-                dispatchEvent( new CustomEvent(ChartEvent.ITEM_CLICK, { detail: currentEvent }));
+                // dispatchEvent( new CustomEvent(ChartEvent.ITEM_CLICK, { detail: currentEvent }));
+                this.dispatchEvent( ChartEvent.ITEM_CLICK, currentEvent );
             }
         })
         .on('mouseover', () => {
@@ -407,7 +433,8 @@ export class ChartBase implements IDisplay {
                 const currentEvent: ChartEventData = new ChartEventData(
                     d3.event,
                     d3.select(d3.event.target)[0][0].__data__);
-                dispatchEvent( new CustomEvent(ChartEvent.MOUSE_OVER, { detail: currentEvent }));
+                // dispatchEvent( new CustomEvent(ChartEvent.MOUSE_OVER, { detail: currentEvent }));
+                this.dispatchEvent( ChartEvent.MOUSE_OVER, currentEvent );
             }
         })
         .on('mouseout', () => {
@@ -415,23 +442,37 @@ export class ChartBase implements IDisplay {
                 const currentEvent: ChartEventData = new ChartEventData(
                     d3.event,
                     d3.select(d3.event.target)[0][0].__data__);
-                dispatchEvent( new CustomEvent(ChartEvent.MOUSE_OUT, { detail: currentEvent }));
+                // dispatchEvent( new CustomEvent(ChartEvent.MOUSE_OUT, { detail: currentEvent }));
+                this.dispatchEvent( ChartEvent.MOUSE_OUT, currentEvent );
             }
         })
         .on('mousemove', () => {
             const cX: number = (d3.event.offsetX - this.margin.left);
             const cY: number = (d3.event.offsetY - this.margin.top);
+            const isObj = d3.select(d3.event.target)[0][0].__data__? 'true': 'false';
+            // console.log('move = >', cX, cY, isObj, d3.select(d3.event.target), d3.select(d3.event.target)[0][0].__data__);
         })
         .on('remove', () => {
             // this._itemClick(currentEvent);
         });
 
-        addEventListener(DragBase.DRAG_END, this._dragEnd);
+        // this.addEventListener(DragBase.DRAG_END, this._dragEnd);
     };
 
+    _pluginEvent(event: ChartEventData) {
+        console.log('_pluginEvent : ', event, this);
+        if (event.type === ChartEvent.DRAG_END) {
+            // this._dragEnd(event);
+        }
+    }
+
     _dragEnd(event: any) {
-        const position: any = event.detail;
+        const position: any = event.data;
+        // dispatchEvent(new CustomEvent(ChartEvent.SELECT_ALL_ITEMS, event));
         console.log('_dragEnd', position.startX, position.startY, position.endX, position.endY);
+        this.series.map( (d) => {
+            <Series>d.selectAll(position);
+        });
     }
 
     _afterEvent() {

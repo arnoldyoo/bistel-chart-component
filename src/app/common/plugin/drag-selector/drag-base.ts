@@ -1,18 +1,26 @@
 import { Observable } from 'rxjs/Observable';
 import { Dragable } from './model/drag-model';
+import { ChartPlugin } from '../chart-plugin';
+import { ChartEvent } from '../../event/index';
+import { ChartEventData } from '../../event/chart-event.interface';
 
-
-export class DragBase {
-    static DRAG_START = 'drag_start';
-    static DRAG_MOVE = 'drag_move';
-    static DRAG_END = 'drag_end';
-
-    private _target: any;
+export class DragBase extends ChartPlugin {
 
     offsetX = 0; // start x
     offsetY = 0; // start y
     moveX = 0;
     moveY = 0;
+
+    private _direction = 'horizontal'; // default : horizontal, etc : vertical, both
+    private _target: any;
+
+    set direction(value: string) {
+        this._direction = value;
+    }
+
+    get direction() {
+        return this._direction;
+    }
 
     set target(value: any) {
         this._target = value;
@@ -25,7 +33,15 @@ export class DragBase {
         return this._target;
     }
 
-    constructor(target?: any) {
+    get events() {
+        return [ChartEvent.DRAG_START, ChartEvent.DRAG_MOVE, ChartEvent.DRAG_END ];
+    }
+
+    constructor(target: any, configuration?: any) {
+        super(configuration);
+        if (configuration) {
+            this.direction = configuration.direction;
+        }
         if (target) {
             this.target = target;
         }
@@ -43,7 +59,7 @@ export class DragBase {
 
         dragStart = mouseDowns.flatMap(() =>
                                         mouseMoves
-                                            .filter(x => { console.log('movemonent', x.movementX); return  x.movementX !== 0 || x.movementY !== 0})
+                                            .filter(x => { return  x.movementX !== 0 || x.movementY !== 0})
                                             .takeUntil(mouseUps)
                                             .take(1)
                                     );
@@ -60,7 +76,7 @@ export class DragBase {
                 .style('fill-opacity', 0.5);
         });
 
-        dragStart.map(function () {
+        dragStart.map( () => {
             return mouseMoves.takeUntil(mouseUps);
         })
         .concatAll()
@@ -68,24 +84,41 @@ export class DragBase {
             this.moveX = e.offsetX - this.offsetX;
             this.moveY = e.offsetY - this.offsetY;
             // move가 되는 동안에 d3 rect를 그려준다.
-            const s_box: any = target.select('.selection_box');
-            if ( !s_box.empty()) {
-                s_box.attr('width', this.moveX);
-                s_box.attr('height', this.moveY);
-            }
-
+            this.updateDisplay();
         });
 
         mouseUps.subscribe( (e: any) => {
             this.moveX = e.offsetX - 1;
             this.moveY = e.offsetY - 1;
             const dragable: Dragable = new Dragable(this.offsetX, this.offsetY, this.moveX, this.moveY);
-            const s_box: any = target.select('.selection_box');
+            const s_box: any = this.target.select('.selection_box');
+            console.log('1. mouse up!');
             if (s_box[0][0]) {
-                dispatchEvent(new CustomEvent(DragBase.DRAG_END, {
-                    detail: dragable
-                }));
+                console.log('2. mouse up!');
+                const event = new ChartEventData( e, dragable, ChartEvent.DRAG_END );
+                this.dispatchEvent( ChartEvent.PLUGIN_EVENT, event );
             }
         });
+    }
+
+    updateDisplay(width?: number, height?: number) {
+        const s_box: any = this.target.select('.selection_box');
+        if ( !s_box.empty()) {
+            const ytarget = this.target.select('g.background');
+            const yposition = d3.transform(ytarget.attr('transform')).translate;
+
+            if (this.direction === 'horizontal') {
+                s_box.attr('y', yposition[1]);
+                s_box.attr('height', ytarget.node().getBoundingClientRect().height);
+                s_box.attr('width', this.moveX);
+            } else if (this.direction === 'vertical') {
+                s_box.attr('x', yposition[0]);
+                s_box.attr('width', ytarget.node().getBoundingClientRect().width);
+                s_box.attr('height', this.moveY);
+            } else {
+                s_box.attr('width', this.moveX);
+                s_box.attr('height', this.moveY);
+            }
+        }
     }
 }

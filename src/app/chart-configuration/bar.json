@@ -77,5 +77,11 @@
              "visible": true,
              "displayName": "Category"
          }
+    ],
+    "plugin": [
+        {
+            "pluginClass": "DragBase",
+            "direction": "vertical"
+        }
     ]
 }

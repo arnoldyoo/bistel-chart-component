@@ -2,6 +2,7 @@ import { SeriesConditions } from './../../model/index';
 import { IDisplay } from './../i-display.interface';
 import { SeriesConfiguration } from '../../model/index';
 import { Axe } from '../../common/axis/index';
+import { Dragable } from '../plugin/drag-selector/model/drag-model';
 
 export abstract class Series implements IDisplay {
 
@@ -234,6 +235,10 @@ export abstract class Series implements IDisplay {
         if (this.data) {
             this.generatePosition();
         }
+    }
+
+    selectAll(event: Dragable) {
+
     }
 
 }

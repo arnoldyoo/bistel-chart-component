@@ -3,6 +3,8 @@
  */
 
 import { ChartException } from './error/index';
+import { ChartPlugin } from './plugin/chart-plugin';
+import { DragBase } from './plugin/index';
 
 export class PluginCreator {
     plugins: any;
@@ -14,6 +16,7 @@ export class PluginCreator {
     _settingPlugins() {
         this.plugins = {
             // PieSet: PieSet
+            DragBase: DragBase
         };
     }
 

@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
     chartinfo: any;
     axis: any;
     series: any;
+    plugin: any;
     legendinfo: LegendConfiguration;
     data: Array<any>;
     chartTypeClick$: Subject<string> = new Subject();
@@ -56,8 +57,8 @@ export class AppComponent implements OnInit {
         // default chart configuration setting
 
         this.chartinfo = {
-            selector: '#div_01',
-            uid: 'chart01_uid',
+            selector: '#chart-div',
+            uid: 'chart-div_uid',
             size: {
                 width: 800,
                 height: 400
@@ -127,6 +128,12 @@ export class AppComponent implements OnInit {
                 }
             }
         ];
+        this.plugin = [
+            {
+                pluginClass: 'DragBase',
+                direction: 'horizontal'
+            }
+        ];
         this.series = [
             {
                 seriesClass: 'ColumnSeries',
@@ -166,6 +173,7 @@ export class AppComponent implements OnInit {
         this.chartinfo = this.currentConfiguration.chart;
         this.series = this.currentConfiguration.series;
         this.axis = this.currentConfiguration.axis;
+        this.plugin = this.currentConfiguration.plugin;
 
         this.legendinfo = {
             selector: '#div_02',

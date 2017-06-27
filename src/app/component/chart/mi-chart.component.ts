@@ -7,7 +7,7 @@ import { ChartEvent } from '../../common/event/index';
     selector: 'mi-chart',
     templateUrl: 'mi-chart.component.html',
     styles: [`
-        #div_01 {
+        .div01 {
             border: 1px solid black;
             -webkit-user-select: none;
             -khtml-user-select: none;
@@ -40,6 +40,7 @@ export class ChartComponent implements OnInit, OnChanges {
     @Input() chartinfo: any;
     @Input() series: any;
     @Input() axis: any;
+    @Input() plugin: any;
     @Input() set data(value: Array<any>) {
         if (this.baseChart) {
             this.baseChart.dataProvider = value;
@@ -52,11 +53,17 @@ export class ChartComponent implements OnInit, OnChanges {
 
     baseChart: ChartBase;
     chartConfig: any;
+    chartSelector: string;
 
-    constructor() { }
+    constructor() {
+        // unique id create
+        this.chartSelector = this.guid();
+    }
 
     ngOnInit() {
-        this._setChartJson(this.chartinfo, this.axis, this.series);
+        this.chartinfo.selector = this.chartinfo.uid = '#' + this.chartSelector;
+        document.getElementById('chart-div').id = this.chartSelector;
+        this._setChartJson(this.chartinfo, this.axis, this.series, this.plugin);
         this._drawChart();
         dispatchEvent(new Event('resize'));
     }
@@ -67,7 +74,8 @@ export class ChartComponent implements OnInit, OnChanges {
             this.chartinfo = value.chartinfo.currentValue;
             this.axis = value.axis.currentValue;
             this.series = value.series.currentValue;
-            this._setChartJson(this.chartinfo, this.axis, this.series);
+            this.chartinfo.selector = this.chartinfo.uid = '#' + this.chartSelector;
+            this._setChartJson(this.chartinfo, this.axis, this.series, this.plugin);
             this._drawChart();
             window.dispatchEvent(new Event('resize'));
 
@@ -85,15 +93,18 @@ export class ChartComponent implements OnInit, OnChanges {
     @HostListener('window:resize', ['$event'])
     onResize(event) {
         // const elem = window.document.getElementById('div_01');
-        const elem = event.target.document.getElementById('div_01');
-        this.baseChart.updateDisplay(elem.offsetWidth, elem.offsetHeight);
+        const elem = event.target.document.getElementById(this.chartSelector);
+        if (this.baseChart) {
+            this.baseChart.updateDisplay(elem.offsetWidth, elem.offsetHeight);
+        }
     }
 
-    _setChartJson(chartinfo: any, axis: any, series: any) {
+    _setChartJson(chartinfo: any, axis: any, series: any, plugin?: any) {
         this.chartConfig = {};
         this.chartConfig.chart = chartinfo;
         this.chartConfig.axis = axis;
         this.chartConfig.series = series;
+        this.chartConfig.plugin = plugin;
     }
 
     _itemClick(event: CustomEvent) {
@@ -115,5 +126,15 @@ export class ChartComponent implements OnInit, OnChanges {
         if (this.mouseout && this.mouseout.emit) {
             this.mouseout.emit(event);
         }
+    }
+
+    private guid() {
+        return 'mi-chart-' + this.s4() + '-' + this.s4();
+    }
+
+    private s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
     }
 }

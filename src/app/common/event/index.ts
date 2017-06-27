@@ -1,3 +1,3 @@
 export { EventDispatcher } from './event-dispatcher';
 export { ChartEvent } from './chart-event.constant';
-export { IChartEvent, ChartEventData } from './chart-event.interface';
+export { IChartEvent, ChartEventData, EventMap } from './chart-event.interface';
