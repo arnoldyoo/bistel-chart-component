@@ -449,7 +449,6 @@ export class ChartBase implements IDisplay {
         .on('mousemove', () => {
             const cX: number = (d3.event.offsetX - this.margin.left);
             const cY: number = (d3.event.offsetY - this.margin.top);
-            const isObj = d3.select(d3.event.target)[0][0].__data__? 'true': 'false';
             // console.log('move = >', cX, cY, isObj, d3.select(d3.event.target), d3.select(d3.event.target)[0][0].__data__);
         })
         .on('remove', () => {
@@ -459,12 +458,12 @@ export class ChartBase implements IDisplay {
         // this.addEventListener(DragBase.DRAG_END, this._dragEnd);
     };
 
-    _pluginEvent(event: ChartEventData) {
+    _pluginEvent = (event: ChartEventData) => {
         console.log('_pluginEvent : ', event, this);
         if (event.type === ChartEvent.DRAG_END) {
             // this._dragEnd(event);
         }
-    }
+    };
 
     _dragEnd(event: any) {
         const position: any = event.data;
