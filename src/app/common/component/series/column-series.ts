@@ -261,21 +261,32 @@ export class ColumnSeries extends Series {
         if (this.manual !== 'multiselection') {
             target.selectAll('.selected').style('fill-opacity', 0.3).classed('selected', false);
         }
+        console.log('unselectedItem : ', target);
         target.style('fill-opacity', 0.3);
     }
 
     unselectAll() {
         super.unselectAll();
         this.target.selectAll('rect').style('fill-opacity', null).classed('selected', false);
+
         const seriesEl = d3.select(this.target[0][0].parentElement);
         seriesEl.style('fill-opacity', 1);
+        this.target.style('fill-opacity', 1);
     }
 
     selectAll(event: Dragable) {
-        const targetElments = this.target.selectAll('rect');
-        const thatPointx = targetElments.attr('x');
-        const thatPointy = targetElments.attr('y');
-        console.log('column series selectAll ==> ', targetElments, thatPointx, thatPointy, event );
+        const targetElements: any = this.target.selectAll('rect');
+        // const thatPointx = targetElements.attr('x');
+        // const thatPointy = targetElements.attr('y');
+        // console.log('column series selectAll ==> ', targetElements, thatPointx, thatPointy, event );
+        this._unselectedItem(this.target);
+        targetElements[0].map((rectTemp: any) => {
+            const rect: any = d3.select(rectTemp);
+            const rectX: number = rect.attr('x');
+            if (rectX > (event.startX - 50) && rectX < (event.endX - 50)) {
+                this._selectedItem(rect);
+            }
+        });
     }
 }
 

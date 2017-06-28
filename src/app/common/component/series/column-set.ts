@@ -2,6 +2,7 @@ import { ColumnSeries } from './column-series';
 import { IDisplay } from './../../i-display.interface';
 import { Axe } from './../../axis/index';
 import { SeriesConfiguration } from './../../../model/index';
+import { Dragable } from '../../plugin/drag-selector/model/drag-model';
 
 export class ColumnSet implements IDisplay {
 
@@ -144,6 +145,12 @@ export class ColumnSet implements IDisplay {
     unselectAll() {
         for ( let i = 0; i < this.series.length; i++ ) {
             this.series[i].unselectAll();
+        }
+    }
+
+    selectAll(event: Dragable) {
+        for ( let i = 0; i < this.series.length; i++ ) {
+            this.series[i].selectAll(event);
         }
     }
 }

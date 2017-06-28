@@ -2,6 +2,7 @@ import { BarSeries } from './bar-series';
 import { IDisplay } from './../../i-display.interface';
 import { Axe } from './../../axis/index';
 import { SeriesConfiguration } from './../../../model/index';
+import { Dragable } from '../../plugin/drag-selector/model/drag-model';
 
 export class BarSet implements IDisplay {
 
@@ -145,6 +146,12 @@ export class BarSet implements IDisplay {
     unselectAll() {
         for ( let i = 0; i < this.series.length; i++ ) {
             this.series[i].unselectAll();
+        }
+    }
+
+    selectAll(event: Dragable) {
+        for ( let i = 0; i < this.series.length; i++ ) {
+            this.series[i].selectAll(event);
         }
     }
 }

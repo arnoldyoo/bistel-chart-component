@@ -407,12 +407,13 @@ export class ChartBase implements IDisplay {
     }
 
     _addEvent() {
-        this.target.on('click', () => {
+        this.target.on('mousedown', () => {
             if (d3.event.target) {
+                console.log('click');
                 const currentEvent: ChartEventData = new ChartEventData(
                     d3.event,
                     d3.select(d3.event.target)[0][0].__data__);
-
+                console.log(currentEvent.data);
                 if (currentEvent.data === undefined) {
                     this.selectedItem = [];
                     this.series.map((s) => {
@@ -461,7 +462,7 @@ export class ChartBase implements IDisplay {
     _pluginEvent = (event: ChartEventData) => {
         console.log('_pluginEvent : ', event, this);
         if (event.type === ChartEvent.DRAG_END) {
-            // this._dragEnd(event);
+            this._dragEnd(event);
         }
     };
 
