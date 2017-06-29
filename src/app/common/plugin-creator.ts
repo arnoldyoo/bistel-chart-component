@@ -30,13 +30,13 @@ export class PluginCreator {
     }
 
     // name: string ,config: any, target: any, width: number, height: number, margin: Array<any>, domain: any
-    pluginFactory(name: string, pluginConfiguration: any): any {
+    pluginFactory(name: string, target: any, pluginConfiguration: any): any {
         const plugin: any = this._getPlugin(name);
         let classInstance: any;
         if (!plugin) {
             throw new ChartException(404, {message: `not found ${name} plugin `});
         }
-        classInstance = new plugin(pluginConfiguration);
+        classInstance = new plugin(target, pluginConfiguration);
         return classInstance;
     }
 

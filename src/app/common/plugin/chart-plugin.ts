@@ -7,12 +7,26 @@ export abstract class ChartPlugin implements IDisplay {
     private _width: number;
     private _height: number;
     protected _eventMap: EventMap = {};
+    protected _target: any;
 
-
-    constructor( config?: any ) {
+    constructor( target?: any, config?: any ) {
         if (config) {
             this.configuration = config;
         }
+        if (target) {
+            this.target = target;
+        }
+    }
+
+    set target(value: any) {
+        this._target = value;
+        if (this._target) {
+            this._addEvent(this._target);
+        }
+    }
+
+    get target() {
+        return this._target;
     }
 
     set width(value: number) {
@@ -41,6 +55,9 @@ export abstract class ChartPlugin implements IDisplay {
 
     get events() {
         return [];
+    }
+
+    protected _addEvent(target) {
     }
 
     addEventListener(type: string, method: any) {
