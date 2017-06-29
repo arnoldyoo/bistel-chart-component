@@ -11,6 +11,9 @@ export class DragBase extends ChartPlugin {
     moveX = 0;
     moveY = 0;
 
+    private marginLeft = 0;
+    private marginTop = 0;
+
     private _direction = 'horizontal'; // default : horizontal, etc : vertical, both
 
     set direction(value: string) {
@@ -30,6 +33,11 @@ export class DragBase extends ChartPlugin {
         if (configuration) {
             this.direction = configuration.direction;
         }
+        // get parent group element translate for setup margin
+        const ytarget = this.target.select('g.background');
+        const yposition = d3.transform(ytarget.attr('transform')).translate;
+        this.marginTop = yposition[1];
+        this.marginLeft = yposition[0];
     }
 
     _addEvent(target) {
@@ -75,12 +83,18 @@ export class DragBase extends ChartPlugin {
         mouseUps.subscribe( (e: any) => {
             this.moveX = e.offsetX - 1;
             this.moveY = e.offsetY - 1;
-            const dragable: Dragable = new Dragable(this.offsetX, this.offsetY, this.moveX, this.moveY);
             const s_box: any = this.target.select('.selection_box');
             console.log('1. mouse up!');
             if (s_box[0][0]) {
                 console.log('2. mouse up!');
-                const event = new ChartEventData( e, dragable, ChartEvent.DRAG_END );
+                const targetBox = d3.select(s_box[0][0]);
+                const startX = +targetBox.attr('x');
+                const startY = +targetBox.attr('y');
+                const moveX = startX + (+targetBox.attr('width'));
+                const moveY = startY + (+targetBox.attr('height'));
+                // minus margin position for original position
+                const dragEvent: Dragable = new Dragable(startX - this.marginLeft, startY - this.marginTop, moveX - this.marginLeft, moveY - this.marginTop);
+                const event = new ChartEventData( e, dragEvent, ChartEvent.DRAG_END );
                 this.dispatchEvent( ChartEvent.PLUGIN_EVENT, event );
             }
         });
@@ -91,18 +105,19 @@ export class DragBase extends ChartPlugin {
         if ( !s_box.empty()) {
             const ytarget = this.target.select('g.background');
             const yposition = d3.transform(ytarget.attr('transform')).translate;
-
+            const mX = (this.moveX < 0 ? 0 : this.moveX);
+            const mY = (this.moveY < 0 ? 0 : this.moveY);
             if (this.direction === 'horizontal') {
-                s_box.attr('y', yposition[1]);
+                s_box.attr('y', this.marginTop);
                 s_box.attr('height', ytarget.node().getBoundingClientRect().height);
-                s_box.attr('width', this.moveX);
+                s_box.attr('width', mX);
             } else if (this.direction === 'vertical') {
-                s_box.attr('x', yposition[0]);
+                s_box.attr('x', this.marginLeft);
                 s_box.attr('width', ytarget.node().getBoundingClientRect().width);
-                s_box.attr('height', this.moveY);
+                s_box.attr('height', mY);
             } else {
-                s_box.attr('width', this.moveX);
-                s_box.attr('height', this.moveY);
+                s_box.attr('width', mX);
+                s_box.attr('height', mY);
             }
         }
     }

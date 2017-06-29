@@ -12,6 +12,7 @@
             "top": 50,
             "bottom": 50
         },
+        "selectionMode": "multiselection",
         "data": null
     },
     "axis": [

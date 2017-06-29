@@ -284,7 +284,9 @@ export class ColumnSeries extends Series {
         targetElements[0].map((rectTemp: any) => {
             const rect: any = d3.select(rectTemp);
             const rectX: number = rect.attr('x');
-            if (rectX > (event.startX - 50) && rectX < (event.endX - 50)) {
+            const rectWidth: number = Math.round(rect.attr('width'));
+            if (rectX > (event.startX - rectWidth) && rectX < event.endX) {
+                // console.log('selected :', rectX, rectWidth, (event.startX - 50), (event.endX - 50));
                 this._selectedItem(rect);
             }
         });
