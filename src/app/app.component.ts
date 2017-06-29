@@ -69,6 +69,7 @@ export class AppComponent implements OnInit {
                 top: 50,
                 bottom: 50
             },
+            selectionMode: 'multiselection', // ['normal', 'zoom', 'multiselection'
             data: this.data
         };
         this.axis = [

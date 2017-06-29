@@ -7,6 +7,7 @@ import { ChartEvent, ChartEventData, EventMap } from './event/index';
 import { Series } from './series/index';
 import { DragBase } from './plugin/index';
 import { PluginCreator } from './plugin-creator';
+import { Dragable } from './plugin/drag-selector/model/drag-model';
 
 export class ChartBase implements IDisplay {
 
@@ -40,9 +41,6 @@ export class ChartBase implements IDisplay {
     private OSName = 'none';
     private _isCtrlKey: boolean;
 
-
-    private _dragEvent: DragBase;
-
     constructor( config?: any ) {
         this._instanceLoader = new InstanceLoader();
         this._pluginLoader = new PluginCreator();
@@ -56,6 +54,9 @@ export class ChartBase implements IDisplay {
         this._configuration = value;
         if (this._configuration) {
             this.manual = 'normal';
+            if ( this._configuration.chart.selectionMode ) {
+                this.manual = this._configuration.chart.selectionMode;
+            }
             if (!this._configuration.chart.data) {
                 this._setDefaultData();
             } else {
@@ -411,7 +412,6 @@ export class ChartBase implements IDisplay {
     }
 
     _addEvent() {
-        /*
         this.target.on('mousedown', () => {
             if (d3.event.target) {
                 console.log('click');
@@ -460,13 +460,11 @@ export class ChartBase implements IDisplay {
         .on('remove', () => {
             // this._itemClick(currentEvent);
         });
-        */
 
         // this.addEventListener(DragBase.DRAG_END, this._dragEnd);
     };
 
     _pluginEvent = (event: ChartEventData) => {
-        console.log('_pluginEvent : ', event, this);
         if (event.type === ChartEvent.DRAG_END) {
             this._dragEnd(event);
         }
@@ -474,17 +472,10 @@ export class ChartBase implements IDisplay {
 
     _dragEnd(event: any) {
         const position: any = event.data;
-        // dispatchEvent(new CustomEvent(ChartEvent.SELECT_ALL_ITEMS, event));
-        console.log('_dragEnd', position.startX, position.startY, position.endX, position.endY);
-        this.series.map( (d) => {
-            <Series>d.selectAll(position);
-        });
-    }
-
-    _afterEvent() {
+        console.log(this._current_manual, '_dragEnd', position.startX, position.startY, position.endX, position.endY);
         switch (this._current_manual) {
-            case 'selection' :
-                this._dragSelection();
+            case 'multiselection' :
+                this._dragSelection(position);
                 break;
             case 'zoom' :
                 this._zoomSelection();
@@ -495,8 +486,10 @@ export class ChartBase implements IDisplay {
         }
     }
 
-    _dragSelection() {
-
+    _dragSelection(position: Dragable) {
+        this.series.map( (d) => {
+            <Series>d.selectAll(position);
+        });
     }
 
     _zoomSelection() {
