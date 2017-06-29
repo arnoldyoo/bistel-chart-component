@@ -241,7 +241,12 @@ export class ColumnSeries extends Series {
                 const targetEl = d3.select(d3.event.target);
                 const parentEl = targetEl[0][0].parentElement;
                 const seriesEl = d3.select(parentEl.parentElement);
+                const gEl = seriesEl.selectAll('g');
                 this._unselectedItem(seriesEl);
+
+                gEl[0].map(g => {
+                    this._unselectedItem(d3.select(g));
+                });
                 this._selectedItem(targetEl);
             })
             .on('mousemove', d => {
@@ -261,7 +266,6 @@ export class ColumnSeries extends Series {
         if (this.manual !== 'multiselection') {
             target.selectAll('.selected').style('fill-opacity', 0.3).classed('selected', false);
         }
-        console.log('unselectedItem : ', target);
         target.style('fill-opacity', 0.3);
     }
 
@@ -276,9 +280,6 @@ export class ColumnSeries extends Series {
 
     selectAll(event: Dragable) {
         const targetElements: any = this.target.selectAll('rect');
-        // const thatPointx = targetElements.attr('x');
-        // const thatPointy = targetElements.attr('y');
-        // console.log('column series selectAll ==> ', targetElements, thatPointx, thatPointy, event );
         this._unselectedItem(this.target);
         targetElements[0].map((rectTemp: any) => {
             const rect: any = d3.select(rectTemp);
