@@ -1,5 +1,6 @@
 import { Series } from '../../series/index';
 import { SeriesConfiguration } from './../../../model/index';
+import { Dragable } from '../../plugin/drag-selector/model/drag-model';
 
 export class BarSeries extends Series {
 
@@ -251,6 +252,21 @@ export class BarSeries extends Series {
         const seriesEl = d3.select(this.target[0][0].parentElement);
         seriesEl.style('fill-opacity', 1);
         // seriesEl.style('stroke', 'none');
+    }
+
+    selectAll(event: Dragable) {
+        const targetElements: any = this.target.selectAll('rect');
+        // const thatPointx = targetElements.attr('x');
+        // const thatPointy = targetElements.attr('y');
+        // console.log('column series selectAll ==> ', targetElements, thatPointx, thatPointy, event );
+        this._unselectedItem(this.target);
+        targetElements[0].map((rectTemp: any) => {
+            const rect: any = d3.select(rectTemp);
+            const rectY: number = rect.attr('y');
+            if (rectY > (event.startY - 50) && rectY < (event.endY - 50)) {
+                this._selectedItem(rect);
+            }
+        });
     }
 
 };
