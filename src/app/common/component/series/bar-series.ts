@@ -224,7 +224,12 @@ export class BarSeries extends Series {
                 const targetEl = d3.select(d3.event.target);
                 const parentEl = targetEl[0][0].parentElement;
                 const seriesEl = d3.select(parentEl.parentElement);
+                const gEl = seriesEl.selectAll('g');
                 this._unselectedItem(seriesEl);
+
+                gEl[0].map(g => {
+                    this._unselectedItem(d3.select(g));
+                });
                 this._selectedItem(targetEl);
             })
             .on('mousemove', d => {
@@ -251,14 +256,11 @@ export class BarSeries extends Series {
         this.target.selectAll('rect').style('fill-opacity', null).classed('selected', false);
         const seriesEl = d3.select(this.target[0][0].parentElement);
         seriesEl.style('fill-opacity', 1);
-        // seriesEl.style('stroke', 'none');
+        this.target.style('fill-opacity', 1);
     }
 
     selectAll(event: Dragable) {
         const targetElements: any = this.target.selectAll('rect');
-        // const thatPointx = targetElements.attr('x');
-        // const thatPointy = targetElements.attr('y');
-        // console.log('column series selectAll ==> ', targetElements, thatPointx, thatPointy, event );
         this._unselectedItem(this.target);
         targetElements[0].map((rectTemp: any) => {
             const rect: any = d3.select(rectTemp);
