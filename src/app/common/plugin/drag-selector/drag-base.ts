@@ -12,7 +12,6 @@ export class DragBase extends ChartPlugin {
     moveY = 0;
 
     private _direction = 'horizontal'; // default : horizontal, etc : vertical, both
-    private _target: any;
 
     set direction(value: string) {
         this._direction = value;
@@ -22,32 +21,18 @@ export class DragBase extends ChartPlugin {
         return this._direction;
     }
 
-    set target(value: any) {
-        this._target = value;
-        if (this._target) {
-            this._addEvent(this._target);
-        }
-    }
-
-    get target() {
-        return this._target;
-    }
-
     get events() {
         return [ChartEvent.DRAG_START, ChartEvent.DRAG_MOVE, ChartEvent.DRAG_END ];
     }
 
     constructor(target: any, configuration?: any) {
-        super(configuration);
+        super(target, configuration);
         if (configuration) {
             this.direction = configuration.direction;
         }
-        if (target) {
-            this.target = target;
-        }
     }
 
-    private _addEvent(target) {
+    _addEvent(target) {
         const mouseDowns = Observable.fromEvent(target[0][0], 'mousedown');
         const mouseUps = Observable.fromEvent(target[0][0], 'mouseup');
         const mouseMoves = Observable.fromEvent<MouseEvent>(target[0][0], 'mousemove');

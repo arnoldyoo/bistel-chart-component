@@ -6,6 +6,7 @@ import { ChartException } from '../common/error/index';
 import { ChartEvent, ChartEventData, EventMap } from './event/index';
 import { Series } from './series/index';
 import { DragBase } from './plugin/index';
+import { PluginCreator } from './plugin-creator';
 
 export class ChartBase implements IDisplay {
 
@@ -31,6 +32,7 @@ export class ChartBase implements IDisplay {
     private _domain: any;
     private _dataProvider: Array<any> = [];
     private _instanceLoader: InstanceLoader;
+    private _pluginLoader: PluginCreator;
     private _isStacked = false; // special series ( data parse )
     private _eventMap: EventMap = {}; // chart event list
     private _manuals = ['normal', 'zoom', 'multiselection'];
@@ -43,6 +45,7 @@ export class ChartBase implements IDisplay {
 
     constructor( config?: any ) {
         this._instanceLoader = new InstanceLoader();
+        this._pluginLoader = new PluginCreator();
         if (config) {
             this.configuration = config;
             this._keyBind();
@@ -377,7 +380,8 @@ export class ChartBase implements IDisplay {
         const tempList = <any>[];
         if (pluginList && pluginList.length) {
             pluginList.map((plugin, i) => {
-                const pluginObj = new DragBase(this.target, plugin);
+                // const pluginObj = new DragBase(this.target, plugin);
+                const pluginObj = this._pluginLoader.pluginFactory(plugin.pluginClass, this.target, plugin);
                 pluginObj.addEventListener(ChartEvent.PLUGIN_EVENT, this._pluginEvent);
                 tempList.push(pluginObj);
             });
@@ -407,6 +411,7 @@ export class ChartBase implements IDisplay {
     }
 
     _addEvent() {
+        /*
         this.target.on('mousedown', () => {
             if (d3.event.target) {
                 console.log('click');
@@ -455,6 +460,7 @@ export class ChartBase implements IDisplay {
         .on('remove', () => {
             // this._itemClick(currentEvent);
         });
+        */
 
         // this.addEventListener(DragBase.DRAG_END, this._dragEnd);
     };
@@ -464,7 +470,7 @@ export class ChartBase implements IDisplay {
         if (event.type === ChartEvent.DRAG_END) {
             this._dragEnd(event);
         }
-    };
+    }
 
     _dragEnd(event: any) {
         const position: any = event.data;
