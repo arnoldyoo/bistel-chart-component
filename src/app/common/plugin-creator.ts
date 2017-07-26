@@ -3,8 +3,8 @@
  */
 
 import { ChartException } from './error/index';
-import { ChartPlugin } from './plugin/chart-plugin';
 import { DragBase } from './plugin/index';
+import { TextLabel } from './plugin/component-plugin/text-label';
 
 export class PluginCreator {
     plugins: any;
@@ -15,8 +15,8 @@ export class PluginCreator {
 
     _settingPlugins() {
         this.plugins = {
-            // PieSet: PieSet
-            DragBase: DragBase
+            DragBase: DragBase,
+            TextLabel: TextLabel
         };
     }
 
@@ -29,7 +29,7 @@ export class PluginCreator {
         }
     }
 
-    // name: string ,config: any, target: any, width: number, height: number, margin: Array<any>, domain: any
+    // name: string ,config: any, target: any, pluginConfiguration: any
     pluginFactory(name: string, target: any, pluginConfiguration: any): any {
         const plugin: any = this._getPlugin(name);
         let classInstance: any;

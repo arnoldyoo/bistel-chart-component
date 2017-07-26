@@ -1,55 +1,18 @@
 import { Series } from '../../series/index';
 import { SeriesConfiguration } from './../../../model/index';
-import { Dragable } from '../../plugin/drag-selector/model/drag-model';
+import { Dragable } from '../../plugin/index';
 
 export class BarSeries extends Series {
 
-    _rectWidthDimensions: number;
-    _rectHeightDimensions: number;
-    _seriesCnt: number;
-    _seriesIndex: number;
-    _type: string;
-    _stackField: Array<string>;
-    _seriesWidth: number;
+    private _type: string;
+    private _stackField: Array<string>;
 
     constructor( seriesParam: SeriesConfiguration ) {
         super( seriesParam );
-        this._seriesIndex = 0;
-        this._seriesCnt = 1;
-        this._rectWidthDimensions = 0;
-        this._rectHeightDimensions = 0;
-    }
-
-    set rectWidthDimensions(value: number) {
-        this._rectWidthDimensions = value;
-    }
-
-    get rectWidthDimensions(): number {
-        return this._rectWidthDimensions;
-    }
-
-    set rectHeightDimensions(value: number) {
-        this._rectHeightDimensions = value;
-    }
-
-    get rectHeightDimensions(): number {
-        return this._rectHeightDimensions;
-    }
-
-    set seriesCnt(value: number) {
-        this._seriesCnt = value;
-    }
-
-    get seriesCnt(): number {
-        return this._seriesCnt;
-    }
-
-    set seriesIndex(value: number) {
-        this._seriesIndex = value;
-    }
-
-    get seriesIndex(): number {
-        return this._seriesIndex;
+        this.seriesIndex = 0;
+        this.seriesCnt = 1;
+        this.rectWidthDimensions = 0;
+        this.rectHeightDimensions = 0;
     }
 
     set type(value: string) {
@@ -100,39 +63,50 @@ export class BarSeries extends Series {
         this.target.attr('data-legend', () => {
             return this.displayName;
         });
-        const rectElement: any = this.target.select(`.${this.displayName + this._index}`);
+        let rectElement: any = this.target.select(`.${this.displayName + this.index}`);
+
         if (!rectElement[0][0]) {
-            this.createItem();
+            rectElement = this.createItem();
         } else {
             rectElement.datum(this.data);
         }
-        rectElement.attr('x', this.x)
-                   .attr('y', this.y)
-                   .attr('width', this.width)
-                   .attr('height', this.height);
+        rectElement.attr('y', this.y);
+        rectElement.attr('height', this.height);
+
+        this.setTransition(rectElement, 500)
+                    .attr('x', this.x)
+                    .attr('y', this.y)
+                    .attr('width', this.width)
+                    .attr('height', this.height)
+                    .each('end', (d: any) => {
+                        super.createLabel('right', rectElement);
+                    });
         this.target.style('fill', this.color);
     }
 
     createItem() {
+        const min: number = this.xAxe.scale.domain()[0];
         const thatElement: any = this.target.datum(this.data)
                             .append('rect')
-                            .attr('class', this.displayName + this._index)
-                            .attr('value', this._data[this._xField]);
+                            .attr('x', this.xAxe.scale(min))
+                            .attr('width', 0)
+                            .attr('class', this.displayName + this.index)
+                            .attr('value', this.data[this.xField]);
         this.addEvent(thatElement);
+        return thatElement;
     }
 
     _normal() {
         if (this.xAxe) {
-            const min = this.xAxe.scale.domain()[0];
-            const max = this.xAxe.scale.domain()[1];
-            const targetvalue = this.data[this.xField];
+            const min: number = this.xAxe.scale.domain()[0];
+            const targetValue: number = this.data[this.xField];
             if (min < 0) {
-                if (targetvalue < 0) {
+                if (targetValue < 0) {
                     this.x = this.xAxe.scale(this.data[this.xField]);
-                    this.width = this.xAxe.scale(0) - this.xAxe.scale(targetvalue);
+                    this.width = this.xAxe.scale(0) - this.xAxe.scale(targetValue);
                 } else {
                     this.x = this.xAxe.scale(0);
-                    this.width = this.xAxe.scale(targetvalue + min);
+                    this.width = this.xAxe.scale(targetValue + min);
                 }
 
             } else {
@@ -149,15 +123,14 @@ export class BarSeries extends Series {
     _stacked() {
         if (this.xAxe) {
             const min: number = this.xAxe.scale.domain()[0];
-            const max: number = this.xAxe.scale.domain()[1];
-            const targetvalue = this.data[this.xField];
-            let compareValue = 0;
-            let currentField = '';
-            if (targetvalue < 0) {
+            const targetValue: number = this.data[this.xField];
+            let compareValue: number = 0;
+            let currentField: string = '';
+            if (targetValue < 0) {
                 if (this.seriesIndex > 0) {
                     for (let i = 0; i < this.seriesIndex; i++) {
                         currentField = this.stackField[i];
-                        const compareTmpValue = this._data[currentField];
+                        const compareTmpValue = this.data[currentField];
                         if (compareTmpValue < 0) {
                             compareValue += compareTmpValue;
                         }
@@ -168,19 +141,19 @@ export class BarSeries extends Series {
                 } else {
                     this.x = this.xAxe.scale(this.data[this.xField]);
                 }
-                this.width = this.xAxe.scale(0) - this.xAxe.scale(targetvalue);
+                this.width = this.xAxe.scale(0) - this.xAxe.scale(targetValue);
             } else {
                 if (this.seriesIndex > 0) {
                     for (let i = 0; i < this.seriesIndex; i++) {
                         currentField = this.stackField[i];
-                        const compareTmpValue = this._data[currentField];
+                        const compareTmpValue: number = this.data[currentField];
                         if ( compareTmpValue > 0) {
                             compareValue += compareTmpValue;
                         }
                     }
                 }
                 this.x = this.xAxe.scale.range()[0] + this.xAxe.scale(compareValue);
-                this.width = this.xAxe.scale(targetvalue + min);
+                this.width = this.xAxe.scale(targetValue + min);
             }
 
         }
@@ -195,16 +168,15 @@ export class BarSeries extends Series {
             this.rectHeightDimensions = (this.yAxe.itemDimensions / this.seriesCnt);
         }
         if (this.xAxe) {
-            const min = this.xAxe.scale.domain()[0];
-            const max = this.xAxe.scale.domain()[1];
-            const targetvalue = this.data[this.xField];
+            const min: number = this.xAxe.scale.domain()[0];
+            const targetValue: number = this.data[this.xField];
             if (min < 0) {
-                if (targetvalue < 0) {
+                if (targetValue < 0) {
                     this.x = this.xAxe.scale(this.data[this.xField]);
-                    this.width = this.xAxe.scale(0) - this.xAxe.scale(targetvalue);
+                    this.width = this.xAxe.scale(0) - this.xAxe.scale(targetValue);
                 } else {
                     this.x = this.xAxe.scale(0);
-                    this.width = this.xAxe.scale(targetvalue + min);
+                    this.width = this.xAxe.scale(targetValue + min);
                 }
             } else {
                 this.x = 0;
@@ -218,21 +190,20 @@ export class BarSeries extends Series {
     }
 
     addEvent(element: any) {
-        super.addEvent(element);
         element
-            .on('click', (d) => {
-                const targetEl = d3.select(d3.event.target);
-                const parentEl = targetEl[0][0].parentElement;
-                const seriesEl = d3.select(parentEl.parentElement);
-                const gEl = seriesEl.selectAll('g');
-                this._unselectedItem(seriesEl);
+            .on('click', () => {
+                const targetEl: any = d3.select(d3.event.target);
+                const parentEl: any = targetEl[0][0].parentElement;
+                const seriesEl: any = d3.select(parentEl.parentElement);
+                const gEl: any = seriesEl.selectAll('g');
 
-                gEl[0].map(g => {
+                this._unselectedItem(seriesEl);
+                gEl[0].map((g: any) => {
                     this._unselectedItem(d3.select(g));
                 });
                 this._selectedItem(targetEl);
             })
-            .on('mousemove', d => {
+            .on('mousemove', () => {
                 // const cX = (d3.event.offsetX);
                 // const cY = (d3.event.offsetY);
                 // console.log('element click ==> x :', cX, ' , y : ', cY);
@@ -251,10 +222,11 @@ export class BarSeries extends Series {
         target.style('fill-opacity', 0.3);
     }
 
+
     unselectAll() {
         super.unselectAll();
         this.target.selectAll('rect').style('fill-opacity', null).classed('selected', false);
-        const seriesEl = d3.select(this.target[0][0].parentElement);
+        const seriesEl: any = d3.select(this.target[0][0].parentElement);
         seriesEl.style('fill-opacity', 1);
         this.target.style('fill-opacity', 1);
     }
@@ -262,13 +234,17 @@ export class BarSeries extends Series {
     selectAll(event: Dragable) {
         const targetElements: any = this.target.selectAll('rect');
         this._unselectedItem(this.target);
+        const selectedItems: Array<any> = [];
         targetElements[0].map((rectTemp: any) => {
             const rect: any = d3.select(rectTemp);
             const rectY: number = rect.attr('y');
-            if (rectY > (event.startY - 50) && rectY < (event.endY - 50)) {
+            const rectHeight: number = Math.round(rect.attr('height'));
+            if (rectY > (event.startY - rectHeight) && rectY < event.endY) {
                 this._selectedItem(rect);
+                selectedItems.push(rect);
             }
         });
+        this.target[0][0].nearestViewportElement.dispatchEvent( new CustomEvent('select_all_items', {detail: selectedItems}));
     }
+}
 
-};

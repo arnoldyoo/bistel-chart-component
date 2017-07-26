@@ -3,7 +3,7 @@ import { SeriesConfiguration } from './../../../model/index';
 
 export class LineSeries extends Series {
 
-    line: any;
+    private _line: any;
 
     constructor( seriesParam: SeriesConfiguration ) {
         super( seriesParam );
@@ -20,31 +20,32 @@ export class LineSeries extends Series {
         super.generatePosition();
         // tslint:disable-next-line:comment-format
         // setup x, y, width, height
-        this.line = d3.svg.line()
-            .x((d) => {
-                return this.xAxe.itemDimensions  / 2 + this.xAxe.scale(d[this._xField]);
+        this._line = d3.svg.line()
+            .x((d: any) => {
+                return this.xAxe.itemDimensions  / 2 + this.xAxe.scale(d[this.xField]);
             })
-            .y((d) => {
-                return this.yAxe.scale(d[this._yField]);
+            .y((d: any) => {
+                return this.yAxe.scale(d[this.yField]);
             })
             .interpolate('interpolate');
     }
 
     updateDisplay() {
         this.generatePosition();
-        const svgElement: any = this.target.select(`.${this.displayName + this._index}`);
+        let svgElement: any = this.target.select(`.${this.displayName + this.index}`);
+
         if (!svgElement[0][0]) {
-            this.createItem();
+            svgElement = this.createItem();
         } else {
             svgElement.datum(this.dataProvider);
         }
-        svgElement.attr('d', this.line);
+        svgElement.attr('d', this._line);
     }
 
     createItem() {
-        this.target.datum(this.data)
+        return this.target.datum(this.dataProvider)
                             .append('path')
-                            .attr('class', this.displayName + this._index);
+                            .attr('class', this.displayName + this.index);
     }
 
-};
+}

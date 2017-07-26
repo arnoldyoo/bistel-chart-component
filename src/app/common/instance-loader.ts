@@ -4,14 +4,14 @@ import { AxisConfiguration, SeriesConfiguration } from './../model/index';
 import { ChartException } from './error/index';
 
 export class InstanceLoader {
-    ctors: any;
+    instance: any;
 
     constructor() {
         this._settingInstance();
     }
 
     _settingInstance() {
-        this.ctors = {
+        this.instance = {
             CategoryAxis: CategoryAxis,
             NumericAxis: NumericAxis,
             DateTimeAxis: DateTimeAxis,
@@ -26,33 +26,33 @@ export class InstanceLoader {
     }
 
     _getCtor( name: string ): any {
-        const ctor: any = this.ctors[name];
-        if (!ctor) {
+        const instance: any = this.instance[name];
+        if (!instance) {
             return null;
         } else {
-            return ctor;
+            return instance;
         }
     }
 
     // name: string ,config: any, target: any, width: number, height: number, margin: Array<any>, domain: any
     axisFactory(name: string, axisparams: AxisConfiguration): any {
-        const ctor: any = this._getCtor(name);
+        const instance: any = this._getCtor(name);
         let classInstance: any;
-        if (!ctor) {
+        if (!instance) {
             throw new ChartException(404, {message: `not found axis component ${name}`});
         }
-        classInstance = new ctor(axisparams);
+        classInstance = new instance(axisparams);
         return classInstance;
     }
 
     // name: string, config: any, target: any, margin: any
     seriesFactory(name: string, seriesparams: SeriesConfiguration): any {
-        const ctor: any = this._getCtor(name);
-        if (!ctor) {
+        const instance: any = this._getCtor(name);
+        if (!instance) {
             throw new ChartException(404, {message: `not found series component ${name}`});
         }
         let classInstance: any;
-        classInstance = new ctor(seriesparams);
+        classInstance = new instance(seriesparams);
         return classInstance;
     }
 };

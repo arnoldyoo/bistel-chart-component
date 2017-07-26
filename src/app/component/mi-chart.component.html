@@ -1,0 +1,13 @@
+<div class="mi-chart">
+    <div class="row">
+        <div class="mi-chart-toolbox" >
+            <button style="width: 25px;" (click)="pluginStatus()" >Plugin enabled {{isPlugin}}</button>
+        </div>
+        <div class="mi-chart-column">
+            <chart #chart [config]="chartInfo"></chart>
+        </div>
+        <div class="mi-chart-option">
+            <legend #legend [config]="legendInfo"></legend>
+        </div>
+    </div>
+</div>

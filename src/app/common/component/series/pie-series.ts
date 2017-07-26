@@ -4,38 +4,21 @@ import { ChartException } from '../../error/index';
 
 export class PieSeries extends Series {
 
-    _seriesCnt: number;
-    _seriesIndex: number;
-    _innerRadius: number;
-    _outerRadius: number;
-    _pie: any;
-    _radius: number;
-    _arc: any;
-    _pieData: Array<any>;
-    _piecolor: any;
-    _displayKey: string;
+    private _innerRadius: number;
+    private _outerRadius: number;
+    private _pie: any;
+    private _radius: number;
+    private _arc: any;
+    private _pieColor: any;
+    private _displayKey: string;
+    private _pieData: Array<any>;
 
     constructor( seriesParam: SeriesConfiguration ) {
         super( seriesParam );
         this._pie = d3.layout.pie();
-        this._index = 0;
+        this.index = 0;
         this.seriesIndex = 0;
-    }
-
-    set seriesCnt( value: number ) {
-        this._seriesCnt = value;
-    }
-
-    get seriesCnt() {
-        return this._seriesCnt;
-    }
-
-    set seriesIndex(value: number) {
-        this._seriesIndex = value;
-    }
-
-    get seriesIndex(): number {
-        return this._seriesIndex;
+        this.seriesCnt = 0;
     }
 
     set innerRadius(value: number) {
@@ -75,7 +58,7 @@ export class PieSeries extends Series {
 
     generatePosition() {
         super.generatePosition();
-        if (!this.radius) {
+        if (this.seriesCnt === 0) {
             this.radius = Math.min(this.width, this.height) / 2;
         }
         this._createArc();
@@ -89,63 +72,33 @@ export class PieSeries extends Series {
         if (!this._displayKey) {
             throw new ChartException(404, {message: 'do not displayKey of pieseries configuration'});
         }
-        this._piecolor = d3.scale.category20();
+        this._pieColor = d3.scale.category20();
         this.target.attr('data-legend', () => {
             return this.displayName;
         });
-        const pieTarget = this.target.selectAll('path')
+        const pieTarget: any = this.target.selectAll('path')
             .data(this._pie(this._pieData))
             .enter();
         pieTarget.append('path')
-            .style('fill', (d, i) => {
-                return this._piecolor(i);
+            .style('fill', (d: any, i: any) => {
+                return this._pieColor(i);
             })
-            .attr('class', (d, i) => {
+            .attr('class', (d: any, i: any) => {
                 return this.dataProvider[i][this._displayKey];
             })
-            .attr('d', this._arc);
+            .transition()
+            .duration(500)
+            .attrTween('d', (d: any) => {
+                const i = d3.interpolate(d.startAngle+0.1, d.endAngle);
+                return (t: any) => {
+                    d.endAngle = i(t);
+                    return this._arc(d);
+                };
+            });
+        setTimeout(() => {
+            this._drawLabel(pieTarget);
+        }, 1000);
 
-        if ( this.label.visible ) {
-            if (this.label.side === 'in') {
-                const label: any = this._createInnerLabel();
-                pieTarget.append('text')
-                          .attr('transform', (d) => {
-                              return `translate(${label.centroid(d)})`;
-                          })
-                          .attr('dy', '0.35em')
-                          .text((d, i) => {
-                              // return this.dataProvider[i][this._displayKey] + ' : ' + d.value;
-                              return d.value;
-                          });
-            } else {
-                const outsideLabel: any = this._createOutsideLabel();
-                const arc: any = this._createArc();
-
-                pieTarget.append('text')
-                         .attr('text-anchor', 'middle')
-                         .attr('transform', (d) => {
-                             const pos: any = outsideLabel.centroid(d);
-                             pos[0] = this.radius * 1.7 * (this._midAngle(d) < Math.PI ? 1.03 : -1.03);
-                             return `translate(${pos})`;
-                         })
-                         .text((d, i) => {
-                             // return this.dataProvider[i][this._displayKey] + ' : ' + d.value;
-                             return d.value;
-                         });
-
-                pieTarget.append('g')
-                         .append('polyline')
-                         .attr('points', (d) => {
-                             const pos = outsideLabel.centroid(d);
-                             pos[0] = this.radius * 1.55 * (this._midAngle(d) < Math.PI ? 1 : -1);
-                             return [this._arc.centroid(d), outsideLabel.centroid(d), pos];
-                         })
-                         .style('fill', 'none')
-                         .style('stroke', 'black')
-                         .style('stroke-width', '1px');
-
-            }
-        }
     }
 
     createItem() { }
@@ -175,4 +128,47 @@ export class PieSeries extends Series {
         return data.startAngle + (data.endAngle - data.startAngle) / 2;
     }
 
-};
+    _drawLabel(pie_target: any) {
+        if ( this.label.visible ) {
+            if (this.label.side === 'in') {
+                const label: any = this._createInnerLabel();
+                pie_target.append('text')
+                    .attr('transform', (d: any) => {
+                        return `translate(${label.centroid(d)})`;
+                    })
+                    .attr('dy', '0.35em')
+                    .text((d: any, i: any) => {
+                        return d.value;
+                    });
+            } else {
+                const outsideLabel: any = this._createOutsideLabel();
+                this._createArc();
+
+                pie_target.append('text')
+                    .attr('text-anchor', 'middle')
+                    .attr('transform', (d: any) => {
+                        const pos: any = outsideLabel.centroid(d);
+                        pos[0] = this.radius * 1.7 * (this._midAngle(d) < Math.PI ? 1.03 : -1.03);
+                        return `translate(${pos})`;
+                    })
+                    .text((d: any, i: any) => {
+                        return d.value;
+                    });
+
+                pie_target.append('g')
+                    .append('polyline')
+                    .attr('points', (d: any) => {
+                        const pos = outsideLabel.centroid(d);
+                        pos[0] = this.radius * 1.55 * (this._midAngle(d) < Math.PI ? 1 : -1);
+                        return [this._arc.centroid(d), outsideLabel.centroid(d), pos];
+                    })
+                    .style('fill', 'none')
+                    .style('stroke', 'black')
+                    .style('stroke-width', '1px');
+
+            }
+        }
+    }
+
+}
+

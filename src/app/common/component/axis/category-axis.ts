@@ -3,19 +3,17 @@ import { AxisConfiguration } from './../../../model/index';
 
 export class CategoryAxis extends Axis {
 
-    constructor(axisconfig: AxisConfiguration) {
-        super(axisconfig);
-        // make Axis
+    constructor(axisConfig: AxisConfiguration) {
+        super(axisConfig);
     }
 
     updateDisplay(width: number, height: number) {
         super.updateDisplay(width, height);
     }
 
-    // 재정의
     makeAxisLabel() {
         super.makeAxisLabel();
-        this.target.call(this.axe.scaleToAxe);
+        this.target.transition().call(this.axe.scaleToAxe);
         if (this.tickInfo.rotate) {
             this._tickRotate();
         }
@@ -50,28 +48,28 @@ export class CategoryAxis extends Axis {
     }
 
     _domainTruncate() {
-        let ticksize: number = Math.round(this.axe.scale.domain().length / this.tickInfo.ticks);
+        let tickSize: number = Math.round(this.axe.scale.domain().length / this.tickInfo.ticks);
         if (this.tickInfo.ticks % 2) {
-            ticksize = ticksize + 1;
+            tickSize = tickSize + 1;
         }
-        const tempArray: Array<any> = this.axe.scale.domain().map((d, i) => {
+        const tempArray: Array<any> = this.axe.scale.domain().map((d: any, i: any) => {
             if (i === 0) {
                 return d;
             } else {
-                if (i % ticksize === 0) {
+                if (i % tickSize === 0) {
                     return d;
                 } else {
                     return 0;
                 }
             }
         });
-        const tickArray: Array<any> = tempArray.filter(d =>  d !== 0 );
+        const tickArray: Array<any> = tempArray.filter( (d: any) =>  d !== 0 );
         this.axe.scaleToAxe.tickValues(tickArray);
     }
 
     _tickRotate() {
         this.target.selectAll('text').style('text-anchor', 'start')
-                                     .attr('transform', d => {
+                                     .attr('transform', () => {
                                        return 'rotate(45)';
                                       });
     }

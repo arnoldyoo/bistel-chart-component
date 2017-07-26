@@ -7,12 +7,15 @@ export class SvgLegend extends Legend {
     rectHeight = 10;
     padding = 10;
 
+    // chart: any;
+
     constructor(legendConfig: LegendConfiguration, chartSelector: string) {
         super(legendConfig, chartSelector);
     }
 
     updateDisplay(width: number, height: number) {
         super.updateDisplay(width, height);
+        // this.chart = d3.select(this.chart_selector);
         const items: Array<any> = [];
         const compareWidth: number = this.width - 50;
         const orient: string = this.orient;
@@ -29,7 +32,7 @@ export class SvgLegend extends Legend {
             .attr('class', 'legend-row')
             .attr('transform', `translate(0,0)`);
         rowCnt++;
-        this.series_config.map((d, i) => {
+        this.series_config.map((d: any, i: any) => {
 
             items[d.displayName] = {
                 name: d.displayName,
@@ -95,6 +98,7 @@ export class SvgLegend extends Legend {
             return;
         }
         const chart = d3.select(this.chart_selector);
+
         item.on('mouseover', () => {
             const that: any = d3.select(d3.event.target.parentElement).style('opacity', 1);
             this.container.selectAll('.legend-item').filter( function() {

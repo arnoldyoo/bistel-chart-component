@@ -1,22 +1,27 @@
 import { Axe, Axis  } from './../../axis/index';
 import { AxisConfiguration } from './../../../model/index';
 
+interface DomainCompare {
+    field: string;
+    minValue: number;
+    maxValue: number;
+}
+
 export class NumericAxis extends Axis {
 
-    _zero: any;
+    private _zero: any;
 
-    constructor(axisconfig: AxisConfiguration) {
-        super(axisconfig);
+    constructor(axisConfig: AxisConfiguration) {
+        super(axisConfig);
     }
 
     updateDisplay(width: number, height: number) {
         super.updateDisplay(width, height);
     }
 
-    // 재정의
     makeAxisLabel() {
         super.makeAxisLabel();
-        this.target.call(this.axe.scaleToAxe);
+        this.target.transition().call(this.axe.scaleToAxe);
     }
 
     scaleSetting() {
@@ -49,15 +54,15 @@ export class NumericAxis extends Axis {
         const targetArray: Array<any> = this.field.split(',');
         if (targetArray.length > 1) {
             const tempArray: Array<any> = [];
-            let min = 0;
-            let max = 0;
-            let maxTmp = 0;
-            let minTmp = 0;
-            let currentField = '';
+            let min: number = 0;
+            let max: number = 0;
+            let maxTmp: number = 0;
+            let minTmp: number = 0;
+            let currentField: string = '';
             this.domain = [];
             if (this.isStacked) {
                 for (let i = 0; i < this.dataProvider.length; i++) {
-                    const currentObj = this.dataProvider[i];
+                    const currentObj: any = this.dataProvider[i];
                     maxTmp = 0;
                     minTmp = 0;
                     for (let j = 0; j < targetArray.length; j++) {
@@ -78,12 +83,14 @@ export class NumericAxis extends Axis {
                 this.domain.push(max + (max * 0.1));
             } else {
                 for (let i = 0; i < targetArray.length; i++) {
-                    maxTmp = _.maxBy(this.dataProvider, targetArray[i]);
-                    minTmp = _.minBy(this.dataProvider, targetArray[i]);
-                    const obj: any = {
-                        field: targetArray[i],
-                        minValue: minTmp[targetArray[i]],
-                        maxValue: maxTmp[targetArray[i]]
+                    const field: string = targetArray[i];
+                    const minTemp: any = _.minBy(this.dataProvider, field);
+                    const maxTemp: any = _.maxBy(this.dataProvider, field);
+
+                    const obj: DomainCompare = {
+                        field: field,
+                        minValue: minTemp[field],
+                        maxValue: maxTemp[field]
                     };
                     tempArray.push(obj);
                 }
@@ -101,7 +108,7 @@ export class NumericAxis extends Axis {
         super._updateContainerPosition(this.target);
         if (this.numeric_min && this.numeric_max && this.numeric_min < 0) {
             this._showZeroLine();
-        };
+        }
     }
 
     _showZeroLine() {
@@ -132,19 +139,18 @@ export class NumericAxis extends Axis {
     }
 
     _getNumericScale(): any {
-        const temp_range: Array<number> = [];
+        const tempRange: Array<number> = [];
         if (this.type === 'x') {
-            temp_range.push(0);
-            temp_range.push(this.width);
+            tempRange.push(0);
+            tempRange.push(this.width);
         } else {
-            temp_range.push(this.height);
-            temp_range.push(0);
+            tempRange.push(this.height);
+            tempRange.push(0);
         }
-        const temp_scale: any = d3.scale.linear()
+        const tempScale: any = d3.scale.linear()
                             .domain([this.numeric_min, this.numeric_max])
-                            .range(temp_range);
+                            .range(tempRange);
 
-        const scaley: number = temp_scale(0);
-        return scaley;
+        return tempScale(0);
     }
 }

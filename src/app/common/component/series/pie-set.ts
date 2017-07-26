@@ -1,20 +1,19 @@
 import { PieSeries } from './pie-series';
 import { IDisplay } from './../../i-display.interface';
 import { SeriesConfiguration } from './../../../model/index';
+import { Series } from '../../series/series';
 
 export class PieSet implements IDisplay {
 
-    _width: number;
-    _height: number;
-    _target: any;
-
-    _series: Array<PieSeries>;
-    _configuration: SeriesConfiguration;
-
-    _dataProvider: Array<any>;
-    _seriesCnt: number;
-    _radius: number;
-    _manual: string;
+    private _width: number;
+    private _height: number;
+    private _target: any;
+    private _seriesCnt: number = 0;
+    private _radius: number;
+    private _manual: string;
+    private _series: Array<PieSeries>;
+    private _configuration: SeriesConfiguration;
+    private _dataProvider: Array<any>;
 
     constructor(configuration?: SeriesConfiguration) {
         if (configuration) {
@@ -80,7 +79,7 @@ export class PieSet implements IDisplay {
 
     set manual(value: string) {
         this._manual = value;
-        this.series.map(s => {
+        this.series.map((s: Series) => {
             s.manual = this.manual;
         });
     }
@@ -90,14 +89,14 @@ export class PieSet implements IDisplay {
     }
 
     updateDisplay(width?: number, height?: number) {
-        const fieldSet: Array<string> = this.series.map(d => { return d.xField; });
+        const fieldSet: Array<string> = this.series.map((d: Series) => { return d.xField; });
         for ( let i = 0; i < this.series.length; i++ ) {
             this.series[i].seriesCnt = this.series.length;
             this.series[i].seriesIndex = i;
             this.series[i].width = width;
             this.series[i].height = height;
             this.series[i].xField = fieldSet[i];
-            this.series[i].radius = this.radius;
+            this.series[i].radius = this.radius / this.series.length;
             this.series[i].dataProvider = this._dataProvider;
         }
     }

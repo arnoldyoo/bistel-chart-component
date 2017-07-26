@@ -3,7 +3,8 @@ export interface SeriesConfiguration {
     margin: any;
     target?: any;
     type: any;
-};
+    plugin?: any;
+}
 
 export interface SeriesConditions {
     xField: string;
@@ -11,6 +12,10 @@ export interface SeriesConditions {
     displayName: string;
     displayKey?: string;
     visible: boolean;
+    textLabel: {
+        show: boolean,
+        format: any
+    };
     label?: {
         visible: boolean,
         side: string
@@ -38,3 +43,5 @@ export interface AxisConditions {
     orient: string;
     tickInfo?: any;
 }
+
+

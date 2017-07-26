@@ -1,31 +1,46 @@
-import { ChartEventData } from './chart-event.interface';
 
-interface EventMap { // indexable interface
-    [type: string]: any;
+import { EventMap, ChartEventData } from './chart-event.interface';
+
+interface ChartEventMap {
+    [type: string]: EventMap;
 }
 
 export class EventDispatcher {
-    private static Instance: EventDispatcher = null;
-    private _eventMap: EventMap;
+    private static _Instance: EventDispatcher;
+    private _chartForEventMap:ChartEventMap = {};
 
-    public static getInstance(): EventDispatcher {
-        if (EventDispatcher.Instance === null) {
-            EventDispatcher.Instance = new EventDispatcher();
+    static getInstance(chartId?: string): EventDispatcher {
+        if (!EventDispatcher._Instance) {
+            EventDispatcher._Instance = new EventDispatcher(chartId);
         }
-        return EventDispatcher.Instance;
+        return EventDispatcher._Instance;
     }
 
-    public addEventListener(type: string, method: any) {
-        this._eventMap[type] = method;
-    }
-
-    public dispatchEvent(type: string, data: ChartEventData) {
-        if (this._eventMap[type]) {
-            this._eventMap[type](data);
+    constructor(chartId?: string) {
+        if (chartId) {
+            this.connect(chartId);
         }
     }
 
-    private constructor() {
-        this._eventMap = {};
+    connect(chartId: string) {
+        const chartEvent: EventMap = {};
+        this._chartForEventMap[chartId] = chartEvent;
+    }
+
+    disconnect(chartId: string) {
+        this._chartForEventMap[chartId] = undefined;
+    }
+
+    addEventListener(chartId: string, type: string, method: any) {
+        this._chartForEventMap[chartId][type] = method;
+    }
+
+    removeEventListener(chartId: string, type: string) {
+        this._chartForEventMap[chartId][type] = undefined;
+    }
+
+    dispatchEvent(chartId: string, type: string, data?: ChartEventData) {
+        this._chartForEventMap[chartId][type](data);
     }
 }
+

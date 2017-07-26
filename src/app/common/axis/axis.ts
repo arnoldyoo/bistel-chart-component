@@ -4,34 +4,33 @@ import { IDisplay } from './../i-display.interface';
 
 export abstract class Axis implements IDisplay {
     axe: Axe;
-
-    _configuration: AxisConfiguration;
-    _field: string;
-    _format: any;
-    _visible: boolean;
-    _gridline: boolean;
-    _title: string;
-    _domain: Array<any>;
-    _type: string;
-    _orient: string;
-    _margin: any;
-    _target: any;  // svg group element value
-    _width: number;
-    _height: number;
-    _tickInfo: any;
-    _dataProvider: Array<any>;
-    _range: Array<number>;
-    _scale: any;
-
-    _isStacked: boolean;
-
     numeric_min: number;
     numeric_max: number;
 
+    protected _range: Array<number>;
+    protected _scale: any;
+
+    private _configuration: AxisConfiguration;
+    private _field: string;
+    private _format: any;
+    private _visible: boolean;
+    private _gridline: boolean;
+    private _title: string;
+    private _domain: Array<any>;
+    private _type: string;
+    private _orient: string;
+    private _margin: any;
+    private _target: any;
+    private _width: number;
+    private _height: number;
+    private _tickInfo: any;
+    private _dataProvider: Array<any>;
+    private _isStacked: boolean;
+
     // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
-    constructor(axisconfig?: AxisConfiguration) {
-        if (axisconfig) {
-            this.configuration = axisconfig;
+    constructor(axisConfig?: AxisConfiguration) {
+        if (axisConfig) {
+            this.configuration = axisConfig;
         }
     }
 
@@ -202,7 +201,7 @@ export abstract class Axis implements IDisplay {
         this.updateDisplay(this.width, this.height);
     }
 
-    protected _updateContainerPosition(svgtarget) {
+    protected _updateContainerPosition(svgTarget: any) {
         let px = 0;
         let py = 0;
         switch (this.orient) {
@@ -227,17 +226,17 @@ export abstract class Axis implements IDisplay {
                 py = this.margin.top;
             break;
         }
-        svgtarget.attr('transform', `translate(${px}, ${py})`);
+        svgTarget.attr('transform', `translate(${px}, ${py})`);
     }
 
     protected _createDefaultDomain() {
         const targetArray: Array<any> = this.field.split(',');
         const targetField: string = targetArray[0];
-        this.domain = this.dataProvider.map( d => {
+        this.domain = this.dataProvider.map( (d: any) => {
             return d[targetField];
         });
         if ( this.domain.length && _.isNumber(this.domain[0]) ) {
-            const tempDomain = [...this.domain];
+            const tempDomain: Array<any> = [...this.domain];
             this.domain = [];
             let min: number = _.min(tempDomain);
             // date type length 13
@@ -254,7 +253,7 @@ export abstract class Axis implements IDisplay {
     _drawGridLine() {
         if (this._target) {
             const rootSvg: any = d3.select(this.target[0][0].nearestViewportElement);
-            const gridGroup = rootSvg.select(`.grid-line-${this.type}-${this.orient}`);
+            const gridGroup: any = rootSvg.select(`.grid-line-${this.type}-${this.orient}`);
             if (!gridGroup[0][0]) {
                 rootSvg.insert('g', '.background')
                         .attr('class', `grid-line-${this.type}-${this.orient}`)
@@ -285,21 +284,67 @@ export abstract class Axis implements IDisplay {
                         py = this.margin.top;
                     break;
                 }
-                // this._updateContainerPosition(gridGroup);
                 gridGroup.attr('transform', `translate(${px}, ${py})`);
-                const gridScale = d3.svg.axis()
+                const gridScale: any = d3.svg.axis()
                                     .scale(this._scale)
                                     .orient(this.orient);
                 if (this.type === 'y') {
                     gridScale.tickSize(-(this.width), 0, 0)
                              .tickFormat('');
+                    gridGroup.select('rect')
+                                .attr('width', this.margin.left)
+                                .attr('height', this.height);
                 } else {
                     gridScale.innerTickSize(-(this.height))
                              .outerTickSize(0)
                              .tickFormat('');
+                    gridGroup.select('rect')
+                                .attr('width', this.width)
+                                .attr('height', this.margin.bottom);
                 }
                 gridGroup.call(gridScale);
             }
+        }
+    }
+
+    _drawAxisBackground() {
+        if (this._target) {
+            const gridBackground: any = this._target.select(`.grid-background-${this.type}-${this.orient}`);
+            if (!gridBackground[0][0]) {
+                this._target.insert('rect', ':first-child')
+                .attr('class', `grid-background-${this.type}-${this.orient}`)
+                .style('fill', '#fff')
+                .style('fill-opacity', 0);
+            }
+        }
+
+        switch(this.orient) {
+            case 'left' :
+                this._target.select(`.grid-background-${this.type}-${this.orient}`)
+                            .attr('x', -this.margin.left)
+                            .attr('y', 0)
+                            .attr('width', this.margin.left)
+                            .attr('height', this.height);
+                break;
+            case 'right' :
+                this._target.select(`.grid-background-${this.type}-${this.orient}`)
+                            .attr('x', 0)
+                            .attr('y', 0)
+                            .attr('width', this.margin.left)
+                            .attr('height', this.height);
+                break;
+            case 'top' :
+                this._target.select(`.grid-background-${this.type}-${this.orient}`)
+                            .attr('x', 0)
+                            .attr('y', -this.margin.top)
+                            .attr('width', this.width)
+                            .attr('height', this.margin.top);
+                break;
+            default :
+                this._target.select(`.grid-background-${this.type}-${this.orient}`)
+                            .attr('width', this.width)
+                            .attr('height', this.margin.bottom);
+                break;
         }
     }
 
@@ -310,6 +355,7 @@ export abstract class Axis implements IDisplay {
         this._drawGridLine();
         this._updateContainerPosition(this.target);
         this.makeAxisLabel();
+        this._drawAxisBackground();
     }
 
     protected scaleToAxeSetting() { }

@@ -2,19 +2,19 @@ import { Axe, Axis  } from './../../axis/index';
 import { AxisConfiguration } from './../../../model/index';
 
 export class DateTimeAxis extends Axis {
-    _customTimeFormat: any;
+    private _customTimeFormat: any;
 
-    constructor(axisconfig: AxisConfiguration) {
-        super(axisconfig);
+    constructor(axisConfig: AxisConfiguration) {
+        super(axisConfig);
         // make Axis
         this._customTimeFormat = d3.time.format.multi([
-                ['.%L', function(d) { return d.getMilliseconds(); }],
-                [':%S', function(d) { return d.getSeconds(); }],
-                ['%H:%M', function(d) { return d.getMinutes(); }],
-                ['%H:%M', function(d) { return d.getHours(); }],
-                ['%a %d', function(d) { return d.getDay() && d.getDate() !== 1; }],
-                ['%b %d', function(d) { return d.getDate() !== 1; }],
-                ['%B', function(d) { return d.getMonth(); }],
+                ['.%L', function(d: any) { return d.getMilliseconds(); }],
+                [':%S', function(d: any) { return d.getSeconds(); }],
+                ['%H:%M', function(d: any) { return d.getMinutes(); }],
+                ['%H:%M', function(d: any) { return d.getHours(); }],
+                ['%a %d', function(d: any) { return d.getDay() && d.getDate() !== 1; }],
+                ['%b %d', function(d: any) { return d.getDate() !== 1; }],
+                ['%B', function(d: any) { return d.getMonth(); }],
                 ['%Y', function() { return true; }]
              ]);
     }
@@ -26,7 +26,7 @@ export class DateTimeAxis extends Axis {
     // 재정의
     makeAxisLabel() {
         super.makeAxisLabel();
-        this.target.call(this.axe.scaleToAxe);
+        this.target.transition().call(this.axe.scaleToAxe);
     }
 
     scaleSetting() {

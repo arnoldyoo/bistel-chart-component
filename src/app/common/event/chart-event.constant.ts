@@ -14,4 +14,7 @@ export class ChartEvent {
     static DRAG_END = 'drag_end';
 
     static PLUGIN_EVENT = 'plugin_event';
+
+    static CREATION_COMPLETE = 'create_complete';
+    static SELECT_ALL_ITEM = 'select_all_items';
 }
