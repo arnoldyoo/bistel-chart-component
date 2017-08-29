@@ -13,13 +13,9 @@ import { Subject } from 'rxjs/';
 export class AppComponent implements OnInit {
     title = 'app works!';
     currentType: string;
-    chartinfo: any;
-    axis: any;
-    series: any;
-    plugin: any;
-    legendinfo: LegendConfiguration;
+    chartConfig: any;
     data: Array<any>;
-    chartTypeClick$: Subject<string> = new Subject();
+    chartTypeClick$: Subject<any> = new Subject();
     currentConfiguration: any;
     currentConfigurationString: string;
     responseStream: Observable<any>;
@@ -53,102 +49,214 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.currentType = 'column';
+        this._setDefaultData();
 
-        // default chart configuration setting
+        this.chartConfig = {
+            chart: {
+                selector: '',
+                uid: '',
+                size: {
+                    width: 100,
+                    height: 100
+                },
+                margin: {
+                    left: 50,
+                    right: 50,
+                    top: 50,
+                    bottom: 50
+                },
+                data: this.data,
+                // event: {
+                //     itemclick: function (event) { console.log('itemclick : ', event); },
+                //     mouseover: function (event) { console.log('mouseover : ', event); },
+                //     mouseout: function (event) { console.log('mouseout : ', event); }
+                // }
+            },
+            axis: [
+                {
+                    axisClass: 'NumericAxis',
+                    type: 'y',
+                    field: 'profit,revenue,ratio',
+                    format: null,
+                    orient: 'left',
+                    visible: true,
+                    gridline: true,
+                    title: 'Profit',
+                    tickInfo: {
+                        ticks: 5
+                    }
+                },
 
-        this.chartinfo = {
-            selector: '#chart-div',
-            uid: 'chart-div_uid',
-            size: {
-                width: 800,
-                height: 400
-            },
-            margin: {
-                left: 50,
-                right: 50,
-                top: 50,
-                bottom: 50
-            },
-            selectionMode: 'multiselection', // ['normal', 'zoom', 'multiselection'
-            data: this.data
-        };
-        this.axis = [
-            {
-                axisClass: 'NumericAxis',
-                type: 'y',
-                field: 'profit,revenue,ratio',
-                format: undefined,
-                orient: 'left',
-                visible: true,
-                gridline: true,
-                title: 'Profit',
-                tickInfo : {
-                    ticks: 5,
-                    tickFormat: function(d) { return '$' + d3.format(',.0f')(d); }
+                {
+                    axisClass: 'DateTimeAxis',
+                    type: 'x',
+                    field: 'date',
+                    format: null,
+                    orient: 'bottom',
+                    visible: true,
+                    gridline: false,
+                    title: 'date',
+                    tickInfo: {
+                        ticks: 20
+                    }
+                },
+                {
+                    axisClass: 'NumericAxis',
+                    type: 'y',
+                    field: 'rate',
+                    format: null,
+                    orient: 'right',
+                    visible: true,
+                    gridline: false,
+                    title: 'Rate',
+                    tickInfo: {
+                        ticks: 5
+                    }
                 }
-            },
-            {
-                axisClass: 'CategoryAxis',
-                type: 'x',
-                field: 'category',
-                format: undefined,
+            ],
+            series: [
+                {
+                    seriesClass: 'LineSeries',
+                    xField: 'date',
+                    yField: 'profit',
+                    visible: true,
+                    displayName: 'Profit'
+                },
+                {
+                    seriesClass: 'LineSeries',
+                    xField: 'date',
+                    yField: 'rate',
+                    visible: true,
+                    displayName: 'rate'
+                }
+            ],
+            plugin: [
+                {
+                    pluginClass: 'MultiBrushPlugin',
+                    direction: 'x',
+                    orient: 'bottom',
+                    callback: this.multiCallback
+                }
+            ],
+            legend: {
+                selector: '#div_02',
                 orient: 'bottom',
-                visible: true,
-                gridline: false,
-                title: 'Category',
-                tickInfo: {
-                    rotate: false,
-                    ticks: 5
-                }
-            },
-            {
-                axisClass: 'DateTimeAxis',
-                type: 'x',
-                field: 'date',
-                format: undefined,
-                orient: 'top',
-                visible: true,
-                gridline: false,
-                title: 'date',
-                tickInfo: {
-                    ticks: 12
-                }
-            },
-            {
-                axisClass: 'NumericAxis',
-                type: 'y',
-                field: 'rate',
-                format: undefined,
-                orient: 'right',
-                visible: true,
-                gridline: false,
-                title: 'Rate',
-                tickInfo : {
-                    ticks: 5,
-                    tickFormat: function(d) { return d3.format(',.0f')(d) + '%'; }
-                }
+                series: undefined
             }
-        ];
-        this.plugin = [
-            {
-                pluginClass: 'DragBase',
-                direction: 'horizontal'
-            }
-        ];
-        this.series = [
-            {
-                seriesClass: 'ColumnSeries',
-                xField: 'category',
-                yField: 'profit',
-                visible: true,
-                displayName: 'Profit'
-            },
-        ];
-        this.legendinfo = {
-            selector: '#div_02',
-            orient: 'bottom',
-            series: this.series
         };
+
+
+
+
+
+        // this.chartConfig = {
+        //     chart: {
+        //         selector: '',
+        //         uid: '',
+        //         size: {
+        //             width: 100,
+        //             height: 100
+        //         },
+        //         margin: {
+        //             left: 50,
+        //             right: 50,
+        //             top: 50,
+        //             bottom: 50
+        //         },
+        //         data: this.data,
+        //         event: {
+        //             itemclick: function (event) { console.log('itemclick : ', event); },
+        //             mouseover: function (event) { console.log('mouseover : ', event); },
+        //             mouseout: function (event) { console.log('mouseout : ', event); }
+        //         }
+        //     },
+        //     axis: [
+        //         {
+        //             axisClass: 'NumericAxis',
+        //             type: 'y',
+        //             field: 'profit,revenue,ratio',
+        //             format: undefined,
+        //             orient: 'left',
+        //             visible: true,
+        //             gridline: true,
+        //             title: 'Profit',
+        //             tickInfo : {
+        //                 ticks: 5,
+        //                 tickFormat: function(d: any) { return '$' + d3.format(',.0f')(d); }
+        //             }
+        //         },
+        //         {
+        //             axisClass: 'CategoryAxis',
+        //             type: 'x',
+        //             field: 'category',
+        //             format: undefined,
+        //             orient: 'bottom',
+        //             visible: true,
+        //             gridline: false,
+        //             title: 'Category',
+        //             tickInfo: {
+        //                 rotate: false,
+        //                 ticks: 5
+        //             }
+        //         },
+        //         {
+        //             axisClass: 'DateTimeAxis',
+        //             type: 'x',
+        //             field: 'date',
+        //             format: undefined,
+        //             orient: 'top',
+        //             visible: true,
+        //             gridline: false,
+        //             title: 'date',
+        //             tickInfo: {
+        //                 ticks: 12
+        //             }
+        //         },
+        //         {
+        //             axisClass: 'NumericAxis',
+        //             type: 'y',
+        //             field: 'rate',
+        //             format: undefined,
+        //             orient: 'right',
+        //             visible: true,
+        //             gridline: false,
+        //             title: 'Rate',
+        //             tickInfo : {
+        //                 ticks: 5,
+        //                 tickFormat: function(d: any) { return d3.format(',.0f')(d) + '%'; }
+        //             }
+        //         }
+        //     ],
+        //     series: [
+        //         {
+        //             seriesClass: 'ColumnSeries',
+        //             xField: 'category',
+        //             yField: 'profit',
+        //             visible: true,
+        //             displayName: 'Profit',
+        //             textLabel: {
+        //                 show: true
+        //                 // format: function(d) {return d+'%';}
+        //             }
+        //         },
+        //     ],
+        //     plugin: [
+        //         {
+        //             pluginClass: 'DragBase',
+        //             direction: 'horizontal'
+        //         }
+        //     ],
+        //     legend: {
+        //         selector: '#div_02',
+        //         orient: 'bottom',
+        //         series: undefined
+        //     }
+        // };
+    }
+
+    multiCallback = (dates: Array<any>, event: any) => {
+        console.log(dates);
+        console.log(event);
     }
 
     rerun() {
@@ -168,18 +276,18 @@ export class AppComponent implements OnInit {
     }
 
     _chartDrawSetting(data: any) {
-
         this.currentConfiguration = data;
         this.currentConfigurationString = JSON.stringify(data, undefined, 4);
-        this.chartinfo = this.currentConfiguration.chart;
-        this.series = this.currentConfiguration.series;
-        this.axis = this.currentConfiguration.axis;
-        this.plugin = this.currentConfiguration.plugin;
-
-        this.legendinfo = {
-            selector: '#div_02',
-            orient: 'bottom',
-            series: this.series
+        this.chartConfig = {
+            chart: this.currentConfiguration.chart,
+            axis: this.currentConfiguration.axis,
+            series: this.currentConfiguration.series,
+            plugin: this.currentConfiguration.plugin,
+            legend: {
+                selector: '#div_02',
+                orient: 'bottom',
+                series: undefined
+            }
         };
     }
 }

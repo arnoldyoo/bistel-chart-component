@@ -23,7 +23,8 @@ export class MIChartComponent implements OnChanges {
 
     constructor(private el: ElementRef) { }
 
-    ngOnChanges(value: SimpleChanges) {
+    ngOnChanges(value: any) {
+        console.log(value);
         if (value.config.currentValue) {
             const selector = this.guid();
             this.chartInfo = value.config.currentValue;

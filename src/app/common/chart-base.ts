@@ -404,8 +404,10 @@ export class ChartBase implements IDisplay {
                 // series.yAxe = _.find(this._axis, 'field', seriesConfig.yField);
                 for ( let i = 0 ; i < this._axis.length; i++ ) {
                     if (this._axis[i].field.split(',').indexOf(seriesConfig.xField) > -1) {
+                        console.log(this._axis[i].axe);
                         series.xAxe =  this._axis[i].axe;
                         series.xAxe.name = this._axis[i].field;
+                        console.log(series);
                         break;
                     }
                 }
@@ -522,6 +524,10 @@ export class ChartBase implements IDisplay {
             this.selectedItem.push(event.detail);
             console.log(this.selectedItem);
         });
+
+        // this.target[0][0].addEventListener(ChartEvent.DRAG_END, (event: CustomEvent) => {
+        //     console.log(event);
+        // })
     }
 
     _setDefaultData() {

@@ -235,16 +235,17 @@ export abstract class Axis implements IDisplay {
         this.domain = this.dataProvider.map( (d: any) => {
             return d[targetField];
         });
+        console.log(this.domain);
         if ( this.domain.length && _.isNumber(this.domain[0]) ) {
             const tempDomain: Array<any> = [...this.domain];
             this.domain = [];
             let min: number = _.min(tempDomain);
+            let max: number = _.max(tempDomain);
             // date type length 13
             if (min > 0 && min.toString().length !== 13) {
                 min = 0;
+                max = max + (max * 0.1);
             }
-            let max: number = _.max(tempDomain);
-            max = max + (max * 0.1);
             this.domain.push(min);
             this.domain.push(max);
         }

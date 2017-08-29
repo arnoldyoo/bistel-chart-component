@@ -7,6 +7,7 @@ export class LineSeries extends Series {
 
     constructor( seriesParam: SeriesConfiguration ) {
         super( seriesParam );
+        this.index = 0;
     }
 
     dataSetting() {
@@ -40,6 +41,14 @@ export class LineSeries extends Series {
             svgElement.datum(this.dataProvider);
         }
         svgElement.attr('d', this._line);
+
+        this.target.selectAll(".dot")
+                .data(this.dataProvider)
+            .enter().append("circle") // Uses the enter().append() method
+                .attr("class", "dot") // Assign a class for styling
+                .attr("cx", (d, i) => { return this.xAxe.itemDimensions  / 2 + this.xAxe.scale(d[this.xField]); })
+                .attr("cy", (d) => { return this.yAxe.scale(d[this.yField]) })
+                .attr("r", 2);
     }
 
     createItem() {

@@ -15,7 +15,7 @@ import { ChartConfiguration } from "../../model/chart.interface";
             -moz-user-select: none;
             -o-user-select: none;
             user-select: none;
-            
+
         }
         path, line {
             fill: none;
@@ -57,13 +57,14 @@ export class ChartComponent implements OnChanges {
 
     constructor() {}
 
-    ngOnChanges(value: SimpleChanges) {
+    ngOnChanges(value: any) {
         if (value.config.currentValue) {
             if (this.baseChart) {
                 this.baseChart.clear();
             }
             this.chart_div.nativeElement.id = value.config.currentValue.chart.selector;
             this._createChart(value.config.currentValue);
+            console.log(this.chart_div.nativeElement.offsetWidth, this.chart_div.nativeElement.offsetHeight);
             this._drawChart(this.chart_div.nativeElement.offsetWidth, this.chart_div.nativeElement.offsetHeight);
         }
     }

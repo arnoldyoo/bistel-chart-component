@@ -1,13 +1,21 @@
-<div class="mi-chart">
+<!-- <div>
     <div class="row">
-        <div class="mi-chart-toolbox" >
+         <div class="mi-chart-toolbox" >
             <button style="width: 25px;" (click)="pluginStatus()" >Plugin enabled {{isPlugin}}</button>
         </div>
-        <div class="mi-chart-column">
+        <div>
             <chart #chart [config]="chartInfo"></chart>
         </div>
-        <div class="mi-chart-option">
+        <div>
             <legend #legend [config]="legendInfo"></legend>
         </div>
     </div>
+</div> -->
+
+
+<div>
+    <chart style="width:100%; height:80%;" #chart [config]="chartInfo"></chart>
+</div>
+<div>
+    <legend style="width:100%; height20%;" #legend [config]="legendInfo"></legend>
 </div>

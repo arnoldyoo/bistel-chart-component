@@ -18,7 +18,7 @@ export class LegendComponent implements OnChanges {
 
     constructor() {}
 
-    ngOnChanges(value: SimpleChanges) {
+    ngOnChanges(value: any) {
         if (value.config.currentValue) {
             if (this.legend) {
                 this.legend.clear();
