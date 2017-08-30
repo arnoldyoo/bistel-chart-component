@@ -48,12 +48,14 @@ export class LineSeries extends Series {
                 .attr("class", "dot") // Assign a class for styling
                 .attr("cx", (d, i) => { return this.xAxe.itemDimensions  / 2 + this.xAxe.scale(d[this.xField]); })
                 .attr("cy", (d) => { return this.yAxe.scale(d[this.yField]) })
-                .attr("r", 2);
+                .attr("r", 3)
+                .attr('fill', this.color);
     }
 
     createItem() {
         return this.target.datum(this.dataProvider)
                             .append('path')
+                            .style('stroke', this.color)
                             .attr('class', this.displayName + this.index);
     }
 

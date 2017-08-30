@@ -336,6 +336,7 @@ export class ChartBase implements IDisplay {
 
         axisList.map( (axisConfig: any) => {
             let axis: Axis;
+
             const axis_params: AxisConfiguration = {
                 conditions: axisConfig,
                 target: this._axisGroup,
@@ -404,10 +405,8 @@ export class ChartBase implements IDisplay {
                 // series.yAxe = _.find(this._axis, 'field', seriesConfig.yField);
                 for ( let i = 0 ; i < this._axis.length; i++ ) {
                     if (this._axis[i].field.split(',').indexOf(seriesConfig.xField) > -1) {
-                        console.log(this._axis[i].axe);
                         series.xAxe =  this._axis[i].axe;
                         series.xAxe.name = this._axis[i].field;
-                        console.log(series);
                         break;
                     }
                 }
@@ -541,6 +540,10 @@ export class ChartBase implements IDisplay {
                 profit: Math.round( Math.random() * 100  ) } );
         }
         this.dataProvider = testData;
+    }
+
+    removeFromUid(className: string, uid: any) {
+        this.target.select(`.${className}-${uid}`).remove();
     }
 
 }

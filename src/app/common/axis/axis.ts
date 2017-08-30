@@ -36,6 +36,7 @@ export abstract class Axis implements IDisplay {
 
     set configuration( value: AxisConfiguration ) {
         this._configuration = value;
+        console.log(value);
         if (this._configuration) {
             this.width = this._configuration.width;
             this.height = this._configuration.height;
@@ -161,6 +162,7 @@ export abstract class Axis implements IDisplay {
 
     set dataProvider( value: Array<any> ) {
         this._dataProvider = value;
+
         if ( !this.domain ) {
             this._createDefaultDomain();
         }
@@ -235,7 +237,6 @@ export abstract class Axis implements IDisplay {
         this.domain = this.dataProvider.map( (d: any) => {
             return d[targetField];
         });
-        console.log(this.domain);
         if ( this.domain.length && _.isNumber(this.domain[0]) ) {
             const tempDomain: Array<any> = [...this.domain];
             this.domain = [];
@@ -250,6 +251,8 @@ export abstract class Axis implements IDisplay {
             this.domain.push(max);
         }
     }
+
+
 
     _drawGridLine() {
         if (this._target) {

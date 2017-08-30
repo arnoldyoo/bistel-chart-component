@@ -62,8 +62,8 @@ export class AppComponent implements OnInit {
                 margin: {
                     left: 50,
                     right: 50,
-                    top: 50,
-                    bottom: 50
+                    top: 10,
+                    bottom: 100
                 },
                 data: this.data,
                 // event: {
@@ -76,7 +76,7 @@ export class AppComponent implements OnInit {
                 {
                     axisClass: 'NumericAxis',
                     type: 'y',
-                    field: 'profit,revenue,ratio',
+                    field: 'profit,rate',
                     format: null,
                     orient: 'left',
                     visible: true,
@@ -97,20 +97,9 @@ export class AppComponent implements OnInit {
                     gridline: false,
                     title: 'date',
                     tickInfo: {
-                        ticks: 20
-                    }
-                },
-                {
-                    axisClass: 'NumericAxis',
-                    type: 'y',
-                    field: 'rate',
-                    format: null,
-                    orient: 'right',
-                    visible: true,
-                    gridline: false,
-                    title: 'Rate',
-                    tickInfo: {
-                        ticks: 5
+                        ticks: 10,
+                        rotate: 65,
+                        format: '%Y-%m-%d'
                     }
                 }
             ],
@@ -120,14 +109,15 @@ export class AppComponent implements OnInit {
                     xField: 'date',
                     yField: 'profit',
                     visible: true,
-                    displayName: 'Profit'
+                    displayName: 'Profit',
+
                 },
                 {
                     seriesClass: 'LineSeries',
                     xField: 'date',
                     yField: 'rate',
                     visible: true,
-                    displayName: 'rate'
+                    displayName: 'rate',
                 }
             ],
             plugin: [
@@ -254,9 +244,10 @@ export class AppComponent implements OnInit {
         // };
     }
 
-    multiCallback = (dates: Array<any>, event: any) => {
+    multiCallback = (dates: Array<any>, event: any, uid: any) => {
         console.log(dates);
         console.log(event);
+        console.log(uid);
     }
 
     rerun() {

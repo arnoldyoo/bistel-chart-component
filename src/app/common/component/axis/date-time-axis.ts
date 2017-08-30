@@ -27,6 +27,9 @@ export class DateTimeAxis extends Axis {
     makeAxisLabel() {
         super.makeAxisLabel();
         this.target.transition().call(this.axe.scaleToAxe);
+        if (this.tickInfo.rotate) {
+            this._tickRotate(this.tickInfo.rotate);
+        }
     }
 
     scaleSetting() {
@@ -45,9 +48,22 @@ export class DateTimeAxis extends Axis {
         this.axe.scaleToAxe = d3.svg.axis()
                                 .scale(this._scale)
                                 .orient(this.orient);
-        this.axe.scaleToAxe.tickFormat(this._customTimeFormat);
+        if (this.tickInfo.format) {
+            this.axe.scaleToAxe.tickFormat(d3.time.format(this.tickInfo.format));
+        } else {
+            this.axe.scaleToAxe.tickFormat(this._customTimeFormat);
+        }
         if (this.tickInfo.ticks) {
             this.axe.scaleToAxe.ticks(this.tickInfo.ticks);
         }
+    }
+
+    _tickRotate(deg: number) {
+        this.target.selectAll('text').style('text-anchor', 'start')
+                                     .attr('dx', '.71em')
+                                     .attr('dy', '.35em')
+                                     .attr('transform', () => {
+                                        return `rotate(${deg})`;
+                                     });
     }
 }

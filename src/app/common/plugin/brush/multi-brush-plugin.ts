@@ -107,20 +107,25 @@ export class MultiBrushPlugin extends ChartPlugin {
 
     _addDragRect() {
         this.containerRect
-            .on('click', () => {
-                console.log('click');
-                // 현재 가지고 있는 uid 를 select하여 삭제
-                // randomTempUid, ran 초기화
-            })
+            // .on('click', () => {
+            //     console.log('click');
+            //     // 현재 가지고 있는 uid 를 select하여 삭제
+            //     // randomTempUid, uid 초기화
+            //     // this.container.select(`.brush-${this.randomTempUid}`).remove();
+
+            // })
+            .on('click', null)
             .on('mousedown', () => {
                 // randomTempUid 생성
+                this.randomTempUid = Math.round( Math.random() * 1000 );
                 this.offsetX = d3.event.clientX - this.marginLeft;
-                this.currentRect = this.container.append('rect').style('fill', 'lightgrey')
+                this.currentRect = this.container.append('rect').attr('class', `brush-${this.randomTempUid}`).style('fill', 'grey')
                 .style('fill-opacity', 0.7).attr('x', this.offsetX).attr('y', 0);
                 this.container.on('mousemove', () => {
                     this.moveX = d3.event.clientX - 10 - this.marginLeft;
                     if (this.moveX - this.offsetX > 10) {
                         // uid 저장
+                        this.uid = this.randomTempUid;
                         this.isDragging = true;
                         const widthCompare: number = this.moveX - this.offsetX;
                         this.currentRect.attr('width', widthCompare < 0 ? 0 : widthCompare ).attr('height', this.targetRectHeight);
@@ -136,15 +141,19 @@ export class MultiBrushPlugin extends ChartPlugin {
                 dates.push(this.scale.invert(this.offsetX));
                 dates.push(this.scale.invert(this.moveX));
                 if (this.isDragging) {
-                    // uid 함께 parameter로 담아서 보내주기
-                    this._callback.call(this, dates, d3.event);
+                    this._callback.call(this, dates, d3.event, this.uid);
                     this.isDragging = false;
+                    this.container.on('click', null);
+                } else {
+                    this.container.on('click', () => {
+                        this.container.select(`.brush-${this.uid}`).remove();
+                    });
                 }
             });
     }
 
     updateDisplay(width?: number, height?: number) {
-        this.container.attr('transform', `translate(${this.marginTop}, ${this.marginLeft})`);
+        this.container.attr('transform', `translate(${this.marginLeft}, ${this.marginTop})`);
         this.targetRectWidth = +this.targetRect.attr('width');
         this.targetRectHeight = +this.targetRect.attr('height');
         console.log('size : ', this.targetRectWidth, this.targetRectHeight, this.targetRect);

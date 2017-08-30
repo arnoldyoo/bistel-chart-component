@@ -160,7 +160,6 @@ export abstract class Series implements IDisplay {
     }
 
     set xAxe( value: Axe ) {
-        console.log(value);
         this._xAxe = value;
     }
 
