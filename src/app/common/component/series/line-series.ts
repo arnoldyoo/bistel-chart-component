@@ -4,6 +4,7 @@ import { SeriesConfiguration } from './../../../model/index';
 export class LineSeries extends Series {
 
     private _line: any;
+    private _defs: any;
 
     constructor( seriesParam: SeriesConfiguration ) {
         super( seriesParam );
@@ -41,21 +42,27 @@ export class LineSeries extends Series {
             svgElement.datum(this.dataProvider);
         }
         svgElement.attr('d', this._line);
+        this._defs.select('rect').attr('width', this.width).attr('height', this.height);
 
-        this.target.selectAll(".dot")
+        this.target.selectAll('.dot').remove();
+        this.target.selectAll('.dot')
                 .data(this.dataProvider)
-            .enter().append("circle") // Uses the enter().append() method
-                .attr("class", "dot") // Assign a class for styling
-                .attr("cx", (d, i) => { return this.xAxe.itemDimensions  / 2 + this.xAxe.scale(d[this.xField]); })
-                .attr("cy", (d) => { return this.yAxe.scale(d[this.yField]) })
-                .attr("r", 3)
+            .enter().append('circle') // Uses the enter().append() method
+                .attr('class', 'dot') // Assign a class for styling
+                .attr('cx', (d, i) => { return this.xAxe.itemDimensions  / 2 + this.xAxe.scale(d[this.xField]); })
+                .attr('cy', (d) => { return this.yAxe.scale(d[this.yField]) })
+                .attr('r', 2)
+                .attr('clip-path', `url(#${this.displayName + this.index}-clip-path)`)
                 .attr('fill', this.color);
     }
 
     createItem() {
+        this._defs = this.target.append('defs');
+        this._defs.append('clipPath').attr('id', `${this.displayName + this.index}-clip-path`).append('rect');
         return this.target.datum(this.dataProvider)
                             .append('path')
                             .style('stroke', this.color)
+                            .attr('clip-path', `url(#${this.displayName + this.index}-clip-path)`)
                             .attr('class', this.displayName + this.index);
     }
 

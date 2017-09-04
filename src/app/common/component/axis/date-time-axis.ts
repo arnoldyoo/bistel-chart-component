@@ -32,6 +32,12 @@ export class DateTimeAxis extends Axis {
         }
     }
 
+    setDomain(min: number, max: number) {
+        this.domain[0] = min;
+        this.domain[1] = max;
+        this.updateDisplay(this.width, this.height);
+    }
+
     scaleSetting() {
         super.scaleSetting();
         this._scale = d3.time.scale()

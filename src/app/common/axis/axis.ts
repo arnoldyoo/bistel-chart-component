@@ -7,6 +7,7 @@ export abstract class Axis implements IDisplay {
     numeric_min: number;
     numeric_max: number;
 
+
     protected _range: Array<number>;
     protected _scale: any;
 
@@ -26,6 +27,8 @@ export abstract class Axis implements IDisplay {
     private _tickInfo: any;
     private _dataProvider: Array<any>;
     private _isStacked: boolean;
+    private _prevDomain: Array<any>;
+
 
     // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
     constructor(axisConfig?: AxisConfiguration) {
@@ -42,6 +45,7 @@ export abstract class Axis implements IDisplay {
             this.height = this._configuration.height;
             this.margin = this._configuration.margin;
             this.domain = this._configuration.domain;
+            this.prevDomain = this.domain;
             this.isStacked = this._configuration.isStacked;
             if (this._configuration.conditions) {
                 this._setConditions(this._configuration.conditions);
@@ -124,8 +128,18 @@ export abstract class Axis implements IDisplay {
     set domain( value: any ) {
         this._domain = value;
     }
+
     get domain() {
         return this._domain;
+    }
+
+    set prevDomain( value: any) {
+        console.log('prevDomain' , value);
+        this._prevDomain = value;
+    }
+
+    get prevDomain() {
+        return this._prevDomain;
     }
 
     set type( value: string ) {
@@ -238,7 +252,7 @@ export abstract class Axis implements IDisplay {
             return d[targetField];
         });
         if ( this.domain.length && _.isNumber(this.domain[0]) ) {
-            const tempDomain: Array<any> = [...this.domain];
+            const tempDomain: Array<any> = this.domain;
             this.domain = [];
             let min: number = _.min(tempDomain);
             let max: number = _.max(tempDomain);
@@ -250,6 +264,8 @@ export abstract class Axis implements IDisplay {
             this.domain.push(min);
             this.domain.push(max);
         }
+
+        this.prevDomain = [...this.domain];
     }
 
 
@@ -361,6 +377,8 @@ export abstract class Axis implements IDisplay {
         this.makeAxisLabel();
         this._drawAxisBackground();
     }
+
+    setDomain(min: number, max: number) {}
 
     protected scaleToAxeSetting() { }
 

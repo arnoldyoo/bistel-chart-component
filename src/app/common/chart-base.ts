@@ -43,6 +43,12 @@ export class ChartBase implements IDisplay {
     private OSName = 'none';
     private _isCtrlKey: boolean;
 
+    private _offsetX: number;
+    private _offsetY: number;
+    private _moveX: number;
+    private _moveY: number;
+    private _isResetZoom: boolean;
+
     constructor( config?: ChartConfiguration ) {
         this._instanceLoader = new InstanceLoader();
         this._pluginLoader = new PluginCreator();
@@ -471,7 +477,7 @@ export class ChartBase implements IDisplay {
     _addSvgEvent() {
         const selector = this.configuration.chart.selector;
         this.target.on('mousedown', () => {
-
+                this._offsetX = d3.event.offsetX - this.margin.left;
                 if (d3.event.target) {
                     const currentEvent: ChartEventData = new ChartEventData(
                         d3.event,
@@ -493,6 +499,20 @@ export class ChartBase implements IDisplay {
                     }
                     dispatchEvent( new CustomEvent(selector + '-' + ChartEvent.ITEM_CLICK, { detail: currentEvent }));
                 }
+
+                this.target.on('mousemove', () => {
+                    this._moveX = d3.event.offsetX - 10 - this.margin.left;
+                    if ( this._moveX - this._offsetX < -20 ) {
+                        this._isResetZoom = true;
+                    }
+                })
+            })
+            .on('mouseup', () => {
+                if (this._isResetZoom) {
+                    this.resetZoom();
+                    this._isResetZoom = false;
+                }
+                this.target.on('mousemove', null);
             })
             .on('mouseover', () => {
                 if (d3.event.target) {
@@ -544,6 +564,51 @@ export class ChartBase implements IDisplay {
 
     removeFromUid(className: string, uid: any) {
         this.target.select(`.${className}-${uid}`).remove();
+    }
+
+    // custom zoom
+    zoomXAxis(date: Array<any>) {
+        const startX: number = new Date(date[0]).getTime();
+        const endX: number = new Date(date[1]).getTime();
+        console.log(startX);
+        console.log(endX);
+        this.axis.map((a: Axis) => {
+            a.setDomain(startX, endX);
+        });
+
+        this._seriesUpdateForScale();
+
+    }
+
+    resetZoom() {
+        this.axis.map((a: Axis) => {
+            if (a.prevDomain) {
+                console.log(a.prevDomain[0], a.prevDomain[1]);
+                a.setDomain(a.prevDomain[0], a.prevDomain[1]);
+            }
+        });
+        this._seriesUpdateForScale();
+    }
+
+    _seriesUpdateForScale() {
+        this.series.map((series: Series) => {
+            for ( let i = 0 ; i < this._axis.length; i++ ) {
+                if (this._axis[i].field.split(',').indexOf(series.xField) > -1) {
+                    series.xAxe =  this._axis[i].axe;
+                    series.xAxe.name = this._axis[i].field;
+                    break;
+                }
+            }
+
+            for ( let i = 0 ; i < this._axis.length; i++ ) {
+                if (this._axis[i].field.split(',').indexOf(series.yField) > -1) {
+                    series.yAxe =  this._axis[i].axe;
+                    series.yAxe.name = this._axis[i].field;
+                    break;
+                }
+            }
+            series.updateDisplay(this.width, this.height);
+        });
     }
 
 }

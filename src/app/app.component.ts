@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { MIChartComponent } from './component/mi-chart.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { LegendConfiguration } from './model/legend.interface';
 import { AppService } from './app.service';
 import { Observable } from 'rxjs/observable';
@@ -11,6 +12,7 @@ import { Subject } from 'rxjs/';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+    @ViewChild('michart') michart: MIChartComponent;
     title = 'app works!';
     currentType: string;
     chartConfig: any;
@@ -245,9 +247,7 @@ export class AppComponent implements OnInit {
     }
 
     multiCallback = (dates: Array<any>, event: any, uid: any) => {
-        console.log(dates);
-        console.log(event);
-        console.log(uid);
+        this.michart.chart.baseChart.zoomXAxis(dates);
     }
 
     rerun() {
