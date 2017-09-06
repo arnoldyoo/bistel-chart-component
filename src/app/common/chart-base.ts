@@ -88,7 +88,7 @@ export class ChartBase implements IDisplay {
             this._addCustomEvent();
             setTimeout( () => {
                 const currentEvent: ChartEventData = new ChartEventData(this, null, ChartEvent.CREATION_COMPLETE);
-                dispatchEvent( new CustomEvent(ChartEvent.CREATION_COMPLETE, {detail: currentEvent}));
+                document.dispatchEvent( new CustomEvent(ChartEvent.CREATION_COMPLETE, {detail: currentEvent}));
             }, 500 );
         }
     }
@@ -197,6 +197,7 @@ export class ChartBase implements IDisplay {
     }
 
     addEventListener(type: string, method: any) {
+        console.log(type, method);
         const selector = this.configuration.chart.selector;
         addEventListener(selector+ '-' + type, method);
     }

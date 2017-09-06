@@ -71,10 +71,11 @@ export class ChartComponent implements OnChanges {
 
     _createChart(config: any) {
         this.baseChart = new ChartBase(config);
+        console.log(this.baseChart);
         this.baseChart.addEventListener(ChartEvent.ITEM_CLICK, this._itemClick);
         this.baseChart.addEventListener(ChartEvent.MOUSE_OUT, this._mouseOut);
         this.baseChart.addEventListener(ChartEvent.MOUSE_OVER, this._mouseOver);
-        this.baseChart.addEventListener(ChartEvent.CREATION_COMPLETE, this._chartCreation);
+        document.addEventListener(ChartEvent.CREATION_COMPLETE, this._chartCreation);
     }
 
     _drawChart(width: number, height: number) {
@@ -119,7 +120,7 @@ export class ChartComponent implements OnChanges {
         }
     }
 
-    _chartCreation = (event: ChartEventData) => {
+    _chartCreation(event: CustomEvent) {
         console.log('chart creation complate!');
     }
 }

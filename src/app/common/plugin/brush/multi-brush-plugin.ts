@@ -69,13 +69,9 @@ export class MultiBrushPlugin extends ChartPlugin {
     }
 
     _getScale(width: number, height: number ) {
-        const xaxis: Array<any> = d3.select(`.x.${this._orient}`).selectAll('text')[0];
-        console.log(xaxis);
-        const firstLabel: any = new Date(xaxis[0].__data__).getTime();
-        const lastLabel: any = new Date(xaxis[xaxis.length - 1].__data__).getTime();
-        const domain: Array<number> = [firstLabel, lastLabel];
+        const targetDomain = this.target.select(`.x.${this._orient}`)[0][0].__chart__.domain();
         this.scale = d3.time.scale()
-                                .domain(domain)
+                                .domain([targetDomain[0].getTime(), targetDomain[1].getTime()])
                                 .range([0, width]);
 
         // this._addBrush(this.target);
