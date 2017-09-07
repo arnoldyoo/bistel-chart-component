@@ -358,7 +358,7 @@ export abstract class Series implements IDisplay {
     filteringDataProvider(dataProvider: Array<any>) {
         return dataProvider.filter((d: any) => {
             const domain: Array<any> = this.xAxe.scale.domain();
-            if (d.date >= domain[0] && d.date <= domain[1] ) {
+            if (d[this.xField] >= domain[0] && d[this.xField] <= domain[1] ) {
                 return true;
             } else {
                 return false;
