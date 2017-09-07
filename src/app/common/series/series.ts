@@ -353,4 +353,16 @@ export abstract class Series implements IDisplay {
         const elements: Array<any> = this.target.selectAll('*');
         console.log('removeAll : ', elements);
     }
+
+
+    filteringDataProvider(dataProvider: Array<any>) {
+        return dataProvider.filter((d: any) => {
+            const domain: Array<any> = this.xAxe.scale.domain();
+            if (d.date >= domain[0] && d.date <= domain[1] ) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    }
 }

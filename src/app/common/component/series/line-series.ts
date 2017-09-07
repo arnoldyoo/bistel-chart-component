@@ -5,6 +5,7 @@ export class LineSeries extends Series {
 
     private _line: any;
     private _defs: any;
+    private _filteredDataProvider: Array<any>;
 
     constructor( seriesParam: SeriesConfiguration ) {
         super( seriesParam );
@@ -14,6 +15,7 @@ export class LineSeries extends Series {
     dataSetting() {
         super.dataSetting();
         if (this.dataProvider) {
+            this._filteredDataProvider = this.filteringDataProvider(this.dataProvider);
             this.updateDisplay();
         }
     }
@@ -39,14 +41,14 @@ export class LineSeries extends Series {
         if (!svgElement[0][0]) {
             svgElement = this.createItem();
         } else {
-            svgElement.datum(this.dataProvider);
+            svgElement.datum(this._filteredDataProvider);
         }
         svgElement.attr('d', this._line);
         this._defs.select('rect').attr('width', this.width).attr('height', this.height);
 
         this.target.selectAll('.dot').remove();
         this.target.selectAll('.dot')
-                .data(this.dataProvider)
+                .data(this._filteredDataProvider)
             .enter().append('circle') // Uses the enter().append() method
                 .attr('class', 'dot') // Assign a class for styling
                 .attr('cx', (d, i) => { return this.xAxe.itemDimensions  / 2 + this.xAxe.scale(d[this.xField]); })
@@ -59,7 +61,7 @@ export class LineSeries extends Series {
     createItem() {
         this._defs = this.target.append('defs');
         this._defs.append('clipPath').attr('id', `${this.displayName + this.index}-clip-path`).append('rect');
-        return this.target.datum(this.dataProvider)
+        return this.target.datum(this._filteredDataProvider)
                             .append('path')
                             .style('stroke', this.color)
                             .attr('clip-path', `url(#${this.displayName + this.index}-clip-path)`)
