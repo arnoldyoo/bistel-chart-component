@@ -265,8 +265,9 @@ export abstract class Series implements IDisplay {
     }
 
     _pluginEvent = (event: CustomEvent) => {
+        console.log('drag end event in series');
         this.selectAll(event.detail);
-    }
+    };
 
     /*
     * title : _createContainer

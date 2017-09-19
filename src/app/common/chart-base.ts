@@ -229,7 +229,7 @@ export class ChartBase implements IDisplay {
     }
 
     enabledPlugin(pluginClass: string) {
-        this._plugins.map((plugin: ChartPlugin)=> {
+        this._plugins.map((plugin: ChartPlugin) => {
             if (plugin.className === pluginClass) {
                 plugin.enabled();
             }
@@ -237,7 +237,7 @@ export class ChartBase implements IDisplay {
     }
 
     disabledPlugin(pluginClass: string) {
-        this._plugins.map((plugin: ChartPlugin)=> {
+        this._plugins.map((plugin: ChartPlugin) => {
             if (plugin.className === pluginClass) {
                 plugin.disabled();
             }
@@ -331,7 +331,7 @@ export class ChartBase implements IDisplay {
     }
 
     _createSvg(chartConfig: any): any {
-        return d3.select('#'+chartConfig.selector).append('svg')
+        return d3.select('#' + chartConfig.selector).append('svg')
             .attr('id', chartConfig.uid);
     }
 
@@ -472,6 +472,9 @@ export class ChartBase implements IDisplay {
         }
         for (let i = 0; i < this._plugins.length; i++) {
             this._plugins[i].updateDisplay(this.width, this.height);
+            if (this._plugins[i].configuration.disable) {
+                this._plugins[i].disabled();
+            }
         }
     }
 
@@ -509,6 +512,7 @@ export class ChartBase implements IDisplay {
                 })
             })
             .on('mouseup', () => {
+
                 if (this._isResetZoom) {
                     this.resetZoom();
                     this._isResetZoom = false;
@@ -540,25 +544,40 @@ export class ChartBase implements IDisplay {
     }
 
     _addCustomEvent() {
-        this.target[0][0].addEventListener(ChartEvent.SELECT_ALL_ITEM, (event: CustomEvent) => {
+        this.target[0][0].addEventListener(ChartEvent.SELECT_ALL_ITEMS, (event: CustomEvent) => {
             this.selectedItem.push(event.detail);
-            console.log(this.selectedItem);
+            this.selectedItem.map((selected: any) => {
+                const keyNames = Object.keys(selected)[0];
+                console.log('selected key : ', keyNames);
+                console.log('selected values : ', selected[keyNames]);
+            });
         });
 
         // this.target[0][0].addEventListener(ChartEvent.DRAG_END, (event: CustomEvent) => {
-        //     console.log(event);
-        // })
+        //     // here
+        //     console.log('drag end event ??');
+        // });
     }
 
     _setDefaultData() {
         const testData: Array<any> = [];
         for (let i = 0; i < 20; i++) {
-            testData.push( {  category: 'A' + i,
-                date: new Date(2017, 0, i).getTime(),
-                rate: Math.round( Math.random() * 10 ),
-                ratio: Math.round( Math.random() * 110  ),
-                revenue: Math.round( Math.random() * 120  ),
-                profit: Math.round( Math.random() * 100  ) } );
+            if (i === 5) {
+                testData.push( {  category: 'A' + i,
+                    date: new Date(2017, 0, i).getTime(),
+                    rate: null,
+                    ratio: null,
+                    revenue: null,
+                    profit: null
+                });
+            } else {
+                testData.push( {  category: 'A' + i,
+                    date: new Date(2017, 0, i).getTime(),
+                    rate: Math.round( Math.random() * 10 ),
+                    ratio: Math.round( Math.random() * 110  ),
+                    revenue: Math.round( Math.random() * 120  ),
+                    profit: Math.round( Math.random() * 100  ) } );
+            }
         }
         this.dataProvider = testData;
     }

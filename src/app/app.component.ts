@@ -68,11 +68,6 @@ export class AppComponent implements OnInit {
                     bottom: 100
                 },
                 data: this.data,
-                // event: {
-                //     itemclick: function (event) { console.log('itemclick : ', event); },
-                //     mouseover: function (event) { console.log('mouseover : ', event); },
-                //     mouseout: function (event) { console.log('mouseout : ', event); }
-                // }
             },
             axis: [
                 {
@@ -111,7 +106,7 @@ export class AppComponent implements OnInit {
                     xField: 'date',
                     yField: 'profit',
                     visible: true,
-                    displayName: 'Profit',
+                    displayName: 'profit',
 
                 },
                 {
@@ -127,7 +122,13 @@ export class AppComponent implements OnInit {
                     pluginClass: 'MultiBrushPlugin',
                     direction: 'x',
                     orient: 'bottom',
-                    callback: this.multiCallback
+                    callback: this.multiCallback,
+                    disable: true
+                },
+                {
+                    pluginClass: 'DragBase',
+                    direction: 'both',
+                    disable: false
                 }
             ],
             legend: {
@@ -157,9 +158,7 @@ export class AppComponent implements OnInit {
         //         },
         //         data: this.data,
         //         event: {
-        //             itemclick: function (event) { console.log('itemclick : ', event); },
-        //             mouseover: function (event) { console.log('mouseover : ', event); },
-        //             mouseout: function (event) { console.log('mouseout : ', event); }
+        //
         //         }
         //     },
         //     axis: [
@@ -235,7 +234,7 @@ export class AppComponent implements OnInit {
         //     plugin: [
         //         {
         //             pluginClass: 'DragBase',
-        //             direction: 'horizontal'
+        //             direction: 'both'
         //         }
         //     ],
         //     legend: {
@@ -254,15 +253,48 @@ export class AppComponent implements OnInit {
         this._chartDrawSetting(JSON.parse(this.currentConfigurationString));
     }
 
+    brushDisable() {
+        this.michart.chart.baseChart.disabledPlugin('MultiBrushPlugin');
+    }
+
+    brushEnable() {
+        this.michart.chart.baseChart.enabledPlugin('MultiBrushPlugin');
+    }
+
+    dragDisable() {
+        this.michart.chart.baseChart.disabledPlugin('DragBase');
+    }
+
+    dragEnable() {
+        this.michart.chart.baseChart.enabledPlugin('DragBase');
+    }
+
     _setDefaultData() {
         this.data = [];
         for (let i = 0; i < 20; i++) {
-            this.data.push( {  category: 'B' + i,
-                           date: new Date(2017, 0, i).getTime(),
-                           rate: Math.round( Math.random() * 10 ),
-                           ratio: Math.round( Math.random() * 110  ),
-                           revenue: Math.round( Math.random() * 120  ),
-                           profit: Math.round( Math.random() * 100  ) } );
+            if (i === 5) {
+                this.data.push( {  category: 'A' + i,
+                    date: new Date(2017, 0, i).getTime(),
+                    rate: null,
+                    ratio: null,
+                    revenue: null,
+                    profit: null
+                });
+            } else {
+                this.data.push( {  category: 'A' + i,
+                    date: new Date(2017, 0, i).getTime(),
+                    rate: Math.round( Math.random() * 10 ),
+                    ratio: Math.round( Math.random() * 110  ),
+                    revenue: Math.round( Math.random() * 120  ),
+                    profit: Math.round( Math.random() * 100  ) } );
+            }
+
+            // this.data.push( {  category: 'A' + i,
+            //     date: new Date(2017, 0, i).getTime(),
+            //     rate: Math.round( Math.random() * 10 ),
+            //     ratio: Math.round( Math.random() * 110  ),
+            //     revenue: Math.round( Math.random() * 120  ),
+            //     profit: Math.round( Math.random() * 100  ) } );
         }
     }
 

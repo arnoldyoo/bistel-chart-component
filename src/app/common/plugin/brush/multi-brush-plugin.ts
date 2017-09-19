@@ -160,14 +160,20 @@ export class MultiBrushPlugin extends ChartPlugin {
     }
 
     _removeEvent() {
-
+        this.containerRect
+            .on('mousemove', null)
+            .on('mousedown', null)
+            .on('mouseup', null)
+            .on('click', null);
     }
 
     disabled() {
         super.disabled();
+        this._removeEvent();
     }
 
     enabled() {
         super.enabled();
+        this._addDragRect();
     }
 }

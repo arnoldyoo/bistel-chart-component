@@ -2,6 +2,7 @@ import { Series } from '../../series/index';
 import { SeriesConfiguration } from './../../../model/index';
 import { ChartException } from '../../../common/error/index';
 import { Dragable } from '../../plugin/index';
+import { ChartEvent } from '../../event/chart-event.constant';
 
 interface RectInfo {
     rect: any;
@@ -258,7 +259,7 @@ export class ColumnSeries extends Series {
                 selectedItems.push(rect[0][0].__data__);
             }
         });
-        this.target[0][0].nearestViewportElement.dispatchEvent( new CustomEvent('select_all_items', {detail: selectedItems}));
+        this.target[0][0].nearestViewportElement.dispatchEvent( new CustomEvent(ChartEvent.SELECT_ALL_ITEMS, {detail: selectedItems}));
     }
 }
 

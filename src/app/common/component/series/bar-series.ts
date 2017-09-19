@@ -1,6 +1,7 @@
 import { Series } from '../../series/index';
 import { SeriesConfiguration } from './../../../model/index';
 import { Dragable } from '../../plugin/index';
+import { ChartEvent } from '../../event/chart-event.constant';
 
 export class BarSeries extends Series {
 
@@ -244,7 +245,7 @@ export class BarSeries extends Series {
                 selectedItems.push(rect);
             }
         });
-        this.target[0][0].nearestViewportElement.dispatchEvent( new CustomEvent('select_all_items', {detail: selectedItems}));
+        this.target[0][0].nearestViewportElement.dispatchEvent( new CustomEvent(ChartEvent.SELECT_ALL_ITEMS, {detail: selectedItems}));
     }
 }
 
