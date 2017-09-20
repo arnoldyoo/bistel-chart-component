@@ -197,7 +197,6 @@ export class ChartBase implements IDisplay {
     }
 
     addEventListener(type: string, method: any) {
-        console.log(type, method);
         const selector = this.configuration.chart.selector;
         addEventListener(selector+ '-' + type, method);
     }
@@ -546,17 +545,61 @@ export class ChartBase implements IDisplay {
     _addCustomEvent() {
         this.target[0][0].addEventListener(ChartEvent.SELECT_ALL_ITEMS, (event: CustomEvent) => {
             this.selectedItem.push(event.detail);
-            this.selectedItem.map((selected: any) => {
-                const keyNames = Object.keys(selected)[0];
-                console.log('selected key : ', keyNames);
-                console.log('selected values : ', selected[keyNames]);
+            if (this.series.length === this.selectedItem.length) {
+                this._tempCopy();
+                // this._tempDeleteAll();
+            }
+        });
+    }
+
+    _tempCopy() {
+        this.selectedItem.map((selected: any) => {
+            const keyNames = Object.keys(selected)[0];
+            const values: Array<any> = selected[keyNames];
+            let i = 0;
+            let prevData: any;
+            this.dataProvider.map((d: any) => {
+                if (i === values.length) {
+                    return;
+                }
+                if (d.date === values[i].date) {
+                    // d[keyNames] = null;
+                    d[keyNames] = prevData[keyNames];
+                    i++;
+                } else {
+                    prevData = d;
+                }
             });
         });
 
-        // this.target[0][0].addEventListener(ChartEvent.DRAG_END, (event: CustomEvent) => {
-        //     // here
-        //     console.log('drag end event ??');
-        // });
+        // console.log(this.dataProvider);
+
+        this._axisUpdate();
+        this._seriesUpdate();
+    }
+
+    _tempDeleteAll() {
+        this.selectedItem.map((selected: any) => {
+            const keyNames = Object.keys(selected)[0];
+            const values: Array<any> = selected[keyNames];
+            let i = 0;
+            const removedIndex: Array<number> = [];
+            this.dataProvider.map((d: any, index: number) => {
+                if (i === values.length) {
+                    return;
+                }
+                if (d.date === values[i].date) {
+                    removedIndex.push(index);
+                    i++;
+                }
+            });
+            // console.log('remove!! ', removedIndex);
+            removedIndex.map((ri: number) => {
+                this.dataProvider.splice(ri, 1);
+            });
+        });
+        this._axisUpdate();
+        this._seriesUpdate();
     }
 
     _setDefaultData() {

@@ -27,7 +27,7 @@ export class LineSeries extends Series {
         // tslint:disable-next-line:comment-format
         // setup x, y, width, height
         this._line = d3.svg.line()
-            // .defined((d) => { return d[this.yField] !== null; })
+            .defined((d) => { return d[this.yField] !== null; })
             .x((d: any) => {
                 return this.xAxe.itemDimensions  / 2 + this.xAxe.scale(d[this.xField]);
             })
@@ -52,10 +52,10 @@ export class LineSeries extends Series {
 
         this.target.selectAll('.dot').remove();
         this.target.selectAll('.dot')
-                // .data(this._filteredDataProvider.filter((d: any) => {
-                //     return d[this.yField] !== null;
-                // }))
-            .data(this._filteredDataProvider)
+                .data(this._filteredDataProvider.filter((d: any) => {
+                    return d[this.yField] !== null;
+                }))
+            // .data(this._filteredDataProvider)
             .enter().append('circle') // Uses the enter().append() method
                 .attr('class', 'dot') // Assign a class for styling
                 .attr('cx', (d, i) => { return this.xAxe.itemDimensions  / 2 + this.xAxe.scale(d[this.xField]); })
@@ -94,10 +94,6 @@ export class LineSeries extends Series {
                 selectedItem.push(c.__data__);
             }
         });
-
-
-        
-
 
         selectedObj[this.displayName] = selectedItem;
         this.target[0][0].nearestViewportElement.dispatchEvent( new CustomEvent(ChartEvent.SELECT_ALL_ITEMS, {detail: selectedObj}));
