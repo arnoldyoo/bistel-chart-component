@@ -76,6 +76,11 @@ export class LineSeries extends Series {
                             .attr('class', this.displayName + this.index);
     }
 
+    unselectAll() {
+        const circleArr: any = this.target.selectAll('.selected-circle');
+        circleArr.classed('selected-circle', false).attr('fill', 'white');
+    }
+
     selectAll(event: Dragable) {
         const circleArr: Array<any> = this.target.selectAll('circle');
         const selectedObj: any = {};
@@ -85,9 +90,15 @@ export class LineSeries extends Series {
             const circleX: number = +circle.attr('cx');
             const circleY: number = +circle.attr('cy');
             if ( (event.startX < circleX && circleX < event.endX) && ( event.startY < circleY && circleY < event.endY ) ) {
+                circle.classed('selected-circle', true).attr('fill', this.color);
                 selectedItem.push(c.__data__);
             }
         });
+
+
+        
+
+
         selectedObj[this.displayName] = selectedItem;
         this.target[0][0].nearestViewportElement.dispatchEvent( new CustomEvent(ChartEvent.SELECT_ALL_ITEMS, {detail: selectedObj}));
     }
