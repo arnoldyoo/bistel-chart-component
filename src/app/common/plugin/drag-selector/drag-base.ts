@@ -22,6 +22,7 @@ export class DragBase extends ChartPlugin {
     private mouseUps: any;
     private mouseMoves: any;
     private dragStart: any;
+    private _callback: any;
 
     set direction(value: string) {
         this._direction = value;
@@ -39,6 +40,10 @@ export class DragBase extends ChartPlugin {
         super(target, configuration);
         if (configuration) {
             this.direction = configuration.direction;
+            if (configuration.callback) {
+                this._callback = configuration.callback;
+                this._addListener();
+            }
         }
         // get parent group element translate for setup margin
         const ytarget = this.target.select('g.background');
@@ -46,6 +51,12 @@ export class DragBase extends ChartPlugin {
         this.marginTop = yposition[1];
         this.marginLeft = yposition[0];
         this._randomId = 0;
+    }
+
+    _addListener() {
+        addEventListener(ChartEvent.CONCAT_SELECT_ITEMS, (event: CustomEvent) => {
+            this._callback.call(this, event.detail.item, event.detail.event);
+        });
     }
 
     _addEvent(target: any) {
@@ -102,7 +113,7 @@ export class DragBase extends ChartPlugin {
                 const moveY = startY + (+targetBox.attr('height'));
 
                 // minus margin position for original position
-                const dragEvent: Dragable = new Dragable(startX - this.marginLeft,
+                const dragEvent: Dragable = new Dragable(e, startX - this.marginLeft,
                     startY - this.marginTop, moveX - this.marginLeft, moveY - this.marginTop);
 
                 // send event to series component

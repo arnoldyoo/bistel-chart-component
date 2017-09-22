@@ -3,8 +3,10 @@ export class Dragable {
     private _startY: number;
     private _endX: number;
     private _endY: number;
+    private _event: Event;
 
-    constructor(startX?: number, startY?: number, endX?: number, endY?: number) {
+    constructor( event?: Event, startX?: number, startY?: number, endX?: number, endY?: number) {
+        this.event = event;
         this.startX = startX;
         this.startY = startY;
         this.endX = endX;
@@ -41,5 +43,13 @@ export class Dragable {
 
     get endY() {
         return this._endY;
+    }
+
+    set event(ev: Event) {
+        this._event = ev;
+    }
+
+    get event() {
+        return this._event;
     }
 }

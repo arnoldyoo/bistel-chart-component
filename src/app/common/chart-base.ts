@@ -544,10 +544,17 @@ export class ChartBase implements IDisplay {
 
     _addCustomEvent() {
         this.target[0][0].addEventListener(ChartEvent.SELECT_ALL_ITEMS, (event: CustomEvent) => {
-            this.selectedItem.push(event.detail);
+            this.selectedItem.push(event.detail.item);
+
             if (this.series.length === this.selectedItem.length) {
-                this._tempCopy();
+                // this._tempCopy();
                 // this._tempDeleteAll();
+                const dispatchItem = {
+                    item: this.selectedItem,
+                    event: event.detail.event
+                };
+                console.log(dispatchItem);
+                dispatchEvent(new CustomEvent(ChartEvent.CONCAT_SELECT_ITEMS, {detail: dispatchItem}));
             }
         });
     }

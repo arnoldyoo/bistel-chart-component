@@ -17,4 +17,6 @@ export class ChartEvent {
 
     static CREATION_COMPLETE = 'create_complete';
     static SELECT_ALL_ITEMS = 'select_all_items';
+
+    static CONCAT_SELECT_ITEMS = 'concat_select_items';
 }

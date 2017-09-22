@@ -82,6 +82,7 @@ export class LineSeries extends Series {
     }
 
     selectAll(event: Dragable) {
+        console.log(event.event);
         const circleArr: Array<any> = this.target.selectAll('circle');
         const selectedObj: any = {};
         const selectedItem: Array<any> = [];
@@ -96,7 +97,11 @@ export class LineSeries extends Series {
         });
 
         selectedObj[this.displayName] = selectedItem;
-        this.target[0][0].nearestViewportElement.dispatchEvent( new CustomEvent(ChartEvent.SELECT_ALL_ITEMS, {detail: selectedObj}));
+        const dispatchItems = {
+            item: selectedObj,
+            event: event.event
+        }
+        this.target[0][0].nearestViewportElement.dispatchEvent( new CustomEvent(ChartEvent.SELECT_ALL_ITEMS, {detail: dispatchItems}));
     }
 
 }
