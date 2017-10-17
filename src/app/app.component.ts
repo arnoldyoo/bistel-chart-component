@@ -123,12 +123,12 @@ export class AppComponent implements OnInit {
                     direction: 'x',
                     orient: 'bottom',
                     callback: this.multiCallback,
-                    disable: true
+                    disable: false
                 },
                 {
                     pluginClass: 'DragBase',
                     direction: 'both',
-                    disable: false,
+                    disable: true,
                     callback: this.dragCallback
                 }
             ],
@@ -253,7 +253,7 @@ export class AppComponent implements OnInit {
 
     multiCallback = (dates: Array<any>, event: any, uid: any) => {
         console.log(event);
-        this.michart.chart.baseChart.zoomXAxis(dates);
+        // this.michart.chart.baseChart.zoomXAxis(dates);
     }
 
     rerun() {

@@ -117,6 +117,10 @@ export class MultiBrushPlugin extends ChartPlugin {
                 this.offsetX = d3.event.clientX - this.marginLeft;
                 this.currentRect = this.container.append('rect').attr('class', `brush-${this.randomTempUid}`).style('fill', 'grey')
                 .style('fill-opacity', 0.7).attr('x', this.offsetX).attr('y', 0);
+                this.currentRect.on('mousemove', () => {
+                    console.log('???');
+                    console.log(d3.event);
+                })
                 this.container.on('mousemove', () => {
                     this.moveX = d3.event.clientX - 10 - this.marginLeft;
                     if (this.moveX - this.offsetX > 10) {
