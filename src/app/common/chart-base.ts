@@ -217,6 +217,9 @@ export class ChartBase implements IDisplay {
                 .attr('width', width - this.margin.left - this.margin.right)
                 .attr('height', height - this.margin.bottom - this.margin.top);
         }
+        // this._axisUpdate();
+        // this._seriesUpdate();
+        // this._pluginUpdate();
         try {
             this._axisUpdate();
             this._seriesUpdate();
@@ -435,6 +438,7 @@ export class ChartBase implements IDisplay {
         const tempList = <any>[];
         if (pluginList && pluginList.length) {
             pluginList.map((plugin: any) => {
+                plugin.margin = this.margin;
                 const pluginObj = this._pluginLoader.pluginFactory(plugin.pluginClass, this.target, plugin);
                 tempList.push(pluginObj);
             });

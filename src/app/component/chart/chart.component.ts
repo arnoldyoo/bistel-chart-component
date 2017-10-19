@@ -19,7 +19,7 @@ import { ChartConfiguration } from "../../model/chart.interface";
         }
         path, line {
             fill: none;
-            stroke: #ccc;
+
             shape-rendering: crispEdges;
         }
 

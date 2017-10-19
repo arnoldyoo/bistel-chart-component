@@ -1,4 +1,3 @@
-
 /**
  * Created by airnold on 2017. 6. 23..
  */
@@ -7,7 +6,7 @@ import { ChartException } from './error/index';
 import { DragBase } from './plugin/index';
 import { TextLabel } from './plugin/component-plugin/text-label';
 import { MultiBrushPlugin } from './plugin/brush/multi-brush-plugin';
-
+import { SpecLinePlugin } from './plugin/component-plugin/spec-line';
 
 export class PluginCreator {
     plugins: any;
@@ -20,7 +19,8 @@ export class PluginCreator {
         this.plugins = {
             DragBase: DragBase,
             TextLabel: TextLabel,
-            MultiBrushPlugin: MultiBrushPlugin
+            MultiBrushPlugin: MultiBrushPlugin,
+            SpecLinePlugin: SpecLinePlugin
         };
     }
 

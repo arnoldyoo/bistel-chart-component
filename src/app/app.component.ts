@@ -130,6 +130,24 @@ export class AppComponent implements OnInit {
                     direction: 'both',
                     disable: true,
                     callback: this.dragCallback
+                },
+                {
+                    pluginClass: 'SpecLinePlugin',
+                    value: 45,
+                    color: 'yellow',
+                    orient: 'left',
+                    direction: 'horizontal',
+                    axisKinds: 'numeric',
+                    displayName: 'warning'
+                },
+                {
+                    pluginClass: 'SpecLinePlugin',
+                    value: 85,
+                    color: 'red',
+                    orient: 'left',
+                    direction: 'horizontal',
+                    axisKinds: 'numeric',
+                    displayName: 'alarm'
                 }
             ],
             legend: {
