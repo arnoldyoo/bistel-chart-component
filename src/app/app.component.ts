@@ -81,7 +81,8 @@ export class AppComponent implements OnInit {
                     title: 'Profit',
                     tickInfo: {
                         ticks: 5
-                    }
+                    },
+                    domain: [0, 100]
                 },
 
                 {
@@ -97,25 +98,46 @@ export class AppComponent implements OnInit {
                         ticks: 10,
                         rotate: 65,
                         format: '%Y-%m-%d'
-                    }
+                    },
+                    domain: [new Date(2017, 0, 0) ,new Date(2017, 0, 19)]
                 }
             ],
             series: [
+                // {
+                //     seriesClass: 'LineSeries',
+                //     xField: 'date',
+                //     yField: 'profit',
+                //     visible: true,
+                //     displayName: 'profit',
+                //     circle: {
+                //         fill: {
+                //             start: 1483282800000,
+                //             end: 1483974000000,
+                //             base: 'date'
+                //         }
+                //     }
+                // },
+                // {
+                //     seriesClass: 'LineSeries',
+                //     xField: 'date',
+                //     yField: 'rate',
+                //     visible: true,
+                //     displayName: 'rate',
+                //     circle: {
+                //         fill: {
+                //             start: 1483282800000,
+                //             end: 1483974000000,
+                //             base: 'date'
+                //         }
+                //     }
+                // }
                 {
-                    seriesClass: 'LineSeries',
+                    seriesClass: 'ImageSeries',
                     xField: 'date',
                     yField: 'profit',
                     visible: true,
-                    displayName: 'profit',
-
+                    displayName: 'profit'
                 },
-                {
-                    seriesClass: 'LineSeries',
-                    xField: 'date',
-                    yField: 'rate',
-                    visible: true,
-                    displayName: 'rate',
-                }
             ],
             plugin: [
                 {
@@ -123,32 +145,32 @@ export class AppComponent implements OnInit {
                     direction: 'x',
                     orient: 'bottom',
                     callback: this.multiCallback,
-                    disable: false
+                    disable: true
                 },
                 {
                     pluginClass: 'DragBase',
                     direction: 'both',
-                    disable: true,
+                    disable: false,
                     callback: this.dragCallback
                 },
-                {
-                    pluginClass: 'SpecLinePlugin',
-                    value: 45,
-                    color: 'yellow',
-                    orient: 'left',
-                    direction: 'horizontal',
-                    axisKinds: 'numeric',
-                    displayName: 'warning'
-                },
-                {
-                    pluginClass: 'SpecLinePlugin',
-                    value: 85,
-                    color: 'red',
-                    orient: 'left',
-                    direction: 'horizontal',
-                    axisKinds: 'numeric',
-                    displayName: 'alarm'
-                }
+                // {
+                //     pluginClass: 'SpecLinePlugin',
+                //     value: 45,
+                //     color: 'yellow',
+                //     orient: 'left',
+                //     direction: 'horizontal',
+                //     axisKinds: 'numeric',
+                //     displayName: 'warning'
+                // },
+                // {
+                //     pluginClass: 'SpecLinePlugin',
+                //     value: 85,
+                //     color: 'red',
+                //     orient: 'left',
+                //     direction: 'horizontal',
+                //     axisKinds: 'numeric',
+                //     displayName: 'alarm'
+                // }
             ],
             legend: {
                 selector: '#div_02',
@@ -156,10 +178,6 @@ export class AppComponent implements OnInit {
                 series: undefined
             }
         };
-
-
-
-
 
         // this.chartConfig = {
         //     chart: {
@@ -321,6 +339,7 @@ export class AppComponent implements OnInit {
                 revenue: Math.round( Math.random() * 120  ),
                 profit: Math.round( Math.random() * 100  ) } );
         }
+        console.log(this.data);
     }
 
     _chartDrawSetting(data: any) {

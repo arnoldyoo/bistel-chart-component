@@ -20,6 +20,13 @@ export interface SeriesConditions {
         visible: boolean,
         side: string
     };
+    circle?: {
+        fill?: {
+            start: any,
+            end: any,
+            base: string
+        }
+    };
 }
 
 export interface AxisConfiguration {

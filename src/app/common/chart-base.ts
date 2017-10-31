@@ -217,17 +217,17 @@ export class ChartBase implements IDisplay {
                 .attr('width', width - this.margin.left - this.margin.right)
                 .attr('height', height - this.margin.bottom - this.margin.top);
         }
-        // this._axisUpdate();
-        // this._seriesUpdate();
-        // this._pluginUpdate();
-        try {
-            this._axisUpdate();
-            this._seriesUpdate();
-            this._pluginUpdate();
-        } catch (e) {
-            console.log('Error Code : ', e.status);
-            console.log('Error Message : ', e.errorContent.message);
-        }
+        this._axisUpdate();
+        this._seriesUpdate();
+        this._pluginUpdate();
+        // try {
+        //     this._axisUpdate();
+        //     this._seriesUpdate();
+        //     this._pluginUpdate();
+        // } catch (e) {
+        //     console.log('Error Code : ', e.status);
+        //     console.log('Error Message : ', e.errorContent.message);
+        // }
     }
 
     enabledPlugin(pluginClass: string) {
@@ -356,6 +356,9 @@ export class ChartBase implements IDisplay {
                 domain: this.domain,
                 isStacked: this._isStacked
             };
+            if (axisConfig.domain) {
+                axis_params.domain = axisConfig.domain;
+            }
 
             // axisConfig: any, axisTarget: any, width: number, height: number, margin: Array<any>, domain: any
 

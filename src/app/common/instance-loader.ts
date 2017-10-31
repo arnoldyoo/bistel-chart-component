@@ -1,5 +1,5 @@
 import { DateTimeAxis, CategoryAxis, NumericAxis } from './component/axis/index';
-import { ColumnSeries, LineSeries, ColumnSet, BarSeries, BarSet, PieSeries, PieSet } from './component/series/index';
+import { ColumnSeries, LineSeries, ColumnSet, BarSeries, BarSet, PieSeries, PieSet, ImageSeries } from './component/series/index';
 import { AxisConfiguration, SeriesConfiguration } from './../model/index';
 import { ChartException } from './error/index';
 
@@ -21,7 +21,8 @@ export class InstanceLoader {
             BarSeries: BarSeries,
             BarSet: BarSet,
             PieSeries: PieSeries,
-            PieSet: PieSet
+            PieSet: PieSet,
+            ImageSeries: ImageSeries
         };
     }
 
