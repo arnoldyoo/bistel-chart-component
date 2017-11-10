@@ -54,12 +54,12 @@ export class DateTimeAxis extends Axis {
         this.axe.scaleToAxe = d3.svg.axis()
                                 .scale(this._scale)
                                 .orient(this.orient);
-        if (this.tickInfo.format) {
+        if (this.tickInfo && this.tickInfo.format) {
             this.axe.scaleToAxe.tickFormat(d3.time.format(this.tickInfo.format));
         } else {
             this.axe.scaleToAxe.tickFormat(this._customTimeFormat);
         }
-        if (this.tickInfo.ticks) {
+        if (this.tickInfo && this.tickInfo.ticks) {
             this.axe.scaleToAxe.ticks(this.tickInfo.ticks);
         }
     }

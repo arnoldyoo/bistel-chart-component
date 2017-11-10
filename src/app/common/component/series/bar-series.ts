@@ -74,14 +74,22 @@ export class BarSeries extends Series {
         rectElement.attr('y', this.y);
         rectElement.attr('height', this.height);
 
-        this.setTransition(rectElement, 500)
-                    .attr('x', this.x)
-                    .attr('y', this.y)
-                    .attr('width', this.width)
-                    .attr('height', this.height)
-                    .each('end', (d: any) => {
-                        super.createLabel('right', rectElement);
-                    });
+        if (this.configuration.condition.textLabel.show) {
+            this.setTransition(rectElement, 500)
+            .attr('x', this.x)
+            .attr('y', this.y)
+            .attr('width', this.width)
+            .attr('height', this.height)
+            .each('end', (d: any) => {
+                super.createLabel('right', rectElement);
+            });
+        } else {
+            rectElement
+                .attr('x', this.x)
+                .attr('y', this.y)
+                .attr('width', this.width)
+                .attr('height', this.height)
+        }
         this.target.style('fill', this.color);
     }
 

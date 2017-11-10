@@ -1,3 +1,4 @@
+
 /**
  * Created by airnold on 2017. 6. 23..
  */
@@ -7,6 +8,7 @@ import { DragBase } from './plugin/index';
 import { TextLabel } from './plugin/component-plugin/text-label';
 import { MultiBrushPlugin } from './plugin/brush/multi-brush-plugin';
 import { SpecLinePlugin } from './plugin/component-plugin/spec-line';
+import { SplitLinePlugin } from './plugin/split-line/split-line-plugin';
 
 export class PluginCreator {
     plugins: any;
@@ -20,7 +22,8 @@ export class PluginCreator {
             DragBase: DragBase,
             TextLabel: TextLabel,
             MultiBrushPlugin: MultiBrushPlugin,
-            SpecLinePlugin: SpecLinePlugin
+            SpecLinePlugin: SpecLinePlugin,
+            SplitLinePlugin: SplitLinePlugin
         };
     }
 

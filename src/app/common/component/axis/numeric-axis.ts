@@ -42,10 +42,10 @@ export class NumericAxis extends Axis {
         this.axe.scaleToAxe = d3.svg.axis()
                                 .scale(this._scale)
                                 .orient(this.orient);
-        if (this.tickInfo.ticks) {
+        if (this.tickInfo && this.tickInfo.ticks) {
             this.axe.scaleToAxe.ticks(this.tickInfo.ticks);
         }
-        if ( this.tickInfo.tickFormat ) {
+        if (this.tickInfo && this.tickInfo.tickFormat ) {
             this.axe.scaleToAxe.tickFormat(this.tickInfo.tickFormat);
         }
     }

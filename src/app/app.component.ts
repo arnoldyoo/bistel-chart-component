@@ -52,57 +52,136 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         this.currentType = 'column';
         this._setDefaultData();
-
         this.chartConfig = {
             chart: {
                 selector: '',
                 uid: '',
                 size: {
-                    width: 100,
-                    height: 100
+                    width: 800,
+                    height: 400
                 },
                 margin: {
-                    left: 50,
-                    right: 50,
+                    left: 100,
+                    right: 10,
                     top: 10,
                     bottom: 100
                 },
-                data: this.data,
+                data: null
             },
             axis: [
                 {
                     axisClass: 'NumericAxis',
-                    type: 'y',
-                    field: 'profit,rate',
-                    format: null,
-                    orient: 'left',
-                    visible: true,
-                    gridline: true,
-                    title: 'Profit',
-                    tickInfo: {
-                        ticks: 5
-                    },
-                    domain: [0, 100]
-                },
-
-                {
-                    axisClass: 'DateTimeAxis',
                     type: 'x',
-                    field: 'date',
+                    field: 'revenue',
                     format: null,
                     orient: 'bottom',
                     visible: true,
+                    gridline: true,
+                    title: 'revenue'
+                },
+                {
+                    axisClass: 'CategoryAxis',
+                    type: 'y',
+                    field: 'category',
+                    format: null,
+                    orient: 'left',
+                    visible: true,
                     gridline: false,
-                    title: 'date',
-                    tickInfo: {
-                        ticks: 10,
-                        rotate: 65,
-                        format: '%Y-%m-%d'
-                    },
-                    domain: [new Date(2017, 0, 0) ,new Date(2017, 0, 19)]
+                    title: 'Category',
                 }
             ],
             series: [
+                 {
+                     seriesClass: 'BarSeries',
+                     xField: 'revenue',
+                     yField: 'category',
+                     visible: true,
+                     displayName: 'category',
+                     textLabel: {
+                        show: false
+                        // format: function(d) {return d+'%';}
+                    }
+                 }
+            ],
+            plugin: [
+                {
+                    pluginClass: 'SplitLinePlugin',
+                    xField: {
+                        type: 'x',
+                        field: 'revenue',
+                        orient: 'bottom',
+                        direction: 'vertical',
+                        axisKinds: 'numeric'
+                    },
+                    yField: {
+                        type: 'y',
+                        field: 'category',
+                        orient: 'left',
+                        direction: 'horizontal',
+                        axisKinds: 'category'
+                    },
+                    baseField: 'x',
+                    displayName: 'category',
+                    color: 'red'
+                }
+            ],
+            legend: {
+                selector: '#div_02',
+                orient: 'bottom',
+                series: undefined
+            }
+        }
+
+        // this.chartConfig = {
+        //     chart: {
+        //         selector: '',
+        //         uid: '',
+        //         size: {
+        //             width: 100,
+        //             height: 100
+        //         },
+        //         margin: {
+        //             left: 50,
+        //             right: 50,
+        //             top: 10,
+        //             bottom: 100
+        //         },
+        //         data: this.data,
+        //     },
+        //     axis: [
+        //         {
+        //             axisClass: 'NumericAxis',
+        //             type: 'y',
+        //             field: 'profit,rate',
+        //             format: null,
+        //             orient: 'left',
+        //             visible: true,
+        //             gridline: true,
+        //             title: 'Profit',
+        //             tickInfo: {
+        //                 ticks: 5
+        //             },
+        //             domain: [0, 100]
+        //         },
+
+        //         {
+        //             axisClass: 'DateTimeAxis',
+        //             type: 'x',
+        //             field: 'date',
+        //             format: null,
+        //             orient: 'bottom',
+        //             visible: true,
+        //             gridline: false,
+        //             title: 'date',
+        //             tickInfo: {
+        //                 ticks: 10,
+        //                 rotate: 65,
+        //                 format: '%Y-%m-%d'
+        //             },
+        //             domain: [new Date(2017, 0, 0) ,new Date(2017, 0, 19)]
+        //         }
+        //     ],
+        //     series: [
                 // {
                 //     seriesClass: 'LineSeries',
                 //     xField: 'date',
@@ -131,28 +210,28 @@ export class AppComponent implements OnInit {
                 //         }
                 //     }
                 // }
-                {
-                    seriesClass: 'ImageSeries',
-                    xField: 'date',
-                    yField: 'profit',
-                    visible: true,
-                    displayName: 'profit'
-                },
-            ],
-            plugin: [
-                {
-                    pluginClass: 'MultiBrushPlugin',
-                    direction: 'x',
-                    orient: 'bottom',
-                    callback: this.multiCallback,
-                    disable: true
-                },
-                {
-                    pluginClass: 'DragBase',
-                    direction: 'both',
-                    disable: false,
-                    callback: this.dragCallback
-                },
+                // {
+                //     seriesClass: 'ImageSeries',
+                //     xField: 'date',
+                //     yField: 'profit',
+                //     visible: true,
+                //     displayName: 'profit'
+                // },
+            // ],
+            // plugin: [
+            //     {
+            //         pluginClass: 'MultiBrushPlugin',
+            //         direction: 'x',
+            //         orient: 'bottom',
+            //         callback: this.multiCallback,
+            //         disable: true
+            //     },
+            //     {
+            //         pluginClass: 'DragBase',
+            //         direction: 'both',
+            //         disable: false,
+            //         callback: this.dragCallback
+            //     },
                 // {
                 //     pluginClass: 'SpecLinePlugin',
                 //     value: 45,
@@ -171,13 +250,13 @@ export class AppComponent implements OnInit {
                 //     axisKinds: 'numeric',
                 //     displayName: 'alarm'
                 // }
-            ],
-            legend: {
-                selector: '#div_02',
-                orient: 'bottom',
-                series: undefined
-            }
-        };
+            // ],
+            // legend: {
+            //     selector: '#div_02',
+            //     orient: 'bottom',
+            //     series: undefined
+            // }
+        // };
 
         // this.chartConfig = {
         //     chart: {

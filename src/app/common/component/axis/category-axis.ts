@@ -14,7 +14,7 @@ export class CategoryAxis extends Axis {
     makeAxisLabel() {
         super.makeAxisLabel();
         this.target.transition().call(this.axe.scaleToAxe);
-        if (this.tickInfo.rotate) {
+        if (this.tickInfo && this.tickInfo.rotate) {
             this._tickRotate();
         }
     }
@@ -37,7 +37,7 @@ export class CategoryAxis extends Axis {
                                 .orient(this.orient);
 
 
-        if (this.tickInfo.ticks) {
+        if (this.tickInfo && this.tickInfo.ticks) {
             const domain_length: number = this.axe.scale.domain().length;
             if ((domain_length / 2) < this.tickInfo.ticks) {
                 return;

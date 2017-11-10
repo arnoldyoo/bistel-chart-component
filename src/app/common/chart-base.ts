@@ -619,22 +619,12 @@ export class ChartBase implements IDisplay {
     _setDefaultData() {
         const testData: Array<any> = [];
         for (let i = 0; i < 20; i++) {
-            if (i === 5) {
-                testData.push( {  category: 'A' + i,
-                    date: new Date(2017, 0, i).getTime(),
-                    rate: null,
-                    ratio: null,
-                    revenue: null,
-                    profit: null
-                });
-            } else {
-                testData.push( {  category: 'A' + i,
-                    date: new Date(2017, 0, i).getTime(),
-                    rate: Math.round( Math.random() * 10 ),
-                    ratio: Math.round( Math.random() * 110  ),
-                    revenue: Math.round( Math.random() * 120  ),
-                    profit: Math.round( Math.random() * 100  ) } );
-            }
+            testData.push( {  category: 'A' + i,
+            date: new Date(2017, 0, i).getTime(),
+            rate: Math.round( Math.random() * 10 ),
+            ratio: Math.round( Math.random() * 110  ),
+            revenue: Math.round( Math.random() * 120  ),
+            profit: Math.round( Math.random() * 100  ) } );
         }
         this.dataProvider = testData;
     }
