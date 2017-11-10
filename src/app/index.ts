@@ -17,8 +17,3 @@ export { ArrayCollection } from './common/array-collection';
  * configuration setting
  */
 export { SeriesType, AxisType, PluginType } from './model/chart-config.interface';
-
-/**
- * chart component
- */
-export { MIP_ChartModule } from './module';

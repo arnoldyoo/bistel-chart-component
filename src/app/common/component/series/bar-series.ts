@@ -74,7 +74,7 @@ export class BarSeries extends Series {
         rectElement.attr('y', this.y);
         rectElement.attr('height', this.height);
 
-        if (this.configuration.condition.textLabel.show) {
+        if (this.configuration.condition.textLabel && this.configuration.condition.textLabel.show) {
             this.setTransition(rectElement, 500)
             .attr('x', this.x)
             .attr('y', this.y)

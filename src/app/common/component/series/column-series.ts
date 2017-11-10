@@ -80,7 +80,8 @@ export class ColumnSeries extends Series {
             rectElement.datum(this.data);
         }
 
-        this.setTransition(rectElement, 500)
+        if (this.configuration.condition.textLabel && this.configuration.condition.textLabel.show) {
+            this.setTransition(rectElement, 500)
             .attr('x', this.x)
             .attr('y', this.y)
             .attr('width', this.width)
@@ -88,6 +89,13 @@ export class ColumnSeries extends Series {
             .each('end', (d: any) => {
                 this.createLabel('top', rectElement);
             });
+        } else {
+            rectElement
+            .attr('x', this.x)
+            .attr('y', this.y)
+            .attr('width', this.width)
+            .attr('height', this.height);
+        }
 
         this.target.style('fill', this.color);
     }
